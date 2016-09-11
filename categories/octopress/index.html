@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>分类 : Octopress | 极致的技术博客</title>
+    <title>分类 : octopress | 极致的技术博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="JiZhi">
@@ -13,7 +13,7 @@
     
     <meta property="og:type" content="website">
 <meta property="og:title" content="极致的技术博客">
-<meta property="og:url" content="http://yoursite.com/categories/Octopress/index.html">
+<meta property="og:url" content="http://yoursite.com/categories/octopress/index.html">
 <meta property="og:site_name" content="极致的技术博客">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="极致的技术博客">
@@ -61,7 +61,7 @@
         
 
 <div class="archive-title" >
-  <h2 class="category-icon">Octopress</h2>
+  <h2 class="category-icon">octopress</h2>
   
 </div>
 <div id="main" class="archive-part clearfix">
@@ -76,6 +76,71 @@
 
 
     <h1 itemprop="name">在Octopress中添加标签</h1>
+
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/blog/2016/03/29/zai-octopresszhong-tian-jia-tu-pian-fang-da/" title="在Octopress中添加图片放大" itemprop="url">
+  
+
+    <time datetime="2016-03-29T07:56:04.000Z" itemprop="datePublished">2016-03-29</time>
+
+
+    <h1 itemprop="name">在Octopress中添加图片放大</h1>
+
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/blog/2016/03/29/rang-octopressbo-ke-zai-duo-tai-macshang-tong-shi-shi-yong/" title="让Octopress博客在多台Mac上同时使用" itemprop="url">
+  
+
+    <time datetime="2016-03-29T01:01:12.000Z" itemprop="datePublished">2016-03-29</time>
+
+
+    <h1 itemprop="name">让Octopress博客在多台Mac上同时使用</h1>
+
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/blog/2016/03/28/octopress-da-jian-liu-cheng/" title="Octopress 搭建流程" itemprop="url">
+  
+
+    <time datetime="2016-03-28T04:10:17.000Z" itemprop="datePublished">2016-03-28</time>
+
+
+    <h1 itemprop="name">Octopress 搭建流程</h1>
+
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/blog/2016/03/27/zai-octopresszhong-tian-jia-yu-fa-gao-liang/" title="在Octopress中添加语法高亮" itemprop="url">
+  
+
+    <time datetime="2016-03-27T13:08:18.000Z" itemprop="datePublished">2016-03-27</time>
+
+
+    <h1 itemprop="name">在Octopress中添加语法高亮</h1>
+
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/" title="解决Octopress博客访问慢的问题" itemprop="url">
+  
+
+    <time datetime="2016-03-27T07:12:57.000Z" itemprop="datePublished">2016-03-27</time>
+
+
+    <h1 itemprop="name">解决Octopress博客访问慢的问题</h1>
 
   </a>
 </section>
@@ -154,85 +219,6 @@ $(document).ready(function(){
     }else{
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-
-
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
-    </body>
-   </html>
-display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
         
     }
