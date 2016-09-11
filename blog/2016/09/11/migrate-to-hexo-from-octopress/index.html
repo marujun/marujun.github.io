@@ -11,16 +11,31 @@
     
 
     
-    <meta name="description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。最近再看了下迁移到hexo的，好像蛮方便的，而且是基于Node的，而 Node 的速度非常快。">
+    <meta name="description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。
+调研了一下，最终决定迁移到 Hexo，主要的原因是：
+
+Hexo 的原理和 Octopress 一样，都是生成静态文件，这样可以方便地托管到 GitHub 和 GitCafe 上。
+Hexo 是基于 Node 的，而 Node 的速度非常快。
+Hexo 对 Oc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="将博客从Octopress迁移往Hexo">
 <meta property="og:url" content="http://devma.cn/blog/2016/09/11/migrate-to-hexo-from-octopress/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。最近再看了下迁移到hexo的，好像蛮方便的，而且是基于Node的，而 Node 的速度非常快。">
-<meta property="og:updated_time" content="2016-09-11T14:22:12.000Z">
+<meta property="og:description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。
+调研了一下，最终决定迁移到 Hexo，主要的原因是：
+
+Hexo 的原理和 Octopress 一样，都是生成静态文件，这样可以方便地托管到 GitHub 和 GitCafe 上。
+Hexo 是基于 Node 的，而 Node 的速度非常快。
+Hexo 对 Oc">
+<meta property="og:updated_time" content="2016-09-11T14:23:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="将博客从Octopress迁移往Hexo">
-<meta name="twitter:description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。最近再看了下迁移到hexo的，好像蛮方便的，而且是基于Node的，而 Node 的速度非常快。">
+<meta name="twitter:description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。
+调研了一下，最终决定迁移到 Hexo，主要的原因是：
+
+Hexo 的原理和 Octopress 一样，都是生成静态文件，这样可以方便地托管到 GitHub 和 GitCafe 上。
+Hexo 是基于 Node 的，而 Node 的速度非常快。
+Hexo 对 Oc">
 
     
     
@@ -85,7 +100,13 @@
 		</div>
 		
 		<!-- { % img fancybox /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
-<p>之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。最近再看了下迁移到hexo的，好像蛮方便的，而且是基于Node的，而 Node 的速度非常快。</p>
+<p>之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。</p>
+<p>调研了一下，最终决定迁移到 Hexo，主要的原因是：</p>
+<ul>
+<li>Hexo 的原理和 Octopress 一样，都是生成静态文件，这样可以方便地托管到 GitHub 和 GitCafe 上。</li>
+<li>Hexo 是基于 Node 的，而 Node 的速度非常快。</li>
+<li>Hexo 对 Octopress 的迁移很友好，图片引用方式完全一样，所以我的博客文章不需要做什么改动。</li>
+</ul>
 <a id="more"></a>
 <h2 id="迁移到Hexo"><a href="#迁移到Hexo" class="headerlink" title="迁移到Hexo"></a>迁移到Hexo</h2><p>因为GFW的存在，我在运行 <code>npm</code> 命令的时候都在前面加上了 <code>proxychains4</code>: <a href="/blog/2016/03/28/ming-ling-xing-gong-ju-xia-shi-yong-shadowsocks">详细教程</a> </p>
 <p><strong>安装nodejs</strong>：我使用的是 <a href="https://nodejs.org/en/" target="_blank" rel="external">v4.5.0 稳定版</a></p>
