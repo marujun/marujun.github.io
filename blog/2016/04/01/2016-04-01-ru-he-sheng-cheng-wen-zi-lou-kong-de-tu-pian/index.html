@@ -1,0 +1,448 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS 如何生成文字镂空的图片 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="最近因为公司业务需求需要生成一张超大的纯色底文字镂空的图片传给服务器端，做的时候遇到了不少问题，记录下解决问题的过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 如何生成文字镂空的图片">
+<meta property="og:url" content="http://yoursite.com/blog/2016/04/01/2016-04-01-ru-he-sheng-cheng-wen-zi-lou-kong-de-tu-pian/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="最近因为公司业务需求需要生成一张超大的纯色底文字镂空的图片传给服务器端，做的时候遇到了不少问题，记录下解决问题的过程。">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/image_text_mask_preview.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/image_text_mask_label.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/image_text_mask_inverse.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/image_text_mask_preview.png">
+<meta property="og:updated_time" content="2016-04-11T13:14:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 如何生成文字镂空的图片">
+<meta name="twitter:description" content="最近因为公司业务需求需要生成一张超大的纯色底文字镂空的图片传给服务器端，做的时候遇到了不少问题，记录下解决问题的过程。">
+<meta name="twitter:image" content="http://yoursite.com/images/2016/04/image_text_mask_preview.png">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/04/01/2016-04-01-ru-he-sheng-cheng-wen-zi-lou-kong-de-tu-pian/" title="iOS 如何生成文字镂空的图片" itemprop="url">iOS 如何生成文字镂空的图片</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-04-01T03:15:31.000Z" itemprop="datePublished"> 发表于 2016-04-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<!-- <img src="/images/2016/03/demo.png" class="fancybox"> –&gt;
+<!-- <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">code snippet</div></pre></td></tr></table></figure> -->
+
+最近因为公司业务需求需要生成一张超大的纯色底文字镂空的图片传给服务器端，做的时候遇到了不少问题，记录下解决问题的过程。
+<a id="more"></a>
+
+##最终效果图
+
+<img src="/images/2016/04/image_text_mask_preview.png" class="fancybox">
+
+##解决方案
+
+###1.绘制大图
+生成一张4000x2000的画布，然后计算出文字的位置把文字画上去，再填充背景色，最后把文字部分变透明，代码如下：
+undefined
+
+通过这个方法绘制图片的时候占用的内存较小、速度也快。但是在绘制图片的过程中内存峰值会瞬间增长30M左右，所以加上 `@autoreleasepool` 在绘制完成之后立刻通知RunLoop进行内存回收，而不是等待线程执行到某个点时再自动进行内存回收。
+
+###2.生成缩略图实时预览
+图片绘制完成之后，我们可以把大图保存到文件，再生成一张缩略图在界面上实时预览，减小内存的消耗。
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//把生成的文件保存到文件</span></div><div class="line"><span class="built_in">NSString</span> *imagePath = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) firstObject];</div><div class="line">imagePath = [imagePath stringByAppendingPathComponent:<span class="string">@"mask.png"</span>];</div><div class="line">[lastdata writeToFile:imagePath atomically:<span class="literal">YES</span>];</div><div class="line"></div><div class="line"><span class="comment">//生成缩略图，也可以使用 CGImageSourceCreateWithURL 从文件中创建CGImageSourceRef</span></div><div class="line"><span class="built_in">CGImageSourceRef</span> src = <span class="built_in">CGImageSourceCreateWithData</span>((__bridge <span class="built_in">CFDataRef</span>)lastdata, <span class="literal">NULL</span>);</div><div class="line"><span class="built_in">CFDictionaryRef</span> options = (__bridge <span class="built_in">CFDictionaryRef</span>) @&#123;</div><div class="line">                                                       (<span class="keyword">id</span>) kCGImageSourceCreateThumbnailWithTransform : @YES,</div><div class="line">                                                       (<span class="keyword">id</span>) kCGImageSourceCreateThumbnailFromImageAlways : @YES,</div><div class="line">                                                       (<span class="keyword">id</span>) kCGImageSourceThumbnailMaxPixelSize : @(<span class="number">800</span>), <span class="comment">//缩略图长边的像素</span></div><div class="line">                                                       &#125;;</div><div class="line"><span class="built_in">CGImageRef</span> thumbnail = <span class="built_in">CGImageSourceCreateThumbnailAtIndex</span>(src, <span class="number">0</span>, options);</div><div class="line"><span class="built_in">CFRelease</span>(src);</div><div class="line"></div><div class="line"><span class="built_in">UIImage</span> *thumImage = [<span class="built_in">UIImage</span> imageWithCGImage:thumbnail];</div><div class="line"><span class="built_in">CGImageRelease</span>(thumbnail);</div><div class="line"></div><div class="line"><span class="built_in">UIImageView</span> *imageView = [[<span class="built_in">UIImageView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">10</span>, <span class="number">20</span>, <span class="number">300</span>, <span class="number">150</span>)];</div><div class="line">imageView.image = thumImage;</div><div class="line">[<span class="keyword">self</span>.view addSubview:imageView];</div></pre></td></tr></table></figure>
+<p>##尝试过的方案<br>在得到上面的解决方案之前还尝试了其他的方案，最终因为占用内存太大、耗时太长被否决了，但是我觉得这些尝试还是让我学到点东西的，所以也记录了下来。</p>
+<p>###1.创建UILabel<br>先创建一个label，并设置label的属性得到自己想要基本的样式，但是必须<font color="red"> <strong>黑底白字</strong> </font></p>
+<img src="/images/2016/04/image_text_mask_label.png" class="fancybox">
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSData</span> *lastdata = <span class="literal">nil</span>;</div><div class="line"><span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">    <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] init];</div><div class="line">    label.bounds = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">4000</span>, <span class="number">2000</span>);</div><div class="line">    label.font = [<span class="built_in">UIFont</span> fontWithName:<span class="string">@"HelveticaNeue-Bold"</span> size:<span class="number">1300</span>];</div><div class="line">    label.text = <span class="string">@"Baby"</span>;</div><div class="line">    label.textAlignment = <span class="built_in">NSTextAlignmentCenter</span>;</div><div class="line">    label.backgroundColor = [<span class="built_in">UIColor</span> blackColor];</div><div class="line">    label.textColor = [<span class="built_in">UIColor</span> whiteColor];</div><div class="line">    </div><div class="line">    <span class="comment">//把label转换成图片，不用转换成高分辨率的</span></div><div class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(label.bounds.size, <span class="literal">NO</span>, <span class="number">1.0</span>);</div><div class="line">    [label.layer renderInContext:<span class="built_in">UIGraphicsGetCurrentContext</span>()];</div><div class="line">    </div><div class="line">    <span class="built_in">UIImage</span> *image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">    </div><div class="line">    lastdata = <span class="built_in">UIImagePNGRepresentation</span>(image);</div><div class="line"></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"draw image app memory %@"</span>,[<span class="built_in">UIDevice</span> usedMemory]);</div><div class="line">&#125;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"after @autoreleasepool app memory %@"</span>,[<span class="built_in">UIDevice</span> usedMemory]);</div></pre></td></tr></table></figure>
+<p>到这一步的时候就发现一个问题，截图完成之后内存不能被回收，过了大概1分钟左右才被自动回收，猜测和 <code>layer</code> 有关</p>
+<p>###2.转换成黑底透明字的图片<br>在网上找到一个方法可以把上述得到的黑底白字的图片转换成黑底透明字的图片</p>
+<img src="/images/2016/04/image_text_mask_inverse.png" class="fancybox">
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIImage</span> *image = [[<span class="built_in">UIImage</span> imageWithData:lastdata] inverseMaskImage];</div><div class="line"></div><div class="line">+ (<span class="built_in">UIImage</span> *)imageWithColor:(<span class="built_in">UIColor</span> *)color size:(<span class="built_in">CGSize</span>)size</div><div class="line">&#123;</div><div class="line">    <span class="built_in">CGRect</span> rect = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, size.width, size.height);</div><div class="line">    </div><div class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(rect.size, <span class="literal">NO</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</div><div class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</div><div class="line">    </div><div class="line">    <span class="built_in">CGContextSetFillColorWithColor</span>(context, [color <span class="built_in">CGColor</span>]);</div><div class="line">    <span class="built_in">CGContextFillRect</span>(context, rect);</div><div class="line">    </div><div class="line">    <span class="built_in">UIImage</span> *image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> image;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/** 纯白色表示被遮罩区域将完全透明，纯黑色表示被遮罩区域将会原封不动保留下来，</span></div><div class="line"> 灰色部分(0x000000~0xFFFFFF)表示被遮罩区域将会处理成半透明的效果 */</div><div class="line">- (<span class="built_in">UIImage</span> *)inverseMaskImage</div><div class="line">&#123;</div><div class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageWithColor:[<span class="built_in">UIColor</span> blackColor] size:<span class="keyword">self</span>.size];</div><div class="line">    </div><div class="line">    <span class="built_in">CGImageRef</span> maskRef = <span class="keyword">self</span>.CGImage;</div><div class="line">    <span class="built_in">CGImageRef</span> mask = <span class="built_in">CGImageMaskCreate</span>(<span class="built_in">CGImageGetWidth</span>(maskRef),</div><div class="line">                                        <span class="built_in">CGImageGetHeight</span>(maskRef),</div><div class="line">                                        <span class="built_in">CGImageGetBitsPerComponent</span>(maskRef),</div><div class="line">                                        <span class="built_in">CGImageGetBitsPerPixel</span>(maskRef),</div><div class="line">                                        <span class="built_in">CGImageGetBytesPerRow</span>(maskRef),</div><div class="line">                                        <span class="built_in">CGImageGetDataProvider</span>(maskRef), <span class="literal">NULL</span>, <span class="literal">false</span>);</div><div class="line">    </div><div class="line">    <span class="built_in">CGImageRef</span> sourceImage = [image <span class="built_in">CGImage</span>];</div><div class="line">    <span class="built_in">CGImageRef</span> imageWithAlpha = sourceImage;</div><div class="line">    <span class="comment">//add alpha channel for images that don't have one (ie GIF, JPEG, etc...)</span></div><div class="line">    <span class="comment">//this however has a computational cost</span></div><div class="line">    <span class="keyword">if</span> (<span class="built_in">CGImageGetAlphaInfo</span>(sourceImage) == kCGImageAlphaNone) &#123;</div><div class="line">        <span class="comment">//copyImageAndAddAlphaChannel</span></div><div class="line">        <span class="built_in">CGImageRef</span> retVal = <span class="literal">NULL</span>;</div><div class="line">        </div><div class="line">        size_t width = <span class="built_in">CGImageGetWidth</span>(sourceImage);</div><div class="line">        size_t height = <span class="built_in">CGImageGetHeight</span>(sourceImage);</div><div class="line">        </div><div class="line">        <span class="built_in">CGColorSpaceRef</span> colorSpace = <span class="built_in">CGColorSpaceCreateDeviceRGB</span>();</div><div class="line">        <span class="built_in">CGContextRef</span> offscreenContext = <span class="built_in">CGBitmapContextCreate</span>(<span class="literal">NULL</span>, width, height, <span class="number">8</span>, <span class="number">0</span>, colorSpace,</div><div class="line">                                                              kCGImageAlphaPremultipliedFirst);</div><div class="line">        <span class="keyword">if</span> (offscreenContext != <span class="literal">NULL</span>) &#123;</div><div class="line">            <span class="built_in">CGContextDrawImage</span>(offscreenContext, <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, width, height), sourceImage);</div><div class="line">            retVal = <span class="built_in">CGBitmapContextCreateImage</span>(offscreenContext);</div><div class="line">            <span class="built_in">CGContextRelease</span>(offscreenContext);</div><div class="line">        &#125;</div><div class="line">        <span class="built_in">CGColorSpaceRelease</span>(colorSpace);</div><div class="line">        imageWithAlpha = retVal;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="built_in">CGImageRef</span> masked = <span class="built_in">CGImageCreateWithMask</span>(imageWithAlpha, mask);</div><div class="line">    <span class="built_in">CGImageRelease</span>(mask);</div><div class="line">    </div><div class="line">    <span class="comment">//release imageWithAlpha if it was created by CopyImageAndAddAlphaChannel</span></div><div class="line">    <span class="keyword">if</span> (sourceImage != imageWithAlpha) &#123;</div><div class="line">        <span class="built_in">CGImageRelease</span>(imageWithAlpha);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="built_in">UIImage</span> *retImage = [<span class="built_in">UIImage</span> imageWithCGImage:masked scale:<span class="keyword">self</span>.scale orientation:<span class="keyword">self</span>.imageOrientation];</div><div class="line">    </div><div class="line">    <span class="built_in">CGImageRelease</span>(masked);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> retImage;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###2.把图片中的黑色部分转换成白色</p>
+<img src="/images/2016/04/image_text_mask_preview.png" class="fancybox">
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line">image = [image tintedImageWithColor:[<span class="built_in">UIColor</span> whiteColor] style:<span class="built_in">UIImageTintStyleKeepingAlpha</span>];</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * The image tinting styles.</div><div class="line"> **/</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> __USImageTintStyle</div><div class="line">&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Keep transaprent pixels (alpha == 0) and tint all other pixels.</div><div class="line">     **/</div><div class="line">    <span class="built_in">UIImageTintStyleKeepingAlpha</span>      = <span class="number">1</span>,</div><div class="line">    </div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Keep non transparent pixels and tint only those that are translucid.</div><div class="line">     **/</div><div class="line">    <span class="built_in">UIImageTintStyleOverAlpha</span>         = <span class="number">2</span>,</div><div class="line">    </div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Remove (turn to transparent) non transparent pixels and tint only those that are translucid.</div><div class="line">     **/</div><div class="line">    <span class="built_in">UIImageTintStyleOverAlphaExtreme</span>  = <span class="number">3</span>,</div><div class="line">    </div><div class="line">&#125; <span class="built_in">UIImageTintStyle</span>;</div><div class="line"></div><div class="line"><span class="comment">/** 根据给定的颜色和模式替换图片中的色彩 */</span></div><div class="line">- (<span class="built_in">UIImage</span> *)tintedImageWithColor:(<span class="built_in">UIColor</span>*)color style:(<span class="built_in">UIImageTintStyle</span>)tintStyle</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (!color)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">    </div><div class="line">    <span class="built_in">CGFloat</span> scale = <span class="keyword">self</span>.scale;</div><div class="line">    <span class="built_in">CGSize</span> size = <span class="built_in">CGSizeMake</span>(scale * <span class="keyword">self</span>.size.width, scale * <span class="keyword">self</span>.size.height);</div><div class="line">    </div><div class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(size);</div><div class="line">    </div><div class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</div><div class="line">    </div><div class="line">    <span class="built_in">CGContextTranslateCTM</span>(context, <span class="number">0</span>, size.height);</div><div class="line">    <span class="built_in">CGContextScaleCTM</span>(context, <span class="number">1.0</span>, <span class="number">-1.0</span>);</div><div class="line">    </div><div class="line">    <span class="built_in">CGRect</span> rect = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, size.width, size.height);</div><div class="line">    </div><div class="line">    <span class="comment">// ---</span></div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (tintStyle == <span class="built_in">UIImageTintStyleKeepingAlpha</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeNormal);</div><div class="line">        <span class="built_in">CGContextDrawImage</span>(context, rect, <span class="keyword">self</span>.CGImage);</div><div class="line">        <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeSourceIn);</div><div class="line">        [color setFill];</div><div class="line">        <span class="built_in">CGContextFillRect</span>(context, rect);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (tintStyle == <span class="built_in">UIImageTintStyleOverAlpha</span>)</div><div class="line">    &#123;</div><div class="line">        [color setFill];</div><div class="line">        <span class="built_in">CGContextFillRect</span>(context, rect);</div><div class="line">        <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeNormal);</div><div class="line">        <span class="built_in">CGContextDrawImage</span>(context, rect, <span class="keyword">self</span>.CGImage);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (tintStyle == <span class="built_in">UIImageTintStyleOverAlphaExtreme</span>)</div><div class="line">    &#123;</div><div class="line">        [color setFill];</div><div class="line">        <span class="built_in">CGContextFillRect</span>(context, rect);</div><div class="line">        <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeDestinationOut);</div><div class="line">        <span class="built_in">CGContextDrawImage</span>(context, rect, <span class="keyword">self</span>.CGImage);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// ---</span></div><div class="line">    <span class="built_in">CGImageRef</span> bitmapContext = <span class="built_in">CGBitmapContextCreateImage</span>(context);</div><div class="line">    </div><div class="line">    <span class="built_in">UIImage</span> *coloredImage = [<span class="built_in">UIImage</span> imageWithCGImage:bitmapContext scale:scale orientation:<span class="built_in">UIImageOrientationUp</span>];</div><div class="line">    </div><div class="line">    <span class="built_in">CGImageRelease</span>(bitmapContext);</div><div class="line">    </div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> coloredImage;</div><div class="line">&#125;</div></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/图片/">图片</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/blog/2016/04/01/2016-04-01-ru-he-sheng-cheng-wen-zi-lou-kong-de-tu-pian/" data-title="iOS 如何生成文字镂空的图片 | 极致的技术博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2016/04/02/2016-04-02-zai-octopresszhong-tian-jia-biao-qian/" title="在Octopress中添加标签">
+  <strong>上一篇：</strong><br/>
+  <span>
+  在Octopress中添加标签</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2016/03/30/2016-03-30-ios-kai-fa-chang-yong-shu-xue-han-shu/"  title="iOS 开发常用数学函数">
+ <strong>下一篇：</strong><br/> 
+ <span>iOS 开发常用数学函数
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

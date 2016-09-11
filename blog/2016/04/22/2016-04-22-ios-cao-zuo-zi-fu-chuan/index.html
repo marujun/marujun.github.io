@@ -1,0 +1,432 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS - 操作字符串 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta property="og:type" content="article">
+<meta property="og:title" content="iOS - 操作字符串">
+<meta property="og:url" content="http://yoursite.com/blog/2016/04/22/2016-04-22-ios-cao-zuo-zi-fu-chuan/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:updated_time" content="2016-04-23T13:47:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS - 操作字符串">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/04/22/2016-04-22-ios-cao-zuo-zi-fu-chuan/" title="iOS - 操作字符串" itemprop="url">iOS - 操作字符串</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-04-22T05:13:32.000Z" itemprop="datePublished"> 发表于 2016-04-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<!-- <img src="/images/2016/04/demo.png" class="fancybox"> –&gt;
+<!-- <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">code snippet</div></pre></td></tr></table></figure> –&gt;
+<p>在iOS系统，NSString可能是最常用的对象，很多用法跟其他语言不一样。</p>
+<a id="more"></a>
+<p>##字符串对象NSString</p>
+<p>###使用格式创建字符串<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">id</span>)stringWithFormat:(<span class="built_in">NSString</span> *)format...</div><div class="line">- (<span class="keyword">id</span>)initWithFormat:(<span class="built_in">NSString</span> *)format...</div><div class="line"></div><div class="line"><span class="built_in">NSString</span> *str = <span class="string">"hello"</span>;</div><div class="line"><span class="built_in">NSString</span> *string = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%@ world"</span>,str];</div></pre></td></tr></table></figure></p>
+<p>###常用的替换符<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">%@  OC对象描述</div><div class="line">%zd  NSInteger</div><div class="line">%tu  NSUInteger</div><div class="line">%d,%D,%i  整数</div><div class="line">%4d,%4D,%4i  格式化整数</div><div class="line">%ld,%lD,%li  长整数</div><div class="line">%u,%U  无符号整数</div><div class="line">%x  将无符号整数以十六进制小写字母显示</div><div class="line">%X  将无符号整数以十六进制大写字母显示</div><div class="line">%f  小数</div><div class="line">%c  8位无符号字符</div><div class="line">%C  16位UNICODE字符</div><div class="line">%s  C语言字符串</div><div class="line">%%  显示％字符本身</div></pre></td></tr></table></figure></p>
+<p>##范围集合NSRange</p>
+<p>###定义<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _NSRange &#123;</div><div class="line">     <span class="keyword">unsigned</span> <span class="keyword">int</span> location;</div><div class="line">     <span class="keyword">unsigned</span> <span class="keyword">int</span> length;</div><div class="line">&#125; <span class="built_in">NSRange</span>;</div></pre></td></tr></table></figure></p>
+<p>###NSMakeRange函数</p>
+<p>这个函数比较特殊 返回一个NSRange的对象。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSMakeRanger</span>(<span class="keyword">unsigned</span> <span class="keyword">int</span> location,<span class="keyword">unsigned</span> <span class="keyword">int</span> length);</div></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSRange</span> range = <span class="built_in">NSMakeRanger</span>(<span class="number">0</span>,<span class="number">5</span>);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"location is %d,length is %d"</span>,range.location,range.length);</div></pre></td></tr></table></figure>
+<p>###查找</p>
+<p>如果找到就返回范围，否则 <code>NSRange</code> 的 <code>location</code> 项被设置为 <code>NSNotFound</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"> - (<span class="built_in">NSRange</span>)rangeOfString:(<span class="built_in">NSString</span> *)subString;</div><div class="line"> - (<span class="built_in">NSRange</span>)rangeOfString:(<span class="built_in">NSString</span> *)subString option:(<span class="keyword">unsigned</span>)mask;</div><div class="line"> - (<span class="built_in">NSRange</span>)rangeOfString:(<span class="built_in">NSString</span> *)subString option:(<span class="keyword">unsigned</span>)mask range:(<span class="built_in">NSRange</span>)range;</div><div class="line"></div><div class="line"><span class="comment">//mask常用选项列表</span></div><div class="line"><span class="comment">//NSCaseInsensitiveSearch   不区分字母大小写</span></div><div class="line"><span class="comment">//NSLiteralSearch           对字符串进行字节单位的比较，一般可提高检索速度</span></div><div class="line"><span class="comment">//NSBackwardsSearch         从范围的末尾开始检索</span></div><div class="line"><span class="comment">//NSAnchoredSearch          仅检索制定范围的前部。忽略字符串中间的检索字符</span></div><div class="line"></div><div class="line"><span class="built_in">NSString</span> *string = <span class="string">@"hello world"</span>;</div><div class="line"><span class="built_in">NSRange</span> range = [string rangeOfString:<span class="string">@"he"</span>];</div><div class="line"><span class="keyword">if</span> (range.location != <span class="built_in">NSNotFound</span>) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@" location=%d,length=%d"</span>,range.location,range.length);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###截取字符串<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span>  </div><div class="line"><span class="comment">//返回字符串开头至index位的字符串 不包含索引位</span></div><div class="line">- (<span class="built_in">NSString</span> *)substringToIndex:(<span class="keyword">unsigned</span>)index;</div><div class="line"></div><div class="line"><span class="comment">//返回字符串第index位至末尾的字符串 包含索引位</span></div><div class="line">- (<span class="built_in">NSString</span> *)substringFromIndex:(<span class="keyword">unsigned</span>)index;</div><div class="line"></div><div class="line"> <span class="comment">//返回字符串中范围range内的字符串</span></div><div class="line">- (<span class="built_in">NSString</span> *)substringWithRange:(<span class="built_in">NSRange</span>)range;</div><div class="line"></div><div class="line"> <span class="comment">//包含索引位</span></div><div class="line"><span class="built_in">NSString</span> *string = [string substringWithRange:<span class="built_in">NSMakeRange</span>(<span class="number">5</span>,<span class="number">2</span>)];</div></pre></td></tr></table></figure></p>
+<p>##比较字符串<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *String1 = <span class="string">@"NSStringInformation.txt"</span>;</div><div class="line"></div><div class="line"><span class="comment">//hasPrefix 前缀比较</span></div><div class="line">[String1 hasPrefix:<span class="string">@"NSString"</span>] = = <span class="number">1</span> ?  <span class="built_in">NSLog</span>(<span class="string">@"YES"</span>) : <span class="built_in">NSLog</span>(<span class="string">@"NO"</span>);</div><div class="line"></div><div class="line"><span class="comment">//hasSuffix 后缀比较</span></div><div class="line">[String1 hasSuffix:<span class="string">@".txt"</span>] = = <span class="number">1</span> ?  <span class="built_in">NSLog</span>(<span class="string">@"YES"</span>) : <span class="built_in">NSLog</span>(<span class="string">@"NO"</span>);</div><div class="line"></div><div class="line"><span class="comment">//isEqualToString 完全比较</span></div><div class="line"><span class="keyword">if</span> ([string1 isEqualToString:<span class="string">@""</span>]) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"string1 is blank"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>##替换字符串<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *newString  = [oldString stringByReplacingOccurrencesOfString:<span class="string">@"x"</span> withString:<span class="string">@"y"</span>];</div></pre></td></tr></table></figure></p>
+<p>##分割字符串成数组<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *string = <span class="string">@"A|B|C|D"</span>;</div><div class="line"><span class="built_in">NSArray</span> *array = [string componentsSeparatedByString:<span class="string">@"|"</span>];</div></pre></td></tr></table></figure></p>
+<p>##读取文本文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span></div><div class="line"> + (<span class="keyword">id</span>)stringWithContentsOfFile:(<span class="built_in">NSString</span> *)path usedEncoding:(<span class="built_in">NSStringEncoding</span> *)enc error:(<span class="built_in">NSError</span> **)error     <span class="comment">//自动释放内存</span></div><div class="line"></div><div class="line"> - (<span class="keyword">id</span>)initWithContentsOfFile:(<span class="built_in">NSString</span> *)path encoding:(<span class="built_in">NSStringEncoding</span>)enc error:(<span class="built_in">NSError</span> **)error</div><div class="line"></div><div class="line"> <span class="built_in">NSString</span> *string = [<span class="built_in">NSString</span> stringWithContentsOfFile:<span class="string">@"/user/test/yw.txt"</span> encoding:<span class="built_in">NSUTF8StringEncoding</span> error:&amp;error];</div><div class="line"> <span class="keyword">if</span> (string) &#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>##输出文本文件<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span></div><div class="line"> - (<span class="built_in">BOOL</span>)writeToFile:(<span class="built_in">NSString</span> *)path atomically:(<span class="built_in">BOOL</span>)useAuxiliaryFile encoding:(<span class="built_in">NSStringEncoding</span>)enc error:(<span class="built_in">NSError</span> **)error</div><div class="line"> <span class="comment">//参数 atomically 暂时将文件保存到辅助文件中</span></div><div class="line"> <span class="comment">//path</span></div><div class="line"> The file to which to write the receiver. If path contains a tilde (~) character, you must expand it withstringByExpandingTildeInPath before invoking <span class="keyword">this</span> method.</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//扩展路径</span></div><div class="line"><span class="built_in">NSString</span> *Path = <span class="string">@"~/NSData.txt"</span>;</div><div class="line"><span class="built_in">NSString</span> *absolutePath = [Path stringByExpandingTildeInPath];</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"absolutePath:%@"</span>,absolutePath);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"Path:%@"</span>,[absolutePath stringByAbbreviatingWithTildeInPath]);</div><div class="line"></div><div class="line"><span class="comment">//文件扩展名</span></div><div class="line"><span class="built_in">NSString</span> *Path = <span class="string">@"~/NSData.txt"</span>;</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"Extension:%@"</span>,[Path pathExtension]);</div></pre></td></tr></table></figure></p>
+-->  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/字符串/">字符串</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/blog/2016/04/22/2016-04-22-ios-cao-zuo-zi-fu-chuan/" data-title="iOS - 操作字符串 | 极致的技术博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2016/04/28/2016-04-28-ios-shi-yong-multipeer-connectivitykuang-jia/" title="iOS - 使用Multipeer Connectivity框架">
+  <strong>上一篇：</strong><br/>
+  <span>
+  iOS - 使用Multipeer Connectivity框架</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2016/04/14/2016-04-14-ios-coretextru-men-zhi-zi-xing/"  title="iOS - CoreText入门之字形">
+ <strong>下一篇：</strong><br/> 
+ <span>iOS - CoreText入门之字形
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

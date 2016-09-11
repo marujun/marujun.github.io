@@ -1,0 +1,465 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS - 使用Multipeer Connectivity框架 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta property="og:type" content="article">
+<meta property="og:title" content="iOS - 使用Multipeer Connectivity框架">
+<meta property="og:url" content="http://yoursite.com/blog/2016/04/28/2016-04-28-ios-shi-yong-multipeer-connectivitykuang-jia/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:updated_time" content="2016-05-06T13:46:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS - 使用Multipeer Connectivity框架">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/04/28/2016-04-28-ios-shi-yong-multipeer-connectivitykuang-jia/" title="iOS - 使用Multipeer Connectivity框架" itemprop="url">iOS - 使用Multipeer Connectivity框架</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-04-28T06:45:09.000Z" itemprop="datePublished"> 发表于 2016-04-28</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<!-- <img src="/images/2016/04/demo.png" class="fancybox"> –&gt;
+<!-- <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">code snippet</div></pre></td></tr></table></figure> –&gt;
+<p>Multipeer connectivity 是一个使附近设备通过WiFi网络、P2P WiFi以及蓝牙个人局域网进行通信的框架。互相链接的节点可以安全地传递信息、流或是其他文件资源，而不用通过网络服务。</p>
+<a id="more"></a>
+<p>首先必须在工程中导入 <code>MultiPeerConnectivity.framework</code> 框架</p>
+<p>##Advertising &amp; Discovering</p>
+<p>通信的第一步是让大家互相知道彼此，我们通过广播 <code>Advertising</code> 和发现 <code>discovering</code> 服务来实现。</p>
+<p>广播作为服务器搜索附近的节点，而节点同时也去搜索附近的广播。在许多情况下，客户端同时广播并发现同一个服务，这将导致一些混乱，尤其是在client-server模式中。</p>
+<p>所以，每一个服务都应有一个类型（标示符），它是由ASCII字母、数字和“-”组成的短文本串，最多15个字符。通常，一个服务的名字应该由应用程序的名字开始，后边跟“-”和一个独特的描述符号。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="built_in">NSString</span> * <span class="keyword">const</span> XXServiceType = <span class="string">@"xx-service"</span>;</div></pre></td></tr></table></figure>
+<p>一个节点有一个唯一标示MCPeerID对象，使用展示名称进行初始化，它可能是用户指定的昵称，或是单纯的设备名称。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MCPeerID *localPeerID = [[MCPeerID alloc] initWithDisplayName:[[<span class="built_in">UIDevice</span> currentDevice] name]];</div></pre></td></tr></table></figure>
+<p>节点使用NSNetService或者Bonjour C API进行手动广播和发现，但这是一个特别深入的问题，关于手动节点管理可具体参见MCSession文档。</p>
+<p>###Advertising</p>
+<p>服务的广播通过MCNearbyServiceAdvertiser来操作，初始化时带着本地节点、服务类型以及任何可与发现该服务的节点进行通信的可选信息。</p>
+<p>发现信息使用Bonjour TXT records encoded（according to RFC <a href="https://tools.ietf.org/html/rfc6763">6763</a>）发送。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">MCNearbyServiceAdvertiser *advertiser = </div><div class="line">    [[MCNearbyServiceAdvertiser alloc] initWithPeer:localPeerID </div><div class="line">                                      discoveryInfo:<span class="literal">nil</span> </div><div class="line">                                        serviceType:XXServiceType]; </div><div class="line">advertiser.delegate = <span class="keyword">self</span>; </div><div class="line">[advertiser startAdvertisingPeer];</div></pre></td></tr></table></figure></p>
+<p>相关事件由advertiser的代理来处理，需遵从 <strong>MCNearbyServiceAdvertiserDelegate</strong> 协议。</p>
+<p>在下例中，考虑到用户可以选择是否接受或拒绝传入连接请求，并有权以拒绝或屏蔽任何来自该节点的后续请求选项。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#pragma mark - MCNearbyServiceAdvertiserDelegate </span></div><div class="line"> </div><div class="line">- (<span class="keyword">void</span>)advertiser:(MCNearbyServiceAdvertiser *)advertiser </div><div class="line">didReceiveInvitationFromPeer:(MCPeerID *)peerID </div><div class="line">       withContext:(<span class="built_in">NSData</span> *)context </div><div class="line"> invitationHandler:(<span class="keyword">void</span>(^)(<span class="built_in">BOOL</span> accept, MCSession *session))invitationHandler </div><div class="line">&#123; </div><div class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.mutableBlockedPeers containsObject:peerID]) &#123; </div><div class="line">        invitationHandler(<span class="literal">NO</span>, <span class="literal">nil</span>); </div><div class="line">        <span class="keyword">return</span>; </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">    [[<span class="built_in">UIActionSheet</span> actionSheetWithTitle:[<span class="built_in">NSString</span> stringWithFormat:<span class="built_in">NSLocalizedString</span>(<span class="string">@"Received Invitation from %@"</span>, <span class="string">@"Received Invitation from &#123;Peer&#125;"</span>), peerID.displayName] </div><div class="line">                       cancelButtonTitle:<span class="built_in">NSLocalizedString</span>(<span class="string">@"Reject"</span>, <span class="literal">nil</span>) </div><div class="line">                  destructiveButtonTitle:<span class="built_in">NSLocalizedString</span>(<span class="string">@"Block"</span>, <span class="literal">nil</span>) </div><div class="line">                       otherButtonTitles:@[<span class="built_in">NSLocalizedString</span>(<span class="string">@"Accept"</span>, <span class="literal">nil</span>)] </div><div class="line">                                   block:^(<span class="built_in">UIActionSheet</span> *actionSheet, <span class="built_in">NSInteger</span> buttonIndex) </div><div class="line">    &#123; </div><div class="line">        <span class="built_in">BOOL</span> acceptedInvitation = (buttonIndex == [actionSheet firstOtherButtonIndex]); </div><div class="line"> </div><div class="line">        <span class="keyword">if</span> (buttonIndex == [actionSheet destructiveButtonIndex]) &#123; </div><div class="line">            [<span class="keyword">self</span>.mutableBlockedPeers addObject:peerID]; </div><div class="line">        &#125; </div><div class="line"> </div><div class="line">        MCSession *session = [[MCSession alloc] initWithPeer:localPeerID </div><div class="line">                                            securityIdentity:<span class="literal">nil</span> </div><div class="line">                                        encryptionPreference:MCEncryptionNone]; </div><div class="line">        session.delegate = <span class="keyword">self</span>; </div><div class="line"> </div><div class="line">        invitationHandler(acceptedInvitation, (acceptedInvitation ? session : <span class="literal">nil</span>)); </div><div class="line">    &#125;] showInView:<span class="keyword">self</span>.view]; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为了简单起见，本例中使用了一个带有block的actionsheet来作为操作框，它可以直接给invitationHandler传递信息。</p>
+<p>###Creating a Session</p>
+<p>在上面的例子中，我们创建了session，并在接受邀请连接时传递到节点。一个MCSession对象跟本地节点标识符、securityIdentity以及encryptionPreference参数一起进行初始化。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MCSession *session = [[MCSession alloc] initWithPeer:localPeerID </div><div class="line">                                    securityIdentity:<span class="literal">nil</span> </div><div class="line">                                encryptionPreference:MCEncryptionNone]; </div><div class="line">session.delegate = <span class="keyword">self</span>;</div></pre></td></tr></table></figure></p>
+<p><code>securityIdentity</code> 是一个可选参数。通过X.509证书，它允许节点安全识别并连接其他节点。当设置了该参数时,第一个对象应该是识别客户端的SecIdentityRef，接着是一个或更多个用以核实本地节点身份的SecCertificateRef objects。</p>
+<p><code>encryptionPreference</code> 参数指定是否加密节点之间的通信。</p>
+<p>MCEncryptionPreference枚举提供的三种值是:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">MCEncryptionOptional:会话更喜欢使用加密,但会接受未加密的连接。</div><div class="line">MCEncryptionRequired:会话需要加密。</div><div class="line">MCEncryptionNone:会话不应该加密。</div></pre></td></tr></table></figure></p>
+<p>启用加密会显著降低传输速率，所以除非你的应用程序很特别，需要对用户敏感信息的处理，否则建议使用 <code>MCEncryptionNone</code>。</p>
+<p>MCSession代理方法中可以检测连接状态:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)session:(MCSession*)session peer:(MCPeerID*)peerID didChangeState:(MCSessionState)state;</div></pre></td></tr></table></figure></p>
+<p>###Discovering</p>
+<p>客户端使用 <code>MCNearbyServiceBrowser</code> 来发现广播，它需要 <code>local peer</code> 标识符，以及非常类似MCNearbyServiceAdvertiser的服务类型来初始化：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">MCNearbyServiceBrowser *browser = [[MCNearbyServiceBrowser alloc] initWithPeer:localPeerID serviceType:XXServiceType]; </div><div class="line">browser.delegate = <span class="keyword">self</span>;</div></pre></td></tr></table></figure></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">instancetype</span>)initWithPeer:(MCPeerID*)myPeerID serviceType:(<span class="built_in">NSString</span>*)service  <span class="comment">// 设备名字, 设备识别码!</span></div><div class="line">- (<span class="keyword">void</span>)startBrowsingForPeers; <span class="comment">// 开始搜索</span></div><div class="line">- (<span class="keyword">void</span>)stopBrowsingForPeers; <span class="comment">// 停止搜索</span></div><div class="line"></div><div class="line"><span class="comment">// 在搜索到周围设备后调用此方法, 邀请相应的设备加入会话!</span></div><div class="line">- (<span class="keyword">void</span>)invitePeer:(MCPeerID*)peerID toSession:(MCSession*)session withContext:(<span class="built_in">NSData</span>*)context timeout:(<span class="built_in">NSTimeInterval</span>)timeout;</div><div class="line"><span class="comment">// 参数1:邀请的peerID  参数2:建立的session  参数3:置空(没搞太明白)  参数4:延迟时间</span></div><div class="line"></div><div class="line">MCNearbyServiceBrowser的代理方法:</div><div class="line"></div><div class="line"><span class="comment">// 表示发现了周围的设备, 再次代理方法中处理是否发送会话邀请!</span></div><div class="line">- (<span class="keyword">void</span>)browser:(MCNearbyServiceBrowser*)browser foundPeer:(MCPeerID*)peerID withDiscoveryInfo:(<span class="built_in">NSDictionary</span>*)info;</div><div class="line"></div><div class="line"><span class="comment">// 此方法用于对断开连接的设备做处理!</span></div><div class="line">- (<span class="keyword">void</span>)browser:(MCNearbyServiceBrowser*)browser lostPeer:(MCPeerID*)peerID</div></pre></td></tr></table></figure>
+<p><code>MCBrowserViewController</code>—- (系统封装好的视图, 可直接显示周围已广播的设备)</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">MCBrowserViewController *browserViewController = [[MCBrowserViewController alloc] initWithBrowser:browser session:session]; </div><div class="line">browserViewController.delegate = <span class="keyword">self</span>; </div><div class="line">[<span class="keyword">self</span> presentViewController:browserViewController animated:<span class="literal">YES</span> completion: ^&#123; </div><div class="line">    [browser startBrowsingForPeers]; </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>当browser完成节点连接后，它将使用它的delegate调用 <code>browserViewControllerDidFinish:</code>，以通知展示视图控制器–它应该更新UI以适应新连接的客户端。</p>
+<img src="/images/2016/04/ios_multipeer_connectivity_browser.png" class="fancybox">
+<p>##Sending &amp; Receiving Information</p>
+<p>一旦节点彼此相连，它们将能互传信息。Multipeer Connectivity框架区分三种不同形式的数据传输：</p>
+<ol>
+<li><code>Messages</code> 是定义明确的信息，比如端文本或者小序列化对象。</li>
+<li><code>Streams</code> 流是可连续传输数据（如音频，视频或实时传感器事件）的信息公开渠道。</li>
+<li><code>Resources</code> 是图片、电影以及文档的文件。</li>
+</ol>
+<p>###Messages</p>
+<p>Messages使用 <code>sendData:toPeers:withMode:error:</code> 方法发送。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *message = <span class="string">@"Hello, World!"</span>; </div><div class="line"><span class="built_in">NSData</span> *data = [message dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>]; </div><div class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>; </div><div class="line"><span class="keyword">if</span> (![<span class="keyword">self</span>.session sendData:data </div><div class="line">                    toPeers:peers </div><div class="line">                   withMode:MCSessionSendDataReliable </div><div class="line">                      error:&amp;error]) &#123; </div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"[Error] %@"</span>, error); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过 <strong>MCSessionDelegate</strong> 方法 <code>sessionDidReceiveData:fromPeer:</code> 收取信息。以下是如何解码先前示例代码中发送的消息：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#pragma mark - MCSessionDelegate </span></div><div class="line">  </div><div class="line">- (<span class="keyword">void</span>)session:(MCSession *)session </div><div class="line"> didReceiveData:(<span class="built_in">NSData</span> *)data </div><div class="line">       fromPeer:(MCPeerID *)peerID </div><div class="line">&#123; </div><div class="line">    <span class="built_in">NSString</span> *message = </div><div class="line">        [[<span class="built_in">NSString</span> alloc] initWithData:data </div><div class="line">                              encoding:<span class="built_in">NSUTF8StringEncoding</span>]; </div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, message); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一种方法是发送 <code>NSKeyedArchiver</code> 编码的对象：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> &lt;<span class="built_in">NSSecureCoding</span>&gt; object = <span class="comment">// ...; </span></div><div class="line"><span class="built_in">NSData</span> *data = [<span class="built_in">NSKeyedArchiver</span> archivedDataWithRootObject:object]; </div><div class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>; </div><div class="line"><span class="keyword">if</span> (![<span class="keyword">self</span>.session sendData:data </div><div class="line">                    toPeers:peers </div><div class="line">                   withMode:MCSessionSendDataReliable </div><div class="line">                      error:&amp;error]) &#123; </div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"[Error] %@"</span>, error); </div><div class="line">&#125; </div><div class="line"><span class="meta">#pragma mark - MCSessionDelegate </span></div><div class="line">  </div><div class="line">- (<span class="keyword">void</span>)session:(MCSession *)session </div><div class="line"> didReceiveData:(<span class="built_in">NSData</span> *)data </div><div class="line">       fromPeer:(MCPeerID *)peerID </div><div class="line">&#123; </div><div class="line">    <span class="built_in">NSKeyedUnarchiver</span> *unarchiver = [[<span class="built_in">NSKeyedUnarchiver</span> alloc] initForReadingWithData:data]; </div><div class="line">    unarchiver.requiresSecureCoding = <span class="literal">YES</span>; </div><div class="line">    <span class="keyword">id</span> object = [unarchiver decodeObject]; </div><div class="line">    [unarchiver finishDecoding]; </div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, object); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>为了防范对象替换攻击,设置 <code>requiresSecureCoding</code> 为YES是很重要的，这样如果根对象类没有遵从<NSSecureCoding>，就会抛出一个异常。</p>
+<p>###Streams</p>
+<p>Streams 使用 <code>startStreamWithName:toPeer:</code> 创建：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSOutputStream</span> *outputStream = </div><div class="line">    [session startStreamWithName:name </div><div class="line">                          toPeer:peer]; </div><div class="line"> </div><div class="line">stream.delegate = <span class="keyword">self</span>; </div><div class="line">[stream scheduleInRunLoop:[<span class="built_in">NSRunLoop</span> mainRunLoop] </div><div class="line">                forMode:<span class="built_in">NSDefaultRunLoopMode</span>]; </div><div class="line">[stream open]; </div><div class="line"> </div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure></p>
+<p>Streams通过 <strong>MCSessionDelegate</strong> 的方法 <code>session:didReceiveStream:withName:fromPeer:</code> 来接收：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#pragma mark - MCSessionDelegate </span></div><div class="line"> </div><div class="line">- (<span class="keyword">void</span>)session:(MCSession *)session </div><div class="line">didReceiveStream:(<span class="built_in">NSInputStream</span> *)stream </div><div class="line">       withName:(<span class="built_in">NSString</span> *)streamName </div><div class="line">       fromPeer:(MCPeerID *)peerID </div><div class="line">&#123; </div><div class="line">    stream.delegate = <span class="keyword">self</span>; </div><div class="line">    [stream scheduleInRunLoop:[<span class="built_in">NSRunLoop</span> mainRunLoop] </div><div class="line">                      forMode:<span class="built_in">NSDefaultRunLoopMode</span>]; </div><div class="line">    [stream open]; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输入和输出的streams必须安排好并打开，然后才能使用它们。一旦这样做，streams就可以被读出和写入。</p>
+<p>###Resources</p>
+<p>Resources 发送使用 <code>sendResourceAtURL:withName:toPeer:withCompletionHandler:</code><br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSURL</span> *fileURL = [<span class="built_in">NSURL</span> fileURLWithPath:<span class="string">@"path/to/resource"</span>]; </div><div class="line"><span class="built_in">NSProgress</span> *progress = </div><div class="line">    [<span class="keyword">self</span>.session sendResourceAtURL:fileURL </div><div class="line">                           withName:[fileURL lastPathComponent] </div><div class="line">                             toPeer:peer </div><div class="line">                  withCompletionHandler:^(<span class="built_in">NSError</span> *error) </div><div class="line">&#123; </div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"[Error] %@"</span>, error); </div><div class="line">&#125;];</div></pre></td></tr></table></figure></p>
+<p>返回的 <code>NSProgress</code> 对象可以是通过<a href="http://nshipster.com/key-value-observing/">KVO(Key-Value Observed)</a>来监视文件传输的进度，并且它提供取消传输的方法：<code>cancel</code>。</p>
+<p>接收资源实现 <strong>MCSessionDelegate</strong> 两种方法：<code>session:didStartReceivingResourceWithName:fromPeer:withProgress:</code> 和 <code>session:didFinishReceivingResourceWithName:fromPeer:atURL:withError:</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#pragma mark - MCSessionDelegate </span></div><div class="line"> </div><div class="line">- (<span class="keyword">void</span>)session:(MCSession *)session </div><div class="line">didStartReceivingResourceWithName:(<span class="built_in">NSString</span> *)resourceName </div><div class="line">       fromPeer:(MCPeerID *)peerID </div><div class="line">   withProgress:(<span class="built_in">NSProgress</span> *)progress </div><div class="line">&#123; </div><div class="line">    <span class="comment">// ... </span></div><div class="line">&#125; </div><div class="line"> </div><div class="line">- (<span class="keyword">void</span>)session:(MCSession *)session </div><div class="line">didFinishReceivingResourceWithName:(<span class="built_in">NSString</span> *)resourceName </div><div class="line">       fromPeer:(MCPeerID *)peerID </div><div class="line">          atURL:(<span class="built_in">NSURL</span> *)localURL </div><div class="line">      withError:(<span class="built_in">NSError</span> *)error </div><div class="line">&#123; </div><div class="line">    <span class="built_in">NSURL</span> *destinationURL = [<span class="built_in">NSURL</span> fileURLWithPath:<span class="string">@"/path/to/destination"</span>]; </div><div class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>; </div><div class="line">    <span class="keyword">if</span> (![[<span class="built_in">NSFileManager</span> defaultManager] moveItemAtURL:localURL </div><div class="line">                                                 toURL:destinationURL </div><div class="line">                                                 error:&amp;error]) &#123; </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"[Error] %@"</span>, error); </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>-->  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/局域网/">局域网</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/blog/2016/04/28/2016-04-28-ios-shi-yong-multipeer-connectivitykuang-jia/" data-title="iOS - 使用Multipeer Connectivity框架 | 极致的技术博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2016/05/06/2016-05-06-charles-cong-ru-men-dao-jing-tong/" title="Charles 从入门到精通">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Charles 从入门到精通</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2016/04/22/2016-04-22-ios-cao-zuo-zi-fu-chuan/"  title="iOS - 操作字符串">
+ <strong>下一篇：</strong><br/> 
+ <span>iOS - 操作字符串
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

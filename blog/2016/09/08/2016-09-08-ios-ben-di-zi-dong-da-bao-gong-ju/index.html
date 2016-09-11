@@ -1,0 +1,461 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS 本地自动打包工具 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="本文介绍的是自动clean本地项目，编译 打包 上传Bugly。原理就是利用python执行控制台命令，对iOS项目进行打包，需要安装 Xcode、Python。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 本地自动打包工具">
+<meta property="og:url" content="http://yoursite.com/blog/2016/09/08/2016-09-08-ios-ben-di-zi-dong-da-bao-gong-ju/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="本文介绍的是自动clean本地项目，编译 打包 上传Bugly。原理就是利用python执行控制台命令，对iOS项目进行打包，需要安装 Xcode、Python。">
+<meta property="og:updated_time" content="2016-09-11T01:33:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 本地自动打包工具">
+<meta name="twitter:description" content="本文介绍的是自动clean本地项目，编译 打包 上传Bugly。原理就是利用python执行控制台命令，对iOS项目进行打包，需要安装 Xcode、Python。">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/09/08/2016-09-08-ios-ben-di-zi-dong-da-bao-gong-ju/" title="iOS 本地自动打包工具" itemprop="url">iOS 本地自动打包工具</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-09-08T09:36:09.000Z" itemprop="datePublished"> 发表于 2016-09-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Xcode控制台命令"><span class="toc-number">1.</span> <span class="toc-text">Xcode控制台命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#没有使用-cocoaPods-项目的编译"><span class="toc-number">2.</span> <span class="toc-text">没有使用 cocoaPods 项目的编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用了-cocoaPods-项目的编译"><span class="toc-number">3.</span> <span class="toc-text">使用了 cocoaPods 项目的编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打包ipa"><span class="toc-number">4.</span> <span class="toc-text">打包ipa</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python实现篇"><span class="toc-number">5.</span> <span class="toc-text">python实现篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#clean、编译、打包"><span class="toc-number">5.1.</span> <span class="toc-text">clean、编译、打包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传Bugly"><span class="toc-number">6.</span> <span class="toc-text">上传Bugly</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运行脚本"><span class="toc-number">6.1.</span> <span class="toc-text">运行脚本</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>本文介绍的是自动clean本地项目，编译 打包 上传Bugly。原理就是利用python执行控制台命令，对iOS项目进行打包，需要安装 Xcode、Python。</p>
+<a id="more"></a>
+<h2 id="Xcode控制台命令"><a href="#Xcode控制台命令" class="headerlink" title="Xcode控制台命令"></a>Xcode控制台命令</h2><p>Xcode控制台命令基本都是以 <code>xcodebuild</code> 开头的介绍几个简单的命令，大家可以在命令行试试。</p>
+<ul>
+<li><code>xcodebuild -version</code> 查看xcode的版本号和build的版本号</li>
+<li><code>xcodebuild -showsdks</code> 显示当前系统的SDK、及其版本</li>
+<li><code>xcodebuild -list</code> 先 cd 到工程目录下执行此命令 显示 <code>target Schemes</code> 等</li>
+</ul>
+<h2 id="没有使用-cocoaPods-项目的编译"><a href="#没有使用-cocoaPods-项目的编译" class="headerlink" title="没有使用 cocoaPods 项目的编译"></a>没有使用 cocoaPods 项目的编译</h2><p>如果你的项目是普通的项目没有使用cocoaPods 那么 cd 到工程目录下直接执行 <code>xcodebuild build</code> ，就会自动编译了 参数都是默认 默认build Release。</p>
+<p>你也可以指定 <code>xcodebuild -configuration Debug build</code> build的时候会在你工程目录下生成一个build文件夹，<code>build/Debug-iphoneos/xx.app</code></p>
+<p>就是一会打包成ipa需要的文件。 第一次build速度会比较慢，要把编译环境拉下来，不要删除build文件夹，以后build 速度就会变快。</p>
+<h2 id="使用了-cocoaPods-项目的编译"><a href="#使用了-cocoaPods-项目的编译" class="headerlink" title="使用了 cocoaPods 项目的编译"></a>使用了 cocoaPods 项目的编译</h2><p>如果你使用了cocoaPods编译的时候就比较麻烦了 ，首先还是 cd 到项目目录 。</p>
+<p>但是你要指定编译文件和 scheme 而且还要指定build后build文件夹的位置，如果位置找不到，后面怎么自动打包ipa？</p>
+<p>我这里的命令大概是这样的： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xcodebuild -workspace xxx.xcworkspace -scheme 你的scheme -configuration Debug -derivedDataPath 指定路径 ONLY_ACTIVE_ARCH=NO</div></pre></td></tr></table></figure>
+<p>这样就能正常编译并把build指定到我们想要去的目录</p>
+<h2 id="打包ipa"><a href="#打包ipa" class="headerlink" title="打包ipa"></a>打包ipa</h2><p>打包ipa只要上面路径对了，打包指定从.app 文件的路径 ， 打包到你指定地方就行了。</p>
+<p>命令：<code>xcrun -sdk iphoneos PackageApplication -v 这里填.app的路径 -o 指定存放ipa路径/文件名.ipa</code></p>
+<h2 id="python实现篇"><a href="#python实现篇" class="headerlink" title="python实现篇"></a>python实现篇</h2><p>上面只是说了下编译的原理,下面看下怎么通过python自动处理这些任务 。</p>
+<h3 id="clean、编译、打包"><a href="#clean、编译、打包" class="headerlink" title="clean、编译、打包"></a>clean、编译、打包</h3><p>首先创建一个 <code>autoipa.py</code> 文件，然后<font color="red">把生成好的文件放到项目根目录下面</font> 需要你懂点python 语法，不要改tab 。python的语法是严格按照tab区分的。</p>
+<p>首先你需要引入一些外部依赖。设置编码为utf-8</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"><span class="keyword">from</span> email <span class="keyword">import</span> encoders</div><div class="line"><span class="keyword">from</span> email.header <span class="keyword">import</span> Header</div><div class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</div><div class="line"><span class="keyword">from</span> email.utils <span class="keyword">import</span> parseaddr, formataddr</div><div class="line"><span class="keyword">import</span> smtplib</div></pre></td></tr></table></figure>
+<p>第一步 ， 声明一些变量</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 项目TARGET名称</span></div><div class="line">target_name = <span class="string">"xx"</span></div><div class="line"><span class="comment"># 编译时的配置 Debug、Release</span></div><div class="line">build_config = <span class="string">"Release"</span></div><div class="line"><span class="comment"># 项目根目录</span></div><div class="line">project_path = os.getcwd() <span class="comment">##获得当前的路径</span></div><div class="line"><span class="comment"># 编译成功后.app所在目录</span></div><div class="line">app_path = project_path + <span class="string">"/build/"</span> + build_config + <span class="string">"-iphoneos/"</span> + target_name + <span class="string">".app"</span></div><div class="line"><span class="comment"># 指定项目下编译目录</span></div><div class="line">build_path = <span class="string">"build"</span></div><div class="line"><span class="comment"># 打包后ipa存储目录</span></div><div class="line">targerIPA_parth = project_path + <span class="string">"/build/ipa"</span></div></pre></td></tr></table></figure>
+<p>第二步，clean，和创建一个文件夹，这里的示例是针对有使用cocoaPods的项目 ， 如果没有使用 不用创建文件夹 ，命令自行简化</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 清理项目 创建build目录</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">clean_project_mkdir_build</span><span class="params">()</span>:</span></div><div class="line">    os.system(<span class="string">'cd %s;xcodebuild clean'</span> % project_path) <span class="comment"># clean 项目</span></div><div class="line">    os.system(<span class="string">'cd %s;mkdir build'</span> % project_path)</div></pre></td></tr></table></figure>
+<p><code>%s</code> 是py的占位符，字符串类型。后面是真正的填充。</p>
+<p>第三步编译项目</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_project</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'build %s start'</span> % (build_config))</div><div class="line">    os.system (<span class="string">'xcodebuild -list'</span>)</div><div class="line">    os.system (<span class="string">'cd %s;xcodebuild -configuration %s || exit'</span> % (project_path,build_config))</div><div class="line">    <span class="comment"># os.system ('cd %s;xcodebuild -workspace xx.xcworkspace  -scheme xx -configuration %s -derivedDataPath %s ONLY_ACTIVE_ARCH=NO || exit' % (project_path,build_config,build_path))</span></div></pre></td></tr></table></figure>
+<p>不知道 <code>scheme</code> 是啥的 <code>xcodebuild -list</code> 自己查</p>
+<p>第四步 打包</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 打包ipa 并且保存在build目录</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_ipa</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">global</span> ipa_filename</div><div class="line">    ipa_filename = time.strftime(target_name+<span class="string">'_%m%d%H%M.ipa'</span>,time.localtime(time.time()))</div><div class="line">    os.system(<span class="string">'mkdir %s'</span> % targerIPA_parth)</div><div class="line">    os.system(<span class="string">'xcrun -sdk iphoneos PackageApplication -v %s -o %s/%s'</span>%(app_path,targerIPA_parth,ipa_filename))</div></pre></td></tr></table></figure>
+<p>然后你现在再编写个方法，按顺序调用就可以编译打包了 ，执行完会看到桌面的ipa</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="comment"># 清理并创建build目录</span></div><div class="line">    clean_project_mkdir_build()</div><div class="line">    <span class="comment"># 编译coocaPods项目文件并 执行编译目录</span></div><div class="line">    build_project()</div><div class="line">    <span class="comment"># 打包ipa 并制定到桌面</span></div><div class="line">    build_ipa()</div></pre></td></tr></table></figure>
+<p>执行就在最下面直接调用就行了 <code>main()</code></p>
+<h2 id="上传Bugly"><a href="#上传Bugly" class="headerlink" title="上传Bugly"></a>上传Bugly</h2><p>我们是把代码上传到Bugly测试的，如果你们用的fir、蒲公英或者其他，请自行搜索。</p>
+<p>需要先去Bugly官网拿到相应的API参数，然后再在变量区加上</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Bugly的相关信息</span></div><div class="line">bugly_pid     = <span class="string">"2"</span></div><div class="line">bugly_app_id  = <span class="string">"xxxxxx"</span></div><div class="line">bugly_app_key = <span class="string">"xxxxxxxxxx"</span></div><div class="line"></div><div class="line"><span class="comment"># 如果不是发布新版本该变量设置为空字符串</span></div><div class="line">bugly_app_title = <span class="string">""</span>  </div><div class="line"></div><div class="line"><span class="comment"># 更新已上传版本的版本id，如果不清楚请在网站后台打开版本详情，然后在URL中versions节点后面找到exp_id</span></div><div class="line"><span class="comment"># 例：https://beta.bugly.qq.com/apps/900041236/versions/ce924c28-911f-4b51-a541-3754fbb3b7f8?pid=2</span></div><div class="line">bugly_app_exp_id = <span class="string">"ce924c28-911f-4b51-a541-3754fbb3b7f8"</span></div></pre></td></tr></table></figure>
+<p>然后命令传入ipa目录就可以上传了</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查询Bugly版本列表</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_exp_bugly</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'watting...'</span>)</div><div class="line">    os.system(<span class="string">"curl --insecure 'https://api.bugly.qq.com/beta/apiv1/exp_list?app_id=%s&amp;pid=%s&amp;app_key=%s&amp;start=0&amp;limit=100'"</span> % (bugly_app_id,bugly_pid,bugly_app_key))</div><div class="line">    </div><div class="line"><span class="comment"># 上传新版本到Bugly</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload_bugly</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> os.path.exists(<span class="string">"%s/%s"</span> % (targerIPA_parth,ipa_filename)):</div><div class="line">        print(<span class="string">'watting for upload new version...'</span>)</div><div class="line">        <span class="comment"># 使用系统自带工具 curl 上传文件</span></div><div class="line">        ret = os.system(<span class="string">"curl --insecure -F 'file=@%s/%s' -F 'app_id=%s' -F 'pid=%s' -F 'title=%s' https://api.bugly.qq.com/beta/apiv1/exp?app_key=%s"</span> % (targerIPA_parth,ipa_filename,bugly_app_id,bugly_pid,bugly_app_title,bugly_app_key))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(<span class="string">"没有找到ipa文件！！！"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 更新版本安装包</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_bugly</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> os.path.exists(<span class="string">"%s/%s"</span> % (targerIPA_parth,ipa_filename)):</div><div class="line">        print(<span class="string">'watting for update ipa file...'</span>)</div><div class="line">        <span class="comment"># 使用系统自带工具 curl 上传文件</span></div><div class="line">        ret = os.system(<span class="string">"curl --insecure -X 'PUT' -F 'file=@%s/%s' -F 'exp_id=%s' https://api.bugly.qq.com/beta/apiv1/exp?app_key=%s"</span> % (targerIPA_parth,ipa_filename,bugly_app_exp_id,bugly_app_key))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(<span class="string">"没有找到ipa文件！！！"</span>)</div></pre></td></tr></table></figure>
+<p>然后执行顺序是这样的</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="comment"># 清理并创建build目录</span></div><div class="line">    clean_project_mkdir_build()</div><div class="line">    <span class="comment"># 编译coocaPods项目文件并 执行编译目录</span></div><div class="line">    build_project()</div><div class="line">    <span class="comment"># 打包ipa 并制定到桌面</span></div><div class="line">    build_ipa()</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> len(bugly_app_title):</div><div class="line">        <span class="comment"># 上传新版本</span></div><div class="line">        upload_bugly()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 更新版本安装包</span></div><div class="line">        update_bugly()</div></pre></td></tr></table></figure>
+<h3 id="运行脚本"><a href="#运行脚本" class="headerlink" title="运行脚本"></a>运行脚本</h3><ol>
+<li><code>cd 项目根目录</code></li>
+<li><code>python autoipa.py</code></li>
+</ol>
+<p>附上完整的代码：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"><span class="keyword">from</span> email <span class="keyword">import</span> encoders</div><div class="line"><span class="keyword">from</span> email.header <span class="keyword">import</span> Header</div><div class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</div><div class="line"><span class="keyword">from</span> email.utils <span class="keyword">import</span> parseaddr, formataddr</div><div class="line"><span class="keyword">import</span> smtplib</div><div class="line"></div><div class="line"><span class="comment"># 项目TARGET名称</span></div><div class="line">target_name = <span class="string">"xx"</span></div><div class="line"></div><div class="line"><span class="comment"># 编译时的配置 Debug、Release</span></div><div class="line">build_config = <span class="string">"Release"</span></div><div class="line"></div><div class="line"><span class="comment"># Bugly的相关信息</span></div><div class="line">bugly_pid     = <span class="string">"2"</span></div><div class="line">bugly_app_id  = <span class="string">"xxxxx"</span></div><div class="line">bugly_app_key = <span class="string">"xxxxxxxxxx"</span></div><div class="line"></div><div class="line"><span class="comment"># 如果不是发布新版本该变量设置为空字符串</span></div><div class="line">bugly_app_title = <span class="string">""</span>  </div><div class="line"></div><div class="line"><span class="comment"># 更新已上传版本的版本id，如果不清楚请在网站后台打开版本详情，然后在URL中versions节点后面找到exp_id</span></div><div class="line"><span class="comment"># 例：https://beta.bugly.qq.com/apps/900041236/versions/ce924c28-911f-4b51-a541-3754fbb3b7f8?pid=2</span></div><div class="line">bugly_app_exp_id = <span class="string">"ce924c28-911f-4b51-a541-3754fbb3b7f8"</span></div><div class="line"></div><div class="line"><span class="comment">#--------------------- 分界线：上面的变量是需要我们手动填写的 ---------------------</span></div><div class="line"></div><div class="line"><span class="comment"># 项目根目录</span></div><div class="line">project_path = os.getcwd()</div><div class="line"><span class="comment"># 编译成功后.app所在目录</span></div><div class="line">app_path = project_path + <span class="string">"/build/"</span> + build_config + <span class="string">"-iphoneos/"</span> + target_name + <span class="string">".app"</span></div><div class="line"><span class="comment"># 指定项目下编译目录</span></div><div class="line">build_path = <span class="string">"build"</span></div><div class="line"><span class="comment"># 打包后ipa存储目录</span></div><div class="line">targerIPA_parth = project_path + <span class="string">"/build/ipa"</span></div><div class="line"></div><div class="line"><span class="comment"># 清理项目 创建build目录</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">clean_project_mkdir_build</span><span class="params">()</span>:</span></div><div class="line">    os.system(<span class="string">'cd %s;xcodebuild clean'</span> % project_path) <span class="comment"># clean 项目</span></div><div class="line">    os.system(<span class="string">'cd %s;mkdir build'</span> % project_path)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_project</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'build %s start'</span> % (build_config))</div><div class="line">    os.system (<span class="string">'xcodebuild -list'</span>)</div><div class="line">    os.system (<span class="string">'cd %s;xcodebuild -configuration %s || exit'</span> % (project_path,build_config))</div><div class="line">    <span class="comment"># os.system ('cd %s;xcodebuild -workspace xx.xcworkspace  -scheme xx -configuration %s -derivedDataPath %s ONLY_ACTIVE_ARCH=NO || exit' % (project_path,build_config,build_path))</span></div><div class="line"><span class="comment"># CONFIGURATION_BUILD_DIR=./build/Release-iphoneos</span></div><div class="line"></div><div class="line"><span class="comment"># 打包ipa 并且保存在build目录</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_ipa</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">global</span> ipa_filename</div><div class="line">    ipa_filename = time.strftime(target_name+<span class="string">'_%m%d%H%M.ipa'</span>,time.localtime(time.time()))</div><div class="line">    os.system(<span class="string">'mkdir %s'</span> % targerIPA_parth)</div><div class="line">    os.system(<span class="string">'xcrun -sdk iphoneos PackageApplication -v %s -o %s/%s'</span>%(app_path,targerIPA_parth,ipa_filename))</div><div class="line">    </div><div class="line"><span class="comment"># 查询Bugly版本列表</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_exp_bugly</span><span class="params">()</span>:</span></div><div class="line">    print(<span class="string">'watting...'</span>)</div><div class="line">    os.system(<span class="string">"curl --insecure 'https://api.bugly.qq.com/beta/apiv1/exp_list?app_id=%s&amp;pid=%s&amp;app_key=%s&amp;start=0&amp;limit=100'"</span> % (bugly_app_id,bugly_pid,bugly_app_key))</div><div class="line">    </div><div class="line"><span class="comment"># 上传新版本到Bugly</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload_bugly</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> os.path.exists(<span class="string">"%s/%s"</span> % (targerIPA_parth,ipa_filename)):</div><div class="line">        print(<span class="string">'watting for upload new version...'</span>)</div><div class="line">        <span class="comment"># 使用系统自带工具 curl 上传文件</span></div><div class="line">        ret = os.system(<span class="string">"curl --insecure -F 'file=@%s/%s' -F 'app_id=%s' -F 'pid=%s' -F 'title=%s' https://api.bugly.qq.com/beta/apiv1/exp?app_key=%s"</span> % (targerIPA_parth,ipa_filename,bugly_app_id,bugly_pid,bugly_app_title,bugly_app_key))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(<span class="string">"没有找到ipa文件！！！"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 更新版本安装包</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_bugly</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> os.path.exists(<span class="string">"%s/%s"</span> % (targerIPA_parth,ipa_filename)):</div><div class="line">        print(<span class="string">'watting for update ipa file...'</span>)</div><div class="line">        <span class="comment"># 使用系统自带工具 curl 上传文件</span></div><div class="line">        ret = os.system(<span class="string">"curl --insecure -X 'PUT' -F 'file=@%s/%s' -F 'exp_id=%s' https://api.bugly.qq.com/beta/apiv1/exp?app_key=%s"</span> % (targerIPA_parth,ipa_filename,bugly_app_exp_id,bugly_app_key))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(<span class="string">"没有找到ipa文件！！！"</span>)</div><div class="line">        </div><div class="line"><span class="comment"># def main():</span></div><div class="line"><span class="comment">#     list_exp_bugly()  ##查询版本列表</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    <span class="comment"># 清理并创建build目录</span></div><div class="line">    clean_project_mkdir_build()</div><div class="line">    <span class="comment"># 编译coocaPods项目文件并 执行编译目录</span></div><div class="line">    build_project()</div><div class="line">    <span class="comment"># 打包ipa 并制定到桌面</span></div><div class="line">    build_ipa()</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> len(bugly_app_title):</div><div class="line">        <span class="comment"># 上传新版本</span></div><div class="line">        upload_bugly()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 更新版本安装包</span></div><div class="line">        update_bugly()</div><div class="line"></div><div class="line"><span class="comment"># 执行</span></div><div class="line">main()</div></pre></td></tr></table></figure>
+<p>使用脚本打包上传到App Store可以参考这篇文章：<a href="http://zackzheng.info/2015/12/27/2015-12-27-an-automated-script-for-building-archiving-submission-sending-emails/" target="_blank" rel="external">详解Shell脚本实现iOS自动化编译打包提交</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mac/">Mac</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mac/">Mac</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/blog/2016/09/08/2016-09-08-ios-ben-di-zi-dong-da-bao-gong-ju/" data-title="iOS 本地自动打包工具 | 极致的技术博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2016/09/10/hello-world/" title="Hello World">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Hello World</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2016/08/22/2016-08-22-ios-wang-luo-an-quan-zhi-https/"  title="iOS - 网络安全之HTTPS">
+ <strong>下一篇：</strong><br/> 
+ <span>iOS - 网络安全之HTTPS
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

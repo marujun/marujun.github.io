@@ -1,0 +1,455 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>CocoaPods 安装和使用 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta property="og:type" content="article">
+<meta property="og:title" content="CocoaPods 安装和使用">
+<meta property="og:url" content="http://yoursite.com/blog/2015/08/31/2015-08-31-cocoapods-an-zhuang-he-shi-yong/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:updated_time" content="2016-06-10T07:21:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CocoaPods 安装和使用">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2015/08/31/2015-08-31-cocoapods-an-zhuang-he-shi-yong/" title="CocoaPods 安装和使用" itemprop="url">CocoaPods 安装和使用</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2015-08-31T03:21:29.000Z" itemprop="datePublished"> 发表于 2015-08-31</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<!-- <img src="/images/2016/04/demo.png" class="fancybox"> –&gt;
+<!-- <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">code snippet</div></pre></td></tr></table></figure> –&gt;
+<p>##CocoaPods是什么？</p>
+<ol>
+<li><p>说这么一个现场，如果要引用第三方类库是不是要把他拖进项目引用或者copy，如果第三方类库更新了，你是不是又要重新应用更新啊？答案是肯定的。</p>
+</li>
+<li><p>另外一种情况，如果项目过大，且项目中有很多相对独立的功能，分工到不同人的手中维护升级开发，最后整合项目（其实可把他们看作第三方类库），是不是也会遇到copy或者引用的问题。</p>
+<a id="more"></a>
+</li>
+</ol>
+<p>以上两点会导致，遇到更改就要换代码换文件，如果你的项目就一个，可以很轻松换掉，如果是10个 ，100个….估计就该抱怨了，cocoapods一个链接就搞定了，可以很好提高效率，同时有利于分工协作。</p>
+<p>今天把cocoapods安装过程总结分享给大家。</p>
+<p>##CocoaPods安装</p>
+<p>####<strong>第一步：</strong><br>安装CocoaPods之前，首先要在本地安装好Ruby环境。（ruby安装 <a href="https://ruby-china.org/wiki/install_ruby_guide">https://ruby-china.org/wiki/install_ruby_guide</a>）</p>
+<p>安装ruby过程如下：</p>
+<p>首先确保已经安装Xcode的 <code>Command Line Tools</code></p>
+<p>然后再打开终端输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/bin/ruby <span class="_">-e</span> <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span>    </div><div class="line">brew install ruby</div></pre></td></tr></table></figure>
+<p>####<strong>第二步：</strong><br>当执行成功后，在终端输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gem install cocoapods</div></pre></td></tr></table></figure>
+<p>发现没有反映，别急换个方法：       </p>
+<font color= red>如果发现报：<strong>Could not find a valid gem ‘cocoapods’ (&gt;= 0) in any repository</strong> 别急，这个问题说明是你的gem版本过旧了 (没有报错此步骤可以跳过)</font>
+
+<p>在终端先输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gem update --system</div></pre></td></tr></table></figure>
+<p>重新打开终端输入：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gem sources --remove <span class="symbol">https:</span>/<span class="regexp">/rubygems.org/</span></div></pre></td></tr></table></figure>
+<p>会返回：<code>https://rubygems.org/ removed from sources</code></p>
+<p>再输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gem sources -a https://ruby.taobao.org/</div></pre></td></tr></table></figure></p>
+<p>会返回：<code>https://ruby.taobao.org/ added to sources</code></p>
+<p>检测一下在终端输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gem sources -l</div></pre></td></tr></table></figure></p>
+<p>得到如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">*** CURRENT SOURCES ***</div><div class="line">https://ruby.taobao.org/</div></pre></td></tr></table></figure></p>
+<p>为什么这么做？原因是国家的防火墙有点牛，猜的！</p>
+<p>####<strong>第三步：</strong><br>再次输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gem install cocoapods</div></pre></td></tr></table></figure></p>
+<p>等待几十秒会返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div></pre></td><td class="code"><pre><div class="line">Fetching: multi_json-1.10.1.gem (100%)  </div><div class="line">Successfully installed multi_json-1.10.1  </div><div class="line">Fetching: activesupport-3.2.19.gem (100%)  </div><div class="line">Successfully installed activesupport-3.2.19  </div><div class="line">Fetching: nap-0.8.0.gem (100%)  </div><div class="line">Successfully installed nap-0.8.0  </div><div class="line">Fetching: json_pure-1.8.1.gem (100%)  </div><div class="line">Successfully installed json_pure-1.8.1  </div><div class="line">Fetching: fuzzy_match-2.0.4.gem (100%)  </div><div class="line">Successfully installed fuzzy_match-2.0.4  </div><div class="line">Fetching: cocoapods-core-0.33.1.gem (100%)  </div><div class="line">Successfully installed cocoapods-core-0.33.1  </div><div class="line">Fetching: claide-0.6.1.gem (100%)  </div><div class="line">Successfully installed claide-0.6.1  </div><div class="line">Fetching: colored-1.2.gem (100%)  </div><div class="line">Successfully installed colored-1.2  </div><div class="line">Fetching: xcodeproj-0.17.0.gem (100%)  </div><div class="line">Building native extensions.  This could take a while...  </div><div class="line">[!] You are using the prebuilt binary version of the xcodeproj gem.  </div><div class="line">Successfully installed xcodeproj-0.17.0  </div><div class="line">Fetching: cocoapods-downloader-0.6.1.gem (100%)  </div><div class="line">Successfully installed cocoapods-downloader-0.6.1  </div><div class="line">Fetching: cocoapods-plugins-0.2.0.gem (100%)  </div><div class="line">Successfully installed cocoapods-plugins-0.2.0  </div><div class="line">Fetching: cocoapods-try-0.3.0.gem (100%)  </div><div class="line">Successfully installed cocoapods-try-0.3.0  </div><div class="line">Fetching: netrc-0.7.7.gem (100%)  </div><div class="line">Successfully installed netrc-0.7.7  </div><div class="line">Fetching: cocoapods-trunk-0.1.4.gem (100%)  </div><div class="line">Successfully installed cocoapods-trunk-0.1.4  </div><div class="line">Fetching: escape-0.0.4.gem (100%)  </div><div class="line">Successfully installed escape-0.0.4  </div><div class="line">Fetching: open4-1.3.4.gem (100%)  </div><div class="line">Successfully installed open4-1.3.4  </div><div class="line">Fetching: cocoapods-0.33.1.gem (100%)  </div><div class="line">  </div><div class="line">CHANGELOG:  </div><div class="line">  </div><div class="line">## 0.33.1  </div><div class="line">  </div><div class="line">##### Bug Fixes  </div><div class="line">  </div><div class="line">* Fix `pod spec lint` for `json` podspecs.    </div><div class="line">  [Fabio Pelosin][irrationalfab]  </div><div class="line">  [#2157](https://github.com/CocoaPods/CocoaPods/issues/2157)  </div><div class="line">  </div><div class="line">* Fixed downloader issues related to `json` podspecs.    </div><div class="line">  [Fabio Pelosin][irrationalfab]  </div><div class="line">  [#2158](https://github.com/CocoaPods/CocoaPods/issues/2158)  </div><div class="line">  </div><div class="line">* Fixed `--no-ansi` flag in help banners.    </div><div class="line">  [Fabio Pelosin][irrationalfab]  </div><div class="line">  [#34](https://github.com/CocoaPods/CLAide/issues/34)  </div><div class="line">  </div><div class="line">Successfully installed cocoapods-0.33.1  </div><div class="line">Parsing documentation for multi_json-1.10.1  </div><div class="line">Installing ri documentation for multi_json-1.10.1  </div><div class="line">Parsing documentation for activesupport-3.2.19  </div><div class="line">unable to convert &quot;\x80&quot; from ASCII-8BIT to UTF-8 for lib/active_support/values/unicode_tables.dat, skipping  </div><div class="line">Installing ri documentation for activesupport-3.2.19  </div><div class="line">Parsing documentation for nap-0.8.0  </div><div class="line">Installing ri documentation for nap-0.8.0  </div><div class="line">Parsing documentation for json_pure-1.8.1  </div><div class="line">Installing ri documentation for json_pure-1.8.1  </div><div class="line">Parsing documentation for fuzzy_match-2.0.4  </div><div class="line">Installing ri documentation for fuzzy_match-2.0.4  </div><div class="line">Parsing documentation for cocoapods-core-0.33.1  </div><div class="line">Installing ri documentation for cocoapods-core-0.33.1  </div><div class="line">Parsing documentation for claide-0.6.1  </div><div class="line">Installing ri documentation for claide-0.6.1  </div><div class="line">Parsing documentation for colored-1.2  </div><div class="line">Installing ri documentation for colored-1.2  </div><div class="line">Parsing documentation for xcodeproj-0.17.0  </div><div class="line">Installing ri documentation for xcodeproj-0.17.0  </div><div class="line">Parsing documentation for cocoapods-downloader-0.6.1  </div><div class="line">Installing ri documentation for cocoapods-downloader-0.6.1  </div><div class="line">Parsing documentation for cocoapods-plugins-0.2.0  </div><div class="line">Installing ri documentation for cocoapods-plugins-0.2.0  </div><div class="line">Parsing documentation for cocoapods-try-0.3.0  </div><div class="line">Installing ri documentation for cocoapods-try-0.3.0  </div><div class="line">Parsing documentation for netrc-0.7.7  </div><div class="line">Installing ri documentation for netrc-0.7.7  </div><div class="line">Parsing documentation for cocoapods-trunk-0.1.4  </div><div class="line">Installing ri documentation for cocoapods-trunk-0.1.4  </div><div class="line">Parsing documentation for escape-0.0.4  </div><div class="line">Installing ri documentation for escape-0.0.4  </div><div class="line">Parsing documentation for open4-1.3.4  </div><div class="line">Installing ri documentation for open4-1.3.4  </div><div class="line">Parsing documentation for cocoapods-0.33.1  </div><div class="line">Installing ri documentation for cocoapods-0.33.1  </div><div class="line">17 gems installed</div></pre></td></tr></table></figure></p>
+<p>##CocoaPods使用</p>
+<p>使用很简单如在终端输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod search AFNetworking</div></pre></td></tr></table></figure></p>
+<p>结果返回：<code>Setting up CocoaPods master repo</code></p>
+<p>嚓，知道吗？我等了足足半个小时。所以请内心等待.</p>
+<p>半小时之后返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">Setup completed (read-only access)</div><div class="line"></div><div class="line">-&gt; AFNetworking (2.3.1)</div><div class="line">   A delightful iOS and OS X networking framework.</div><div class="line">   pod &apos;AFNetworking&apos;, &apos;~&gt; 2.3.1&apos;</div><div class="line">   - Homepage: https://github.com/AFNetworking/AFNetworking</div><div class="line">   - Source:   https://github.com/AFNetworking/AFNetworking.git</div><div class="line">   - Versions: 2.3.1, 2.3.0, 2.2.4, 2.2.3, 2.2.2, 2.2.1, 2.2.0, 2.1.0, 2.0.3, 2.0.2, 2.0.1,</div><div class="line">   2.0.0, 2.0.0-RC3, 2.0.0-RC2, 2.0.0-RC1, 1.3.4, 1.3.3, 1.3.2, 1.3.1, 1.3.0, 1.2.1, 1.2.0,</div><div class="line">   1.1.0, 1.0.1, 1.0, 1.0RC3, 1.0RC2, 1.0RC1, 0.10.1, 0.10.0, 0.9.2, 0.9.1, 0.9.0, 0.7.0,</div><div class="line">   0.5.1 [master repo]</div><div class="line">   - Sub specs:</div><div class="line">     - AFNetworking/Serialization (2.3.1)</div><div class="line">     - AFNetworking/Security (2.3.1)</div><div class="line">     - AFNetworking/Reachability (2.3.1)</div><div class="line">     - AFNetworking/NSURLConnection (2.3.1)</div><div class="line">     - AFNetworking/NSURLSession (2.3.1)</div><div class="line">     - AFNetworking/UIKit (2.3.1)</div><div class="line"></div><div class="line">-&gt; AFNetworking+AutoRetry (0.0.3)</div><div class="line">   Auto Retries for AFNetworking requests</div><div class="line">   pod &apos;AFNetworking+AutoRetry&apos;, &apos;~&gt; 0.0.3&apos;</div><div class="line">   - Homepage: https://github.com/shaioz/AFNetworking-AutoRetry</div><div class="line">   - Source:   https://github.com/shaioz/AFNetworking-AutoRetry.git</div><div class="line">   - Versions: 0.0.3, 0.0.2, 0.0.1 [master repo]</div><div class="line"></div><div class="line">-&gt; AFNetworking+streaming (0.5)</div><div class="line">   A very quick extension to AFNetworking that adds stream based parsing</div><div class="line">   pod &apos;AFNetworking+streaming&apos;, &apos;~&gt; 0.5&apos;</div><div class="line">   - Homepage: https://github.com/deanWombourne/AFNetworking-streaming</div><div class="line">   - Source:   https://github.com/deanWombourne/AFNetworking-streaming.git</div><div class="line">   - Versions: 0.5, 0.4, 0.3, 0.2, 0.1 [master repo]</div><div class="line">   - Sub specs:</div><div class="line">     - AFNetworking+streaming/Core (0.5)</div><div class="line">     - AFNetworking+streaming/Json (0.5)</div><div class="line"></div><div class="line">-&gt; AFNetworking-MUResponseSerializer (1.0.0)</div><div class="line">   Automatically serialize JSON response to your object model. It also works with</div><div class="line">   NSManagedObjects.</div><div class="line">   pod &apos;AFNetworking-MUResponseSerializer&apos;, &apos;~&gt; 1.0.0&apos;</div><div class="line">   - Homepage: https://github.com/Ulianko/AFNetworking-MUResponseSerializer</div><div class="line">   - Source:   https://github.com/Ulianko/AFNetworking-MUResponseSerializer.git</div><div class="line">   - Versions: 1.0.0 [master repo]</div><div class="line"></div><div class="line">-&gt; AFNetworking-RACExtensions (0.1.4)</div><div class="line">   AFNetworking-RACExtensions is a delightful extension to the AFNetworking classes for iOS</div><div class="line">   and Mac OS X.</div><div class="line">   pod &apos;AFNetworking-RACExtensions&apos;, &apos;~&gt; 0.1.4&apos;</div><div class="line">   - Homepage: https://github.com/CodaFi/AFNetworking-RACExtensions</div><div class="line">   - Source:   https://github.com/CodaFi/AFNetworking-RACExtensions.git</div><div class="line">   - Versions: 0.1.4, 0.1.2, 0.1.1, 0.0.1 [master repo]</div><div class="line"></div><div class="line">-&gt; AFNetworking-ReactiveCocoa (0.0.2)</div><div class="line">   Make AFNetworking reactive.</div><div class="line">   pod &apos;AFNetworking-ReactiveCocoa&apos;, &apos;~&gt; 0.0.2&apos;</div><div class="line">   - Homepage: https://github.com/uasi/AFNetworking-ReactiveCocoa</div><div class="line">   - Source:   https://github.com/uasi/AFNetworking-ReactiveCocoa.git</div><div class="line">   - Versions: 0.0.2, 0.0.1 [master repo]</div><div class="line"></div><div class="line">-&gt; AFNetworking-Synchronous (0.2.0)</div><div class="line">   Synchronous requests for AFNetworking</div><div class="line">   pod &apos;AFNetworking-Synchronous&apos;, &apos;~&gt; 0.2.0&apos;</div><div class="line">   - Homepage: https://github.com/paulmelnikow/AFNetworking-Synchronous</div><div class="line">   - Source:   https://github.com/paulmelnikow/AFNetworking-Synchronous.git</div><div class="line">   - Versions: 0.2.0, 0.1.0 [master repo]</div><div class="line"></div><div class="line">-&gt; AFNetworking2-RACExtensions (0.0.1)</div><div class="line">   AFNetworking-RACExtensions is a delightful extension to the AFNetworking classes for iOS</div><div class="line">   and Mac OS X.</div><div class="line">   pod &apos;AFNetworking2-RACExtensions&apos;, &apos;~&gt; 0.0.1&apos;</div><div class="line">   - Homepage: https://github.com/knshiro/AFNetworking-RACExtensions</div><div class="line">   - Source:   https://github.com/knshiro/AFNetworking-RACExtensions.git</div><div class="line">   - Versions: 0.0.1 [master repo]</div><div class="line"></div><div class="line">-&gt; CollectionUtils-AFNetworking (1.0.1)</div><div class="line">   CollectionUtils additions for AFNetworking.</div><div class="line">   pod &apos;CollectionUtils-AFNetworking&apos;, &apos;~&gt; 1.0.1&apos;</div><div class="line">   - Homepage: https://github.com/kishikawakatsumi/CollectionUtils</div><div class="line">   - Source:   https://github.com/kishikawakatsumi/CollectionUtils.git</div><div class="line">   - Versions: 1.0.1, 1.0.0 [master repo]</div><div class="line"></div><div class="line">-&gt; CollectionUtils-AFNetworking-1.3 (1.0.1)</div><div class="line">   CollectionUtils additions for AFNetworking 1.3.x.</div><div class="line">   pod &apos;CollectionUtils-AFNetworking-1.3&apos;, &apos;~&gt; 1.0.1&apos;</div><div class="line">   - Homepage: https://github.com/kishikawakatsumi/CollectionUtils</div><div class="line">   - Source:   https://github.com/kishikawakatsumi/CollectionUtils.git</div><div class="line">   - Versions: 1.0.1, 1.0.0 [master repo]</div></pre></td></tr></table></figure></p>
+<p>##为自己的项目创建 podspec 文件</p>
+<p>我们可以为自己的开源项目创建 <code>podspec</code> 文件，首先通过如下命令初始化一个podspec文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod spec create your_pod_spec_name</div></pre></td></tr></table></figure>
+<p>该命令执行之后，CocoaPods 会生成一个名为 <code>your_pod_spec_name.podspec</code> 的文件，然后我们修改其中的相关内容即可。</p>
+<p>##使用私有的 pods</p>
+<p>我们可以直接指定某一个依赖的 <code>podspec</code> ，这样就可以使用公司内部的私有库。该方案有利于使企业内部的公共项目支持 CocoaPods。如下是一个示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod <span class="string">'MyCommon'</span>, :podspec =&gt; <span class="string">'https://us.com/common/myCommon.podspec'</span></div></pre></td></tr></table></figure>-->  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mac/">Mac</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mac/">Mac</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/blog/2015/08/31/2015-08-31-cocoapods-an-zhuang-he-shi-yong/" data-title="CocoaPods 安装和使用 | 极致的技术博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2016/03/05/2016-03-05-iosru-he-xia-zai-jiu-ban-ben-ying-yong/" title="iOS如何下载旧版本应用">
+  <strong>上一篇：</strong><br/>
+  <span>
+  iOS如何下载旧版本应用</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2015/08/25/2015-08-25-gcdshi-yong-jing-yan-yu-ji-qiao-qian-tan/"  title="GCD使用经验与技巧浅谈">
+ <strong>下一篇：</strong><br/> 
+ <span>GCD使用经验与技巧浅谈
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

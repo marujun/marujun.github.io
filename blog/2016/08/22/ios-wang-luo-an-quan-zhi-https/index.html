@@ -1,0 +1,463 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS - 网络安全之HTTPS | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="HTTPS/SSL的基本原理安全套接字层 (Secure Socket Layer, SSL) 是用来实现互联网安全通信的最普遍的标准。Web 应用程序使用 HTTPS（基于 SSL 的 HTTP），HTTPS 使用数字证书来确保在服务器和客户端之间进行安全、加密的通信。在 SSL 连接中，客户机和服务器在发送数据之前都要对数据进行加密，然后由接受方对其进行解密。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS - 网络安全之HTTPS">
+<meta property="og:url" content="http://yoursite.com/blog/2016/08/22/ios-wang-luo-an-quan-zhi-https/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="HTTPS/SSL的基本原理安全套接字层 (Secure Socket Layer, SSL) 是用来实现互联网安全通信的最普遍的标准。Web 应用程序使用 HTTPS（基于 SSL 的 HTTP），HTTPS 使用数字证书来确保在服务器和客户端之间进行安全、加密的通信。在 SSL 连接中，客户机和服务器在发送数据之前都要对数据进行加密，然后由接受方对其进行解密。">
+<meta property="og:image" content="http://yoursite.com/images/2016/08/charles_https_unsafe.jpg">
+<meta property="og:image" content="http://yoursite.com/images/2016/08/xcode_info_plist_ats.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/08/xcode_ios_https_charles_fails1.jpeg">
+<meta property="og:image" content="http://yoursite.com/images/2016/08/xcode_ios_https_charles_fails2.jpeg">
+<meta property="og:updated_time" content="2016-09-11T09:34:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS - 网络安全之HTTPS">
+<meta name="twitter:description" content="HTTPS/SSL的基本原理安全套接字层 (Secure Socket Layer, SSL) 是用来实现互联网安全通信的最普遍的标准。Web 应用程序使用 HTTPS（基于 SSL 的 HTTP），HTTPS 使用数字证书来确保在服务器和客户端之间进行安全、加密的通信。在 SSL 连接中，客户机和服务器在发送数据之前都要对数据进行加密，然后由接受方对其进行解密。">
+<meta name="twitter:image" content="http://yoursite.com/images/2016/08/charles_https_unsafe.jpg">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/08/22/ios-wang-luo-an-quan-zhi-https/" title="iOS - 网络安全之HTTPS" itemprop="url">iOS - 网络安全之HTTPS</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-08-22T06:40:41.000Z" itemprop="datePublished"> 发表于 2016-08-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPS-SSL的基本原理"><span class="toc-number">1.</span> <span class="toc-text">HTTPS/SSL的基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS移动开发HTTPS应用现状"><span class="toc-number">2.</span> <span class="toc-text">iOS移动开发HTTPS应用现状</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AFN调用使用权威机构颁发证书的HTTPS接口"><span class="toc-number">3.</span> <span class="toc-text">AFN调用使用权威机构颁发证书的HTTPS接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AFN调用使用我们自己签名证书的HTTPS接口"><span class="toc-number">4.</span> <span class="toc-text">AFN调用使用我们自己签名证书的HTTPS接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#不正确的做法"><span class="toc-number">4.1.</span> <span class="toc-text">不正确的做法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正确的做法"><span class="toc-number">4.2.</span> <span class="toc-text">正确的做法</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<!-- { % img fancybox /images/2016/08/demo.png %} -->
+<h2 id="HTTPS-SSL的基本原理"><a href="#HTTPS-SSL的基本原理" class="headerlink" title="HTTPS/SSL的基本原理"></a>HTTPS/SSL的基本原理</h2><p>安全套接字层 (Secure Socket Layer, SSL) 是用来实现互联网安全通信的最普遍的标准。Web 应用程序使用 HTTPS（基于 SSL 的 HTTP），HTTPS 使用数字证书来确保在服务器和客户端之间进行安全、加密的通信。在 SSL 连接中，客户机和服务器在发送数据之前都要对数据进行加密，然后由接受方对其进行解密。</p>
+<a id="more"></a>
+<p>当浏览器（客户端）需要与某个安全站点建立连接时，先建立TCP连接（三次握手），然后再发生 SSL会话握手：</p>
+<ul>
+<li>浏览器将通过网络发送请求安全会话的消息（通常请求以 https 而非 http 开头的 URL）。</li>
+<li>服务器通过发送其证书（包括公钥）进行响应。</li>
+<li>浏览器将检验服务器的证书是否有效，并检验该证书是否是由其证书位于浏览器的数据库中的（并且是可信的）CA 所签发的。它还将检验 CA 证书是否已过期。</li>
+<li>如果证书有效，浏览器将生成一个 <code>一次性的、唯一的</code> 会话密钥，并使用服务器的公钥对该会话密钥进行加密。然后，浏览器将把加密的会话密钥发送给服务器，这样服务器和浏览器都有一份会话密钥。</li>
+<li>服务器可以使用其专用密钥对消息进行解密，然后恢复会话密钥。</li>
+</ul>
+<p>握手之后，即表示客户端已验证了 Web 站点的身份，并且只有该客户端和 Web 服务器拥有会话密钥副本。从现在开始，客户机和服务器便可以使用该会话密钥对彼此间的所有通信进行加密。这样就确保了客户机和服务器之间的通信的安全性。</p>
+<p>上面是一般也是应用最普遍的单向验证方式，由浏览器（客户端）来验证服务端的合法性；其实也可以做双向验证，服务器也可以验证浏览器（客户端）的合法性，不过一般使用在银行业务上，比如U盾之类。我们现在关注普遍的单向验证方式的应用。</p>
+<h2 id="iOS移动开发HTTPS应用现状"><a href="#iOS移动开发HTTPS应用现状" class="headerlink" title="iOS移动开发HTTPS应用现状"></a>iOS移动开发HTTPS应用现状</h2><p>当下绝大部份的移动互联网项目都采用HTTP、HTTPS协议作为前后端的数据接口协议。而iOS开发群体中，绝大部分都在项目中应用了第三方开源的HTTP请求框架AFNetworking来快速而高效的开发，AFNetworking请求HTTP接口简直是简单得不能再简单了。</p>
+<p>只不过从iOS9.0开始需要设置Info.plist中App Transport Security打开非HTTP的资源加载，因为Apple默认只允许采用经过权威证书颁发机构签名的证书的HTTPS站点的访问，一切是为了安全。安全。安全。 </p>
+<p>那么我们重点来分析采用HTTPS协议的后台接口的一般使用方式： HTTPS的服务器配置的证书分两大类，一类是经过权威机构签名颁发的证书，这样证书通常是要花钱买服务的，当然现在也有少数机构提供免费的证书签名服务。另一类就是服务器配置的是研发人员自己签名生成的证书。</p>
+<h2 id="AFN调用使用权威机构颁发证书的HTTPS接口"><a href="#AFN调用使用权威机构颁发证书的HTTPS接口" class="headerlink" title="AFN调用使用权威机构颁发证书的HTTPS接口"></a>AFN调用使用权威机构颁发证书的HTTPS接口</h2><p>现在AFNetworking框架已经修复了爆出的SSL中间人攻击漏洞，并强烈要求开发者使用公钥绑定或者证书绑定的安全策略，那么正确使用AFNetworking请求这类证书的HTTPS站点代码很简单如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">AFSecurityPolicy *policy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];</div><div class="line">policy.validatesDomainName = <span class="literal">YES</span>;</div><div class="line">AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];</div><div class="line">manager.securityPolicy = policy;</div><div class="line">manager.requestSerializer.cachePolicy = <span class="built_in">NSURLRequestReloadIgnoringLocalCacheData</span>;</div></pre></td></tr></table></figure>
+<p>对于这类证书的站点，Info.plist都不需要设置，因为已经是权威机构颁发的证书了，我们只需要设置验证绑定方式和验证域名以防止中间人攻击，毕竟申请证书是花了钱(现在也有免费的申请，比如WoSign)，省事一点。</p>
+<h2 id="AFN调用使用我们自己签名证书的HTTPS接口"><a href="#AFN调用使用我们自己签名证书的HTTPS接口" class="headerlink" title="AFN调用使用我们自己签名证书的HTTPS接口"></a>AFN调用使用我们自己签名证书的HTTPS接口</h2><p>对于使用我们自己签名的证书来说，浏览器打开web站点也会默认阻止访问，除非用户手动把该站点加入信任列表，这个手动加入的过程其实就是不去验证服务器的合法性，任性的认为服务器是可信赖的。 那么手动加入信任列表，这样会导致证书的验证过程压根没发生，虽然可以成功访问目标服务器返回我们需要的数据，其实，这中间很有可能返回的数据不是正真的目标服务器返回的数据，也可能是网络传输中间的第三者伪装返回的数据。传输的数据被人窃取甚至纂改都是很可能的。</p>
+<h3 id="不正确的做法"><a href="#不正确的做法" class="headerlink" title="不正确的做法"></a>不正确的做法</h3><p>浏览器手动加入自签名站点到信任列表这个操作的功能相当于iOS开发中AFNetworking的API的如下做法：</p>
+<ul>
+<li>A 非权威机构颁发证书的HTTPS请求一样必须先在Info.plist设置如下：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;key&gt;NSAppTransportSecurity&lt;/key&gt;</div><div class="line">&lt;dict&gt;</div><div class="line">    &lt;key&gt;NSAllowsArbitraryLoads&lt;/key&gt;</div><div class="line">    &lt;true/&gt;</div><div class="line">&lt;/dict&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li>B AFNetworking代码设置SecurityPolicy</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];</div><div class="line">manager.securityPolicy.allowInvalidCertificates = <span class="literal">YES</span>; <span class="comment">//允许非权威机构颁发的证书</span></div><div class="line">manager.securityPolicy.validatesDomainName = <span class="literal">NO</span>;       <span class="comment">//也不验证域名一致性</span></div><div class="line"></div><div class="line">manager.requestSerializer.cachePolicy = <span class="built_in">NSURLRequestReloadIgnoringLocalCacheData</span>; <span class="comment">//关闭缓存避免干扰测试</span></div><div class="line">[manager GET:<span class="string">@"https://tv.diveinedu.com/channel/"</span> parameters:<span class="literal">nil</span> progress:<span class="literal">nil</span> success:^(<span class="built_in">NSURLSessionDataTask</span> * _Nonnull task, <span class="keyword">id</span>  _Nullable responseObject) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,responseObject);</div><div class="line">&#125; failure:^(<span class="built_in">NSURLSessionDataTask</span> * _Nullable task, <span class="built_in">NSError</span> * _Nonnull error) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>经过如上两步设置之后，我们可以在iOS应用中访问我们采用自签名证书的HTTPS站点了。但是这个是不安全的，因为他在没有使用HTTPS/SSL代理和使用像Charles那样的HTTPS/SSL代理的情况下都可以访问服务器资源. 完全可以说是白费功夫，只能防止“君子”在网络中用Wireshark之类来TCP抓包嗅探。</p>
+<p>因为毕竟还是HTTPS加密了传输数据了。那为什么我要说这样是白费功夫呢，因为这个办法不能防止中间人攻击！比如用户可以给手机设置HTTPS的SSL代理（比如Charles），完全可以在代理中看到明文数据，所以，既然用了HTTPS就要防止中间人攻击，不然还不如不用HTTPS。</p>
+<p>下面我们来看看怎么用Charles代理抓包工具所抓到的HTTPS传输的数据：</p>
+<img src="/images/2016/08/charles_https_unsafe.jpg" class="fancybox">
+<p>上图是在Mac上运行Charles工具代理抓包，真机和Mac电脑同一个局域网，并设置代理为Mac机的IP和Charles的代理端口8888，然后启动App请求网络后抓到的数据。是不是很意外啊。HTTPS的数据也抓出明文了。 显然这样是非常不安全的，那么当我们使用自签名证书的时候，我们该如何来在App端(客户端)严格的验证服务器的合法性呢？</p>
+<h3 id="正确的做法"><a href="#正确的做法" class="headerlink" title="正确的做法"></a>正确的做法</h3><p>我们要在App端严格验证服务器的合法性,防止网络中间的代理或者防火墙进行中间人的攻击和证书欺骗,那么我们需要把服务器配置的证书打包到客户端程序中(私钥留服务器不要分发不用泄露,非常重要),在代码里去读取该证书/公钥信息和服务器返回的进行匹配验证. </p>
+<p>在iOS开发中,从Xcode7和iOS9开始,Apple提升了App的网络安全性,App默认只能进行对采用权威机构签名颁发证书的Web站点进行访问(信任的HTTPS),而自签名的证书的HTTPS站点也被列为属于例外,所以我们需要在App的Info.plist中单独为我们的域名设置 <code>Exception Domains</code> “白名单”,而不是打开 <code>Allow Arbitrary Loads</code> 全部放开,设置信息如下:</p>
+<img src="/images/2016/08/xcode_info_plist_ats.png" class="fancybox">
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;key&gt;NSAppTransportSecurity&lt;/key&gt;</div><div class="line">&lt;dict&gt;</div><div class="line">    &lt;key&gt;NSExceptionDomains&lt;/key&gt;</div><div class="line">    &lt;dict&gt;</div><div class="line">        &lt;key&gt;tv.diveinedu.com&lt;/key&gt;</div><div class="line">        &lt;dict&gt;</div><div class="line">            &lt;key&gt;NSExceptionAllowsInsecureHTTPLoads&lt;/key&gt;</div><div class="line">            &lt;true/&gt;</div><div class="line">        &lt;/dict&gt;</div><div class="line">    &lt;/dict&gt;</div><div class="line">&lt;/dict&gt;</div></pre></td></tr></table></figure>
+<p>这样就不像上面那个方法那样一刀切全部放开, 而是单独为某个域名放开设置.当然上面也可以使用放开全部的设置 <code>NSAllowsArbitraryLoads</code> 为 <code>true</code> .但是我建议使用白名单.</p>
+<p>除此之外,要做到严格验证防止像Charles那样的中间人代理抓包,AFNetworking代码应该用如下设置:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//服务器端配置的包含公钥的证书分发到客户端后,需要转换为DER格式的证书文件.</span></div><div class="line"><span class="comment">//openssl x509 -outform der -in tv.diveinedu.com.crt -out tv.diveinedu.com.der</span></div><div class="line"><span class="built_in">NSString</span> *certFilePath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@"tv.diveinedu.com"</span> ofType:<span class="string">@"der"</span>];</div><div class="line"><span class="built_in">NSData</span> *certData = [<span class="built_in">NSData</span> dataWithContentsOfFile:certFilePath];</div><div class="line"><span class="built_in">NSSet</span> *certSet = [<span class="built_in">NSSet</span> setWithObject:certData];</div><div class="line"></div><div class="line">AFSecurityPolicy *policy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey withPinnedCertificates:certSet];</div><div class="line">policy.allowInvalidCertificates = <span class="literal">YES</span>;</div><div class="line">AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];</div><div class="line">manager.securityPolicy = policy;</div><div class="line"></div><div class="line"><span class="comment">//关闭缓存避免干扰测试</span></div><div class="line">manager.requestSerializer.cachePolicy = <span class="built_in">NSURLRequestReloadIgnoringLocalCacheData</span>;</div><div class="line">[manager GET:<span class="string">@"https://tv.diveinedu.com/channel/"</span> parameters:<span class="literal">nil</span> progress:<span class="literal">nil</span> success:^(<span class="built_in">NSURLSessionDataTask</span> * _Nonnull task, <span class="keyword">id</span>  _Nullable responseObject) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,responseObject);</div><div class="line">&#125; failure:^(<span class="built_in">NSURLSessionDataTask</span> * _Nullable task, <span class="built_in">NSError</span> * _Nonnull error) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>上面的代码能够验证服务器身份在没有使用代理的时候可以正常访问服务器的资源,但是一旦用户给手机网络设置使用了如Charle那样的HTTPS/SSL代理服务,则会出现服务器证书验证失败,SSL网络连接会断开,老板再也不用担心数据接口被人抓包或者代理给扒出来了.故达到防止中间人攻击的效果.</p>
+<p>当使用Charles SSL代理时Xcode调试终端出错信息图:</p>
+<img src="/images/2016/08/xcode_ios_https_charles_fails1.jpeg" class="fancybox">
+<p>代理服务器Charles那边的出错信息图:</p>
+<img src="/images/2016/08/xcode_ios_https_charles_fails2.jpeg" class="fancybox">
+<p>转载自：<a href="http://io.diveinedu.com/2016/01/09/iOS应用网络安全之HTTPS.html" target="_blank" rel="external">http://io.diveinedu.com/2016/01/09/iOS应用网络安全之HTTPS.html</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/HTTPS/">HTTPS</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://yoursite.com/blog/2016/08/22/ios-wang-luo-an-quan-zhi-https/" data-title="iOS - 网络安全之HTTPS | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/09/08/ios-ben-di-zi-dong-da-bao-gong-ju/" title="iOS 本地自动打包工具">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS 本地自动打包工具</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/08/10/xcodedi-san-fang-cha-jian-an-zhuang-bu-liao-de-jie-jue-ban-fa/"  title="Xcode 第三方插件无法安装的解决办法">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>Xcode 第三方插件无法安装的解决办法-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,0 +1,438 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>解决Octopress博客访问慢的问题 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="解决Octopress博客访问慢的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决Octopress博客访问慢的问题">
+<meta property="og:url" content="http://yoursite.com/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="解决Octopress博客访问慢的问题">
+<meta property="og:updated_time" content="2016-09-11T07:58:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解决Octopress博客访问慢的问题">
+<meta name="twitter:description" content="解决Octopress博客访问慢的问题">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/" title="解决Octopress博客访问慢的问题" itemprop="url">解决Octopress博客访问慢的问题</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-03-27T07:12:57.000Z" itemprop="datePublished"> 发表于 2016-03-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#本博情况"><span class="toc-number">1.</span> <span class="toc-text">本博情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#必不可少的罗嗦"><span class="toc-number">2.</span> <span class="toc-text">必不可少的罗嗦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#清理没用的服务"><span class="toc-number">3.</span> <span class="toc-text">清理没用的服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#去除Disqus评论"><span class="toc-number">3.1.</span> <span class="toc-text">去除Disqus评论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去掉Github仓库展示"><span class="toc-number">3.2.</span> <span class="toc-text">去掉Github仓库展示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去除Twitter按钮"><span class="toc-number">3.3.</span> <span class="toc-text">去除Twitter按钮</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去除Google-相关"><span class="toc-number">3.4.</span> <span class="toc-text">去除Google+相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去除Pinboard服务"><span class="toc-number">3.5.</span> <span class="toc-text">去除Pinboard服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去除Delicious评论-去除后可能没有评论系统"><span class="toc-number">3.6.</span> <span class="toc-text">去除Delicious评论,去除后可能没有评论系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#去除Facebook-Like"><span class="toc-number">3.7.</span> <span class="toc-text">去除Facebook Like</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#替换快速的请求资源"><span class="toc-number">4.</span> <span class="toc-text">替换快速的请求资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决Google-Analytics巨慢的问题"><span class="toc-number">4.1.</span> <span class="toc-text">解决Google Analytics巨慢的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决fonts-googleapis-com蜗牛慢"><span class="toc-number">4.2.</span> <span class="toc-text">解决fonts.googleapis.com蜗牛慢</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决ajax-googleapis-com慢的问题"><span class="toc-number">4.3.</span> <span class="toc-text">解决ajax.googleapis.com慢的问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#In-Conclusion"><span class="toc-number">5.</span> <span class="toc-text">In Conclusion</span></a></li></ol>
+		
+		</div>
+		
+		<p>解决Octopress博客访问慢的问题<br><a id="more"></a></p>
+<h2 id="本博情况"><a href="#本博情况" class="headerlink" title="本博情况"></a>本博情况</h2><ul>
+<li>前身为 <a href="http://marujun.github.io" target="_blank" rel="external">marujun.github.io</a></li>
+<li>新域名 <a href="http://devma.cn" target="_blank" rel="external">devma.cn</a> 从阿里云购买。</li>
+<li>DNS由DNSPod解析。</li>
+<li>内容存放在Github、Coding的Pages上。</li>
+<li>博客系统为Octopress</li>
+</ul>
+<h2 id="必不可少的罗嗦"><a href="#必不可少的罗嗦" class="headerlink" title="必不可少的罗嗦"></a>必不可少的罗嗦</h2><p>买了这个域名已经一周了，发现国内访问还是超级慢，慢的让人无法接收了，当然具体原因，大家都懂得。于是只好自己修改Octopress程序了。修改之前的访问速度以分钟计数。修改完成之后，秒开了有木有。</p>
+<h2 id="清理没用的服务"><a href="#清理没用的服务" class="headerlink" title="清理没用的服务"></a>清理没用的服务</h2><p>以下修改均修改 <code>_config.yml</code> ,以下可以根据自己的需要进行去除。</p>
+<h3 id="去除Disqus评论"><a href="#去除Disqus评论" class="headerlink" title="去除Disqus评论"></a>去除Disqus评论</h3><p>打开文件找到 <code>Disqus Comments</code> ，按照下面在每一行前面加<code>#</code>注释掉即可。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Disqus Comments</span></div><div class="line"><span class="comment">#disqus_short_name: androidyue</span></div><div class="line"><span class="comment">#disqus_show_comment_count: true</span></div></pre></td></tr></table></figure>
+<h3 id="去掉Github仓库展示"><a href="#去掉Github仓库展示" class="headerlink" title="去掉Github仓库展示"></a>去掉Github仓库展示</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Github repositories</span></div><div class="line"><span class="comment">#github_user: androidyue</span></div><div class="line"><span class="comment">#github_repo_count: 11</span></div><div class="line"><span class="comment">#github_show_profile_link: true</span></div><div class="line"><span class="comment">#github_skip_forks: true</span></div></pre></td></tr></table></figure>
+<h3 id="去除Twitter按钮"><a href="#去除Twitter按钮" class="headerlink" title="去除Twitter按钮"></a>去除Twitter按钮</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Twitter</span></div><div class="line"><span class="comment">#twitter_user:</span></div><div class="line"><span class="comment">#twitter_tweet_button: true</span></div></pre></td></tr></table></figure>
+<h3 id="去除Google-相关"><a href="#去除Google-相关" class="headerlink" title="去除Google+相关"></a>去除Google+相关</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Google +1</span></div><div class="line"><span class="comment">#google_plus_one: true</span></div><div class="line"><span class="comment">#google_plus_one_size: medium&lt;br /&gt;</span></div><div class="line"><span class="comment"># Google Plus Profile</span></div><div class="line"><span class="comment"># Hidden: No visible button, just add author information to search results</span></div><div class="line"><span class="comment">#googleplus_user: 105362551238192049560</span></div><div class="line"><span class="comment">#googleplus_hidden: false</span></div></pre></td></tr></table></figure>
+<h3 id="去除Pinboard服务"><a href="#去除Pinboard服务" class="headerlink" title="去除Pinboard服务"></a>去除Pinboard服务</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Pinboard</span></div><div class="line"><span class="comment">#pinboard_user:</span></div><div class="line"><span class="comment">#pinboard_count: 3</span></div></pre></td></tr></table></figure>
+<h3 id="去除Delicious评论-去除后可能没有评论系统"><a href="#去除Delicious评论-去除后可能没有评论系统" class="headerlink" title="去除Delicious评论,去除后可能没有评论系统"></a>去除Delicious评论,去除后可能没有评论系统</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Delicious</span></div><div class="line"><span class="comment">#delicious_user:</span></div><div class="line"><span class="comment">#delicious_count: 3</span></div></pre></td></tr></table></figure>
+<h3 id="去除Facebook-Like"><a href="#去除Facebook-Like" class="headerlink" title="去除Facebook Like"></a>去除Facebook Like</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Facebook Like</span></div><div class="line"><span class="comment">#facebook_like: true</span></div></pre></td></tr></table></figure>
+<h2 id="替换快速的请求资源"><a href="#替换快速的请求资源" class="headerlink" title="替换快速的请求资源"></a>替换快速的请求资源</h2><p>其实，真正解决加速的重要环节可能是这里，因为Octopress很多依赖于Google的库和资源。</p>
+<h3 id="解决Google-Analytics巨慢的问题"><a href="#解决Google-Analytics巨慢的问题" class="headerlink" title="解决Google Analytics巨慢的问题"></a>解决Google Analytics巨慢的问题</h3><p>对于使用Google Analytics来说，加在ga.js这个文件简直是要命的慢，这里我使用自己存放在七牛CDN上的js. <a href="http://droidyue-tools.qiniudn.com/ga.js" target="_blank" rel="external">http://droidyue-tools.qiniudn.com/ga.js</a> 已验证，完全可以正常收集数据。</p>
+<p>参考如下，修改 <code>source/_includes/google_analytics.html</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">_gaq.push([<span class="string">'_trackPageview'</span>]);</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"><span class="keyword">var</span> ga = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>); ga.type = <span class="string">'text/javascript'</span>; ga.async = <span class="literal">true</span>;</div><div class="line">ga.src=<span class="string">'http://droidyue-tools.qiniudn.com/ga.js'</span>;</div><div class="line"><span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'script'</span>)[<span class="number">0</span>]; s.parentNode.insertBefore(ga, s);</div><div class="line">&#125;)();</div><div class="line">  <span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<h3 id="解决fonts-googleapis-com蜗牛慢"><a href="#解决fonts-googleapis-com蜗牛慢" class="headerlink" title="解决fonts.googleapis.com蜗牛慢"></a>解决fonts.googleapis.com蜗牛慢</h3><p>这里我们使用数字公司提供的Google Fonts大陆解决方案，使用 <code>fonts.useso.com</code> 替换<code>fonts.googleapis.com</code>。</p>
+<p>修改文件 <code>/source/_includes/custom/head.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--Fonts from Google"s Web font directory at http://google.com/webfonts --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="解决ajax-googleapis-com慢的问题"><a href="#解决ajax-googleapis-com慢的问题" class="headerlink" title="解决ajax.googleapis.com慢的问题"></a>解决ajax.googleapis.com慢的问题</h3><p>修改 <code>source/_includes/head.html</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"/stylesheets/screen.css"</span> <span class="attr">media</span>=<span class="string">"screen, projection"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"/atom.xml"</span> <span class="attr">rel</span>=<span class="string">"alternate"</span> <span class="attr">title</span>=<span class="string">"技术小黑屋"</span> <span class="attr">type</span>=<span class="string">"application/atom+xml"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"/javascripts/modernizr-2.0.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript">!<span class="built_in">window</span>.jQuery &amp;&amp; <span class="built_in">document</span>.write(<span class="built_in">unescape</span>(<span class="string">'%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'</span>))</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"/javascripts/octopress.js"</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="In-Conclusion"><a href="#In-Conclusion" class="headerlink" title="In Conclusion"></a>In Conclusion</h2><p>导致网站慢的原因其实是加载Google的资源，当然我们不能怨Google.经过测试，使用数字公司的解决方法之后，国内国外访问速度都是可以的。这里还是推荐一下数字公司的这个解决方案<a href="http://libs.useso.com/" target="_blank" rel="external">http://libs.useso.com/</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/octopress/">octopress</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/octopress/">octopress</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://yoursite.com/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/" data-title="解决Octopress博客访问慢的问题 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/03/27/zai-octopresszhong-tian-jia-yu-fa-gao-liang/" title="在Octopress中添加语法高亮">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--在Octopress中添加语法高亮</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/"  title="iOS如何下载旧版本应用">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>iOS如何下载旧版本应用-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

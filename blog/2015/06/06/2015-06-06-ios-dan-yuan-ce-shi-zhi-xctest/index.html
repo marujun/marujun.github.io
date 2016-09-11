@@ -1,0 +1,463 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS 单元测试之XCTest | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta property="og:type" content="article">
+<meta property="og:title" content="iOS 单元测试之XCTest">
+<meta property="og:url" content="http://yoursite.com/blog/2015/06/06/2015-06-06-ios-dan-yuan-ce-shi-zhi-xctest/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:updated_time" content="2016-06-05T13:09:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 单元测试之XCTest">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2015/06/06/2015-06-06-ios-dan-yuan-ce-shi-zhi-xctest/" title="iOS 单元测试之XCTest" itemprop="url">iOS 单元测试之XCTest</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2015-06-06T08:51:34.000Z" itemprop="datePublished"> 发表于 2015-06-06</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<!-- <img src="/images/2015/06/demo.png" class="fancybox"> –&gt;
+<!-- <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">code snippet</div></pre></td></tr></table></figure> –&gt;
+<p>Xcode集成了对测试的支持，其中单元测试使用的是XCTest框架 <code>&lt;XCTest/XCTest.h&gt;</code>，良好的单元测试可以提高产品的稳定性，快速定位bug，节省开发时间。</p>
+<a id="more"></a>
+<p>##XCTestCase</p>
+<p>每个XCode创建iOS的工程中都有一个叫做 <code>工程名Tests</code> 的分组，这个分组里就是XCTestCase的子类，<font color=red>XCTest中的测试类都是继承自XCTestCase。</font> </p>
+<p>例如新建一个工程，命名为Demo，就能看到如图：</p>
+<img src="/images/2015/06/ios_xctest_01.png" class="fancybox">
+<p>看一下这个自动创建的文件里都包含了哪些内容</p>
+<img src="/images/2015/06/ios_xctest_06.png" class="fancybox">
+<p>####测试用例的命名</p>
+<p>XCTest中所有的测试用例的命名都是以test开头的。例如上文中的：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)testExample &#123;</div><div class="line">    <span class="comment">// This is an example of a functional test case.</span></div><div class="line">    <span class="built_in">XCTAssert</span>(<span class="literal">YES</span>, <span class="string">@"Pass"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>####setUp和tearDown</p>
+<p><code>setUp</code> 是在所有测试用例运行之前运行的函数，在这个测试用例里进行一些通用的初始化工作</p>
+<p><code>tearDown</code> 是在所有的测试用例都执行完毕后执行的</p>
+<p>####XCode的测试用例导航</p>
+<p>测试用例的导航如图，在测试用例的导航里，我们可以运行一组测试用例，也可以运行一个单独的测试用例 </p>
+<img src="/images/2015/06/ios_xctest_02.png" class="fancybox">
+<p>可以鼠标右键来新建一组测试用例。 </p>
+<img src="/images/2015/06/ios_xctest_03.png" class="fancybox">
+<p>也可以为测试用例添加失败断点来方便我们调试 </p>
+<img src="/images/2015/06/ios_xctest_04.png" class="fancybox">
+<p>##普通方法测试</p>
+<p>例如，新建一个类命名为Model，他有这个方法用来生成10以内的随机数。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">-(<span class="built_in">NSInteger</span>)randomLessThanTen&#123;</div><div class="line">    <span class="keyword">return</span> arc4random()%<span class="number">10</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>于是，测试方法为</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">-(<span class="keyword">void</span>)testModelFunc_randomLessThanTen &#123;</div><div class="line">    Model * model = [[Model alloc] init];</div><div class="line">    <span class="built_in">NSInteger</span> num = [model randomLessThanTen];</div><div class="line">    <span class="built_in">XCTAssert</span>(num&lt;<span class="number">10</span>,<span class="string">@"num should less than 10"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们点击如图的左边图标单独运行这个测试用例，当然也可以在上文我提到的导航栏里单独运行。 </p>
+<img src="/images/2015/06/ios_xctest_05.png" class="fancybox">
+<p>然后会看到输出表示这个测试用例通过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Test Suite <span class="string">'Selected tests'</span> started at 2015-06-06 05:24:56 +0000</div><div class="line">Test Suite <span class="string">'DemoTests.xctest'</span> started at 2015-06-06 05:24:56 +0000</div><div class="line">Test Suite <span class="string">'DemoTests'</span> started at 2015-06-06 05:24:56 +0000</div><div class="line">Test Case <span class="string">'-[DemoTests testModelFunc_randomLessThanTen]'</span> started.</div><div class="line">Test Case <span class="string">'-[DemoTests testModelFunc_randomLessThanTen]'</span> passed (0.000 seconds).</div><div class="line">Test Suite <span class="string">'DemoTests'</span> passed at 2015-06-06 05:24:56 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 0.000 (0.001) seconds</div><div class="line">Test Suite <span class="string">'DemoTests.xctest'</span> passed at 2015-06-06 05:24:56 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 0.000 (0.001) seconds</div><div class="line">Test Suite <span class="string">'Selected tests'</span> passed at 2015-06-06 05:24:56 +0000.</div></pre></td></tr></table></figure>
+<p>##常用断言</p>
+<p>如何判断一个测试用例成功或者失败呢？XCTest使用断言来实现。 </p>
+<p>最基本的断言：表示如果expression满足，则测试通过，否则对应format的错误。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">XCTAssert</span>(expression, format...)</div></pre></td></tr></table></figure>
+<p>其他一些常用的断言：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">XCTFail</span>(format...)  <span class="comment">//生成一个失败的测试；</span></div><div class="line"><span class="built_in">XCTAssert</span>(expression, format...)  <span class="comment">//当expression求值为TRUE时通过；</span></div><div class="line"></div><div class="line"><span class="built_in">XCTAssertNil</span>(a1, format...)  <span class="comment">//为空判断，a1为空时通过，反之不通过；</span></div><div class="line"><span class="built_in">XCTAssertNotNil</span>(a1, format...)  <span class="comment">//不为空判断，a1不为空时通过，反之不通过；</span></div><div class="line"></div><div class="line"><span class="built_in">XCTAssertTrue</span>(expression, format...)  <span class="comment">//当expression求值为TRUE时通过；</span></div><div class="line"><span class="built_in">XCTAssertFalse</span>(expression, format...)  <span class="comment">//当expression求值为False时通过；</span></div><div class="line"></div><div class="line"><span class="comment">/** 特别注意下这两个断言 */</span></div><div class="line"><span class="built_in">XCTAssertEqualObjects</span>(a1, a2, format...)  <span class="comment">//判断相等，条件是[a1 isEqual:a2]值为TRUE时通过，其中一个不为空时，不通过；</span></div><div class="line"><span class="built_in">XCTAssertEqual</span>(a1, a2, format...)  <span class="comment">//判断相等，条件是a1 == a2（当a1和a2是 C语言标量、结构体或联合体时使用,实际测试发现NSString也可以）；</span></div><div class="line"></div><div class="line"><span class="built_in">XCTAssertNotEqualObjects</span>(a1, a2, format...)  <span class="comment">//判断不等，[a1 isEqual:a2]值为False时通过；</span></div><div class="line"><span class="built_in">XCTAssertNotEqual</span>(a1, a2, format...)  <span class="comment">//判断不等（当a1和a2是 C语言标量、结构体或联合体时使用）；</span></div><div class="line"></div><div class="line"><span class="built_in">XCTAssertEqualWithAccuracy</span>(a1, a2, accuracy, format...)  <span class="comment">//判断相等，（double或float类型）提供一个误差范围，当在误差范围（+/-accuracy）以内相等时通过测试；</span></div><div class="line"><span class="built_in">XCTAssertNotEqualWithAccuracy</span>(a1, a2, accuracy, format...)  <span class="comment">//判断不等，（double或float类型）提供一个误差范围，当在误差范围以内不等时通过测试；</span></div><div class="line"></div><div class="line"><span class="built_in">XCTAssertThrows</span>(expression, format...)  <span class="comment">//异常测试，当expression发生异常时通过；反之不通过；（很变态）</span></div><div class="line"><span class="built_in">XCTAssertThrowsSpecific</span>(expression, specificException, format...)  <span class="comment">//异常测试，当expression发生specificException异常时通过；反之发生其他异常或不发生异常均不通过；</span></div><div class="line"><span class="built_in">XCTAssertThrowsSpecificNamed</span>(expression, specificException, exception_name, format...)  <span class="comment">//异常测试，当expression发生具体异常、具体异常名称的异常时通过测试，反之不通过；</span></div><div class="line"></div><div class="line"><span class="built_in">XCTAssertNoThrow</span>(expression, format...)  <span class="comment">//异常测试，当expression没有发生异常时通过测试；</span></div><div class="line"><span class="built_in">XCTAssertNoThrowSpecific</span>(expression, specificException, format...)  <span class="comment">//异常测试，当expression没有发生具体异常、具体异常名称的异常时通过测试，反之不通过；</span></div><div class="line"><span class="built_in">XCTAssertNoThrowSpecificNamed</span>(expression, specificException, exception_name, format...)  <span class="comment">//异常测试，当expression没有发生具体异常、具体异常名称的异常时通过测试，反之不通过</span></div></pre></td></tr></table></figure>
+<p>##性能测试</p>
+<p>所谓性能测试，主要就是评估一段代码的运行时间，XCTest的性能的测试利用如下格式</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)testPerformanceExample &#123;</div><div class="line">    <span class="comment">// This is an example of a performance test case.</span></div><div class="line">    [<span class="keyword">self</span> measureBlock:^&#123;</div><div class="line">        <span class="comment">// Put the code you want to measure the time of here.</span></div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>例如，我要评估一段代码，这段代码的功能是把一张图片缩小到指定的大小。 </p>
+<p>这段代码如下，这段代码我放在UIImage的类别里。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">UIImage</span> *)imageByScaledToSize:(<span class="built_in">CGSize</span>)newSize &#123;</div><div class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>( newSize );</div><div class="line">    [image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">0</span>,newSize.width,newSize.height)];</div><div class="line">    <span class="built_in">UIImage</span> *newImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</div><div class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</div><div class="line">    <span class="keyword">return</span> newImage;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后测试用例如下，主要判断resize后是否为nil，并且尺寸是否对。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)testPerformanceExample &#123;</div><div class="line">    <span class="built_in">UIImage</span> * image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@"icon.png"</span>];</div><div class="line">    [<span class="keyword">self</span> measureBlock:^&#123;</div><div class="line">        <span class="built_in">UIImage</span> *resizedImage = [image imageByScaledToSize:<span class="built_in">CGSizeMake</span>(<span class="number">100</span>, <span class="number">100</span>)];</div><div class="line">        <span class="built_in">XCTAssertNotNil</span>(resizedImage,<span class="string">@"resized image should not be nil"</span>);</div><div class="line">        <span class="built_in">CGFloat</span> resizedWidth = resizedImage.size.width;</div><div class="line">        <span class="built_in">CGFloat</span> resizedHeight = resizedImage.size.height;</div><div class="line">        <span class="built_in">XCTAssert</span>(resizedHeight == <span class="number">100</span> &amp;&amp; resizedWidth == <span class="number">100</span>,<span class="string">@"Size is not right"</span>);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Test Suite <span class="string">'Selected tests'</span> started at 2015-06-06 05:42:39 +0000</div><div class="line">Test Suite <span class="string">'DemoTests.xctest'</span> started at 2015-06-06 05:42:39 +0000</div><div class="line">Test Suite <span class="string">'DemoTests'</span> started at 2015-06-06 05:42:39 +0000</div><div class="line">Test Case <span class="string">'-[DemoTests testPerformanceExample]'</span> started.</div><div class="line">~/Desktop/Demo/DemoTests/DemoTests.m:41: Test Case <span class="string">'-[DemoTests testPerformanceExample]'</span> measured [Time, seconds] average: 0.000, relative standard deviation: 40.714%, values: [0.000241, 0.000116, 0.000128, 0.000089, 0.000087, 0.000081, 0.000101, 0.000093, 0.000092, 0.000087], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: <span class="string">""</span>, baselineAverage: , maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100</div><div class="line">Test Case <span class="string">'-[DemoTests testPerformanceExample]'</span> passed (0.357 seconds).</div><div class="line">Test Suite <span class="string">'DemoTests'</span> passed at 2015-06-06 05:42:40 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 0.357 (0.358) seconds</div><div class="line">Test Suite <span class="string">'DemoTests.xctest'</span> passed at 2015-06-06 05:42:40 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 0.357 (0.358) seconds</div><div class="line">Test Suite <span class="string">'Selected tests'</span> passed at 2015-06-06 05:42:40 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 0.357 (0.360) seconds</div></pre></td></tr></table></figure>
+<p>##异步测试</p>
+<p>异步测试的逻辑如下，首先定义一个或者多个XCTestExpectation，表示异步测试想要的结果。然后设置timeout，表示异步测试最多可以执行的时间。最后，在异步的代码完成的最后，调用fullfill来通知异步测试满足条件。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)testAsyncFunction &#123;</div><div class="line">    <span class="built_in">XCTestExpectation</span> * expectation = [<span class="keyword">self</span> expectationWithDescription:<span class="string">@"Just a demo expectation,should pass"</span>];</div><div class="line">    <span class="comment">//Async function when finished call [expectation fullfill]</span></div><div class="line">    [<span class="keyword">self</span> waitForExpectationsWithTimeout:<span class="number">10</span> handler:^(<span class="built_in">NSError</span> *error) &#123;</div><div class="line">        <span class="comment">//Do something when time out</span></div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>举例<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>) testAsyncFunction &#123;</div><div class="line">    <span class="built_in">XCTestExpectation</span> *exp = [<span class="keyword">self</span> expectationWithDescription:<span class="string">@"这里可以是操作出错的原因描述。。。"</span>];</div><div class="line">    <span class="built_in">NSOperationQueue</span> *queue = [[<span class="built_in">NSOperationQueue</span> alloc]init];</div><div class="line">    [queue addOperationWithBlock:^&#123;</div><div class="line">        <span class="comment">//模拟这个异步操作需要2秒后才能获取结果，比如一个异步网络请求</span></div><div class="line">        sleep(<span class="number">2</span>);</div><div class="line">        <span class="comment">//模拟获取的异步操作后，获取结果，判断异步方法的结果是否正确</span></div><div class="line">        <span class="built_in">XCTAssertEqual</span>(<span class="string">@"a"</span>, <span class="string">@"a"</span>);</div><div class="line">        <span class="comment">//如果断言没问题，就调用fulfill宣布测试满足</span></div><div class="line">        [exp fulfill];</div><div class="line">    &#125;];</div><div class="line">    </div><div class="line">    <span class="comment">//设置延迟多少秒后，如果没有满足测试条件就报错</span></div><div class="line">    [<span class="keyword">self</span> waitForExpectationsWithTimeout:<span class="number">3</span> handler:^(<span class="built_in">NSError</span> * _Nullable error) &#123;</div><div class="line">        <span class="keyword">if</span> (error) <span class="built_in">NSLog</span>(<span class="string">@"Timeout Error: %@"</span>, error);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Test Suite <span class="string">'Selected tests'</span> started at 2015-06-06 05:49:43 +0000</div><div class="line">Test Suite <span class="string">'DemoTests.xctest'</span> started at 2015-06-06 05:49:43 +0000</div><div class="line">Test Suite <span class="string">'DemoTests'</span> started at 2015-06-06 05:49:43 +0000</div><div class="line">Test Case <span class="string">'-[DemoTests testAsyncFunction]'</span> started.</div><div class="line">Test Case <span class="string">'-[DemoTests testAsyncFunction]'</span> passed (1.006 seconds).</div><div class="line">Test Suite <span class="string">'DemoTests'</span> passed at 2015-06-06 05:49:44 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 1.006 (1.007) seconds</div><div class="line">Test Suite <span class="string">'DemoTests.xctest'</span> passed at 2015-06-06 05:49:44 +0000.</div><div class="line">     Executed 1 <span class="built_in">test</span>, with 0 failures (0 unexpected) <span class="keyword">in</span> 1.006 (1.009) seconds</div><div class="line">Test Suite <span class="string">'Selected tests'</span> passed at 2015-06-06 05:49:44 +0000.</div></pre></td></tr></table></figure>
+<p>##注意点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. 使用pod的项目中，在XC测试框架中测试内容包括第三方包时，需要手动去设置 Header Search Paths 才能找到头文件 ，还需要设置<span class="built_in">test</span> target的PODS_ROOT。</div><div class="line">2. Xcode7要使用真机做跑测试时，证书必须配对，否则会报错exc_breakpoint错误</div><div class="line">3. XCTestExpectation 的 fulfill 方法只能调用一次，系统不会帮你检查，如果你调用两次就会出错，而且你经常都找不到错在哪里。</div></pre></td></tr></table></figure>-->  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/单元测试/">单元测试</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/blog/2015/06/06/2015-06-06-ios-dan-yuan-ce-shi-zhi-xctest/" data-title="iOS 单元测试之XCTest | 极致的技术博客" data-tsina="undefined" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/blog/2015/08/08/2015-08-08-gcdshi-yong-zhi-dispatch-group/" title="GCD之dispatch_group">
+  <strong>上一篇：</strong><br/>
+  <span>
+  GCD之dispatch_group</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/blog/2015/06/02/2015-06-02-shen-ru-li-jie-runloop/"  title="深入理解RunLoop">
+ <strong>下一篇：</strong><br/> 
+ <span>深入理解RunLoop
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

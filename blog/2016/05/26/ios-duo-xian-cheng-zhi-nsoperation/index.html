@@ -1,0 +1,448 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS - 多线程之NSOperation | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="NSOperation表示了一个独立的计算单元。作为一个抽象类，它给了它的子类一个十分有用而且线程安全的方式来建立状态、优先级、依赖性和取消等的模型；不用我们考虑线程的生命周期、同步、加锁等问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS - 多线程之NSOperation">
+<meta property="og:url" content="http://yoursite.com/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="NSOperation表示了一个独立的计算单元。作为一个抽象类，它给了它的子类一个十分有用而且线程安全的方式来建立状态、优先级、依赖性和取消等的模型；不用我们考虑线程的生命周期、同步、加锁等问题。">
+<meta property="og:updated_time" content="2016-09-11T09:24:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS - 多线程之NSOperation">
+<meta name="twitter:description" content="NSOperation表示了一个独立的计算单元。作为一个抽象类，它给了它的子类一个十分有用而且线程安全的方式来建立状态、优先级、依赖性和取消等的模型；不用我们考虑线程的生命周期、同步、加锁等问题。">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/" title="iOS - 多线程之NSOperation" itemprop="url">iOS - 多线程之NSOperation</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-05-26T08:43:38.000Z" itemprop="datePublished"> 发表于 2016-05-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#NSOperationQueue"><span class="toc-number">1.</span> <span class="toc-text">NSOperationQueue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NSInvocationOperation"><span class="toc-number">2.</span> <span class="toc-text">NSInvocationOperation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NSBlockOperation"><span class="toc-number">3.</span> <span class="toc-text">NSBlockOperation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#同步执行一个操作"><span class="toc-number">3.1.</span> <span class="toc-text">同步执行一个操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#并发执行多个操作"><span class="toc-number">3.2.</span> <span class="toc-text">并发执行多个操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义NSOperation"><span class="toc-number">4.</span> <span class="toc-text">自定义NSOperation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态管理"><span class="toc-number">5.</span> <span class="toc-text">状态管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优先级"><span class="toc-number">6.</span> <span class="toc-text">优先级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖性"><span class="toc-number">7.</span> <span class="toc-text">依赖性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#completionBlock"><span class="toc-number">8.</span> <span class="toc-text">completionBlock</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img fancybox /images/2016/05/demo.png %} -->
+<p>NSOperation表示了一个独立的计算单元。作为一个抽象类，它给了它的子类一个十分有用而且线程安全的方式来建立状态、优先级、依赖性和取消等的模型；不用我们考虑线程的生命周期、同步、加锁等问题。<br><a id="more"></a></p>
+<h2 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h2><p>NSOperationQueue 有两种不同类型的队列：主队列和自定义队列。</p>
+<font color="red">主队列运行在主线程之上，而自定义队列在后台执行。</font>
+
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSOperationQueue</span> *mainQueue = [<span class="built_in">NSOperationQueue</span> mainQueue];  <span class="comment">//主队列</span></div><div class="line"><span class="built_in">NSOperationQueue</span> *queue = [[<span class="built_in">NSOperationQueue</span> alloc] init]; <span class="comment">//自定义队列</span></div><div class="line"><span class="built_in">NSBlockOperation</span> *operation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^&#123;</div><div class="line">                <span class="comment">//任务执行</span></div><div class="line">            &#125;];</div><div class="line">[queue addOperation:operation];</div></pre></td></tr></table></figure>
+<p>我们可以通过设置 <code>maxConcurrentOperationCount</code> 属性来控制并发任务的数量，当设置为 <code>1</code> 时， 那么它就是一个串行队列。主对列默认是串行队列，这一点和 <code>dispatch_queue_t</code> 是相似的。</p>
+<h2 id="NSInvocationOperation"><a href="#NSInvocationOperation" class="headerlink" title="NSInvocationOperation"></a>NSInvocationOperation</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSInvocationOperation</span> *operation = [[[<span class="built_in">NSInvocationOperation</span> alloc] initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(run:) object:<span class="string">@"mj"</span>] autorelease];</div><div class="line">[operation start];</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>：默认情况下，<font color="red">调用了start方法后并不会开一条新线程去执行操作</font>，而是在当前线程同步执行操作。只有将operation放到一个NSOperationQueue中，才会异步执行操作。</p>
+<h2 id="NSBlockOperation"><a href="#NSBlockOperation" class="headerlink" title="NSBlockOperation"></a>NSBlockOperation</h2><h3 id="同步执行一个操作"><a href="#同步执行一个操作" class="headerlink" title="同步执行一个操作"></a>同步执行一个操作</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSBlockOperation</span> *operation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^()&#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"执行了一个新的操作"</span>);</div><div class="line">&#125;];</div><div class="line"><span class="comment">// 开始执行任务</span></div><div class="line">[operation start];</div></pre></td></tr></table></figure>
+<p>这里还是在当前线程同步执行操作，并没有异步执行</p>
+<h3 id="并发执行多个操作"><a href="#并发执行多个操作" class="headerlink" title="并发执行多个操作"></a>并发执行多个操作</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSBlockOperation</span> *operation = [<span class="built_in">NSBlockOperation</span> blockOperationWithBlock:^()&#123;</div><div class="line">　　<span class="built_in">NSLog</span>(<span class="string">@"执行第1次操作，线程：%@"</span>, [<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line"></div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">　　<span class="built_in">NSLog</span>(<span class="string">@"又执行了1个新的操作，线程：%@"</span>, [<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line"></div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">　　<span class="built_in">NSLog</span>(<span class="string">@"又执行了1个新的操作，线程：%@"</span>, [<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line"></div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">　　<span class="built_in">NSLog</span>(<span class="string">@"又执行了1个新的操作，线程：%@"</span>, [<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;];</div><div class="line"></div><div class="line"><span class="comment">// 开始执行任务</span></div><div class="line">[operation start];</div></pre></td></tr></table></figure>
+<p>在第18行调用start方法后，就会并发地执行这4个操作，也就是会在不同线程中执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">2013-02-02 21:38:46.102 thread[4602:c07] 又执行了1个新的操作，线程：&lt;NSThread: 0x7121d50&gt;&#123;name = (null), num = 1&#125;</div><div class="line">2013-02-02 21:38:46.102 thread[4602:3f03] 又执行了1个新的操作，线程：&lt;NSThread: 0x742e1d0&gt;&#123;name = (null), num = 5&#125;</div><div class="line">2013-02-02 21:38:46.102 thread[4602:1b03] 执行第1次操作，线程：&lt;NSThread: 0x742de50&gt;&#123;name = (null), num = 3&#125;</div><div class="line">2013-02-02 21:38:46.102 thread[4602:1303] 又执行了1个新的操作，线程：&lt;NSThread: 0x7157bf0&gt;&#123;name = (null), num = 4&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，每个操作所在线程的num值都不一样，说明是不同线程</p>
+<h2 id="自定义NSOperation"><a href="#自定义NSOperation" class="headerlink" title="自定义NSOperation"></a>自定义NSOperation</h2><p>直接新建子类继承NSOperation，通过重写 <code>main</code> 或者 <code>start</code> 方法来定义自己的operations</p>
+<p>使用 <code>main</code> 方法非常简单，开发者不需要管理一些状态属性（例如 isExecuting 和 isFinished），当 main 方法返回的时候，这个 operation 就结束了。这种方式使用起来非常简单，但是灵活性相对重写 start 来说要少一些， 因为main方法执行完就认为operation结束了，所以一般可以用来执行同步任务。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">YourOperation</span></span></div><div class="line">- (<span class="keyword">void</span>)main</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 任务代码 ...</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>如果你希望拥有更多的控制权，或者想在一个操作中可以执行异步任务，那么就重写 <code>start</code> 方法, 但是注意：这种情况下，你必须手动管理操作的状态， 只有当发送 isFinished 的 KVO 消息时，才认为是 operation 结束<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">YourOperation</span></span></div><div class="line">- (<span class="keyword">void</span>)start</div><div class="line">&#123;</div><div class="line">  <span class="keyword">self</span>.isExecuting = <span class="literal">YES</span>;</div><div class="line">    <span class="comment">// 任务代码 ...</span></div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)finish <span class="comment">//异步回调</span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">self</span>.isExecuting = <span class="literal">NO</span>;</div><div class="line">  <span class="keyword">self</span>.isFinished = <span class="literal">YES</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<font color="red"><em>当实现了start方法时，默认会执行start方法，而不执行main方法</em></font>
+
+<h2 id="状态管理"><a href="#状态管理" class="headerlink" title="状态管理"></a>状态管理</h2><p><font color="red">如果你不使用 <strong>状态属性</strong> 默认的 <strong>setter</strong> 来进行设置的话</font>，为了让操作队列能够捕获到操作的改变，需要将状态的属性以配合 <code>KVO</code> 的方式进行实现。</p>
+<p>需要手动管理的状态有：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">isExecuting 代表任务正在执行中</div><div class="line">isFinished 代表任务已经执行完成</div><div class="line">isCancelled 代表任务已经取消执行</div></pre></td></tr></table></figure>
+<p>手动的发送 KVO 消息， 通知状态更改如下 ：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> willChangeValueForKey:<span class="string">@"isCancelled"</span>];</div><div class="line">_isCancelled = <span class="literal">YES</span>;</div><div class="line">[<span class="keyword">self</span> didChangeValueForKey:<span class="string">@"isCancelled"</span>];</div></pre></td></tr></table></figure>
+<p>为了能使用操作队列所提供的取消功能，你需要在长时间操作中时不时地检查 <code>isCancelled</code> 属性, 比如在一个长的循环中:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MyOperation</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)main</div><div class="line">&#123;</div><div class="line">    <span class="keyword">while</span> (notDone &amp;&amp; !<span class="keyword">self</span>.isCancelled) &#123;</div><div class="line">        <span class="comment">// 任务处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>另外执行了一段 <em>比较耗时的操作</em> 之后，都需要判断操作有没有被取消；如果被取消了，那就没有必要往下执行了。</p>
+<h2 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h2><p>通过以下的顺序设置 <code>queuePriority</code> 属性可以加快或者推迟操作的执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSOperationQueuePriorityVeryHigh</div><div class="line">NSOperationQueuePriorityHigh</div><div class="line">NSOperationQueuePriorityNormal</div><div class="line">NSOperationQueuePriorityLow</div><div class="line">NSOperationQueuePriorityVeryLow</div></pre></td></tr></table></figure>
+<p>此外，有些操作还可以指定 <code>threadPriority</code> 的值，它的取值范围可以从0.0到1.0，1.0代表最高的优先级。</p>
+<p>鉴于queuePriority属性决定了操作执行的顺序，threadPriority则指定了当操作开始执行以后的CPU计算能力的分配</p>
+<h2 id="依赖性"><a href="#依赖性" class="headerlink" title="依赖性"></a>依赖性</h2><p>根据应用的复杂度不同，将大任务再分成一系列子任务一般都是很有意义的，而你能通过NSOperation的依赖性实现。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[resizingOperation addDependency:networkingOperation];</div><div class="line"></div><div class="line"><span class="comment">//<span class="doctag">TODO:</span> 别忘了把两个 operation 都添加到 queue 中</span></div><div class="line">[operationQueue addOperation:networkingOperation];</div><div class="line">[operationQueue addOperation:resizingOperation];</div></pre></td></tr></table></figure>
+<p>除非一个操作的依赖的 <code>isFinished</code> 返回YES，不然这个操作不会开始。</p>
+<p>此外，确保不要意外地创建依赖循环，像A依赖B，B又依赖A，这也会导致杯具的死锁。</p>
+<h2 id="completionBlock"><a href="#completionBlock" class="headerlink" title="completionBlock"></a>completionBlock</h2><p>每当一个NSOperation执行完毕，它就会调用它的 <code>completionBlock</code> 属性一次。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/多线程/">多线程</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://yoursite.com/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/" data-title="iOS - 多线程之NSOperation | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/05/27/ios-duo-yu-yan-ben-di-hua/" title="iOS - 多语言本地化">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS - 多语言本地化</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/05/06/charles-cong-ru-men-dao-jing-tong/"  title="Charles 从入门到精通">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>Charles 从入门到精通-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

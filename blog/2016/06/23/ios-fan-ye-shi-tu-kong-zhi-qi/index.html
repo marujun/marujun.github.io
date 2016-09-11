@@ -1,0 +1,436 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS - 翻页视图控制器 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="UIPageViewController是iOS中少见的动画视图控制器之一，通过它既可以创建类似UIScrollView与UIPageControl结合的滚屏视图，也可以创建类似图书效果的炫酷翻页视图。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS - 翻页视图控制器">
+<meta property="og:url" content="http://yoursite.com/blog/2016/06/23/ios-fan-ye-shi-tu-kong-zhi-qi/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="UIPageViewController是iOS中少见的动画视图控制器之一，通过它既可以创建类似UIScrollView与UIPageControl结合的滚屏视图，也可以创建类似图书效果的炫酷翻页视图。">
+<meta property="og:image" content="http://yoursite.com/images/2016/06/ios_page_controller_struct.png">
+<meta property="og:updated_time" content="2016-09-11T09:30:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS - 翻页视图控制器">
+<meta name="twitter:description" content="UIPageViewController是iOS中少见的动画视图控制器之一，通过它既可以创建类似UIScrollView与UIPageControl结合的滚屏视图，也可以创建类似图书效果的炫酷翻页视图。">
+<meta name="twitter:image" content="http://yoursite.com/images/2016/06/ios_page_controller_struct.png">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/06/23/ios-fan-ye-shi-tu-kong-zhi-qi/" title="iOS - 翻页视图控制器" itemprop="url">iOS - 翻页视图控制器</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-06-23T09:00:48.000Z" itemprop="datePublished"> 发表于 2016-06-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建一个UIPageViewController"><span class="toc-number">1.</span> <span class="toc-text">创建一个UIPageViewController</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UIPageViewController中方法使用解析"><span class="toc-number">2.</span> <span class="toc-text">UIPageViewController中方法使用解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UIPageViewControllerDataSource中方法解析"><span class="toc-number">3.</span> <span class="toc-text">UIPageViewControllerDataSource中方法解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UIPageViewControllerDelegate中方法解析"><span class="toc-number">4.</span> <span class="toc-text">UIPageViewControllerDelegate中方法解析</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img fancybox /images/2016/06/demo.png %} -->
+<p>UIPageViewController是iOS中少见的动画视图控制器之一，通过它既可以创建类似UIScrollView与UIPageControl结合的滚屏视图，也可以创建类似图书效果的炫酷翻页视图。<br><a id="more"></a> </p>
+<p>它类似一个视图容器，其中每个具体的视图由各自的ViewController进行维护管理，它只进行协调与动画布置。下图可以很好的展现出UIPageViewControlelr的使用结构：</p>
+<img src="/images/2016/06/ios_page_controller_struct.png" class="fancybox">
+<h2 id="创建一个UIPageViewController"><a href="#创建一个UIPageViewController" class="headerlink" title="创建一个UIPageViewController"></a>创建一个UIPageViewController</h2><p>首先新建一个类作为翻页视图控制器中具体每一页视图的控制器，使其继承于UIViewController：</p>
+<p>ModelViewController.h</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ModelViewController</span> : <span class="title">UIViewController</span></span></div><div class="line">+(ModelViewController *)creatWithIndex:(<span class="keyword">int</span>)index;</div><div class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">strong</span>)<span class="built_in">UILabel</span> * indexLabel;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>ModelViewController.m</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"ModelViewController.h"</span></span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ModelViewController</span> ()</span></div><div class="line"><span class="keyword">@end</span></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ModelViewController</span></span></div><div class="line">+(ModelViewController *)creatWithIndex:(<span class="keyword">int</span>)index&#123;</div><div class="line">    ModelViewController * con = [[ModelViewController alloc]init];</div><div class="line">    con.indexLabel = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">110</span>, <span class="number">200</span>, <span class="number">100</span>, <span class="number">30</span>)];</div><div class="line">    con.indexLabel.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"第%d页"</span>,index];</div><div class="line">    [con.view addSubview:con.indexLabel];</div><div class="line">    <span class="keyword">return</span> con;</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    <span class="comment">// Do any additional setup after loading the view.</span></div><div class="line">    <span class="keyword">self</span>.view.backgroundColor = [<span class="built_in">UIColor</span> redColor];</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>在工程模板自带的ViewController.m文件中实现如下代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">"ModelViewController.h"</span></span></div><div class="line"><span class="comment">//遵守协议</span></div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()&lt;<span class="title">UIPageViewControllerDataSource</span>,<span class="title">UIPageViewControllerDelegate</span>&gt;</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">//翻页视图控制器对象</span></div><div class="line">    <span class="built_in">UIPageViewController</span> * _pageViewControl;</div><div class="line">    <span class="comment">//数据源数组</span></div><div class="line">    <span class="built_in">NSMutableArray</span> * _dataArray;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    <span class="comment">//进行初始化</span></div><div class="line">    _pageViewControl = [[<span class="built_in">UIPageViewController</span> alloc]initWithTransitionStyle:<span class="built_in">UIPageViewControllerTransitionStyleScroll</span> navigationOrientation:<span class="built_in">UIPageViewControllerNavigationOrientationHorizontal</span> options:@&#123;<span class="built_in">UIPageViewControllerOptionSpineLocationKey</span>:@<span class="number">0</span>,<span class="built_in">UIPageViewControllerOptionInterPageSpacingKey</span>:@<span class="number">10</span>&#125;];</div><div class="line">    <span class="keyword">self</span>.view.backgroundColor = [<span class="built_in">UIColor</span> greenColor];</div><div class="line">    <span class="comment">//设置翻页视图的尺寸</span></div><div class="line">    _pageViewControl.view.bounds=<span class="keyword">self</span>.view.bounds;</div><div class="line">    <span class="comment">//设置数据源与代理</span></div><div class="line">    _pageViewControl.dataSource=<span class="keyword">self</span>;</div><div class="line">    _pageViewControl.delegate=<span class="keyword">self</span>;</div><div class="line">    <span class="comment">//创建初始界面</span></div><div class="line">    ModelViewController * model = [ModelViewController creatWithIndex:<span class="number">1</span>];</div><div class="line">    <span class="comment">//设置初始界面</span></div><div class="line">    [_pageViewControl setViewControllers:@[model] direction:<span class="built_in">UIPageViewControllerNavigationDirectionReverse</span> animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</div><div class="line">    <span class="comment">//设置是否双面展示</span></div><div class="line">    _pageViewControl.doubleSided = <span class="literal">NO</span>;</div><div class="line">    _dataArray = [[<span class="built_in">NSMutableArray</span> alloc]init];</div><div class="line">    [_dataArray addObject:model];</div><div class="line">    [<span class="keyword">self</span>.view addSubview:_pageViewControl.view];</div><div class="line">&#125;</div><div class="line"><span class="comment">//翻页控制器进行向前翻页动作 这个数据源方法返回的视图控制器为要显示视图的视图控制器</span></div><div class="line">- (<span class="keyword">nullable</span> <span class="built_in">UIViewController</span> *)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController viewControllerBeforeViewController:(<span class="built_in">UIViewController</span> *)viewController&#123;</div><div class="line">    <span class="keyword">int</span> index = (<span class="keyword">int</span>)[_dataArray indexOfObject:viewController];</div><div class="line">    <span class="keyword">if</span> (index==<span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">return</span> _dataArray[index<span class="number">-1</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//翻页控制器进行向后翻页动作 这个数据源方法返回的视图控制器为要显示视图的视图控制器</span></div><div class="line">- (<span class="keyword">nullable</span> <span class="built_in">UIViewController</span> *)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController viewControllerAfterViewController:(<span class="built_in">UIViewController</span> *)viewController&#123;</div><div class="line">    <span class="keyword">int</span> index = (<span class="keyword">int</span>)[_dataArray indexOfObject:viewController];</div><div class="line">    <span class="keyword">if</span> (index==<span class="number">9</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">if</span> (_dataArray.count<span class="number">-1</span>&gt;=(index+<span class="number">1</span>)) &#123;</div><div class="line">            <span class="keyword">return</span> _dataArray[index+<span class="number">1</span>];</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            ModelViewController * model = [ModelViewController creatWithIndex:index+<span class="number">2</span>];</div><div class="line">            [_dataArray addObject:model];</div><div class="line">            <span class="keyword">return</span> model;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//屏幕旋转触发的代理方法</span></div><div class="line">- (<span class="built_in">UIPageViewControllerSpineLocation</span>) pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController spineLocationForInterfaceOrientation:(<span class="built_in">UIInterfaceOrientation</span>)orientation&#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">UIPageViewControllerSpineLocationMin</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">//设置分页控制器的分页数</span></div><div class="line">- (<span class="built_in">NSInteger</span>)presentationCountForPageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController &#123;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="number">10</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">//设置初始的分页点</span></div><div class="line">- (<span class="built_in">NSInteger</span>)presentationIndexForPageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>到这就创建了一个最简单的翻页视图控制器示例</p>
+<h2 id="UIPageViewController中方法使用解析"><a href="#UIPageViewController中方法使用解析" class="headerlink" title="UIPageViewController中方法使用解析"></a>UIPageViewController中方法使用解析</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//创建翻页视图控制器对象</span></div><div class="line">- (<span class="keyword">instancetype</span>)initWithTransitionStyle:(<span class="built_in">UIPageViewControllerTransitionStyle</span>)style navigationOrientation:(<span class="built_in">UIPageViewControllerNavigationOrientation</span>)navigationOrientation options:(<span class="keyword">nullable</span> <span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *, <span class="keyword">id</span>&gt; *)options;</div></pre></td></tr></table></figure>
+<p>上面方法用于创建视图控制器对象，其中 <code>UIPageViewControllerTransitionStyle</code> 参数设置翻页控制器的风格，枚举如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIPageViewControllerTransitionStyle</span>) &#123;</div><div class="line">    <span class="built_in">UIPageViewControllerTransitionStylePageCurl</span> = <span class="number">0</span>, <span class="comment">//类似于书本翻页效果</span></div><div class="line">    <span class="built_in">UIPageViewControllerTransitionStyleScroll</span> = <span class="number">1</span>    <span class="comment">//类似于ScrollView的滑动效果</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>上面初始化方法中的 <code>UIPageViewControllerNavigationOrientation</code> 属性设置翻页的方向，枚举如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIPageViewControllerNavigationOrientation</span>) &#123;</div><div class="line">    <span class="built_in">UIPageViewControllerNavigationOrientationHorizontal</span> = <span class="number">0</span>,  <span class="comment">//水平翻页</span></div><div class="line">    <span class="built_in">UIPageViewControllerNavigationOrientationVertical</span> = <span class="number">1</span>     <span class="comment">//竖直翻页</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>options参数用于设置翻页视图控制器的配置字典，其可以设置的配置键值如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这个键需要设置为UIPageViewControllerOptionSpineLocationKey枚举值对应的NSNumber对象 设置翻页控制器的书轴 后面会介绍</span></div><div class="line"><span class="built_in">NSString</span> * <span class="keyword">const</span> <span class="built_in">UIPageViewControllerOptionSpineLocationKey</span>;</div><div class="line"><span class="comment">//这个键需要设置为NSNumber类型 设置每页视图的间距 用于滚动视图风格的</span></div><div class="line"><span class="built_in">NSString</span> * <span class="keyword">const</span> <span class="built_in">UIPageViewControllerOptionInterPageSpacingKey</span>;</div></pre></td></tr></table></figure>
+<p>下面是UIPageViewController的一些常用属性与方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//设置数据源</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;<span class="built_in">UIPageViewControllerDelegate</span>&gt; delegate;</div><div class="line"><span class="comment">//设置代理</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">nonatomic</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;<span class="built_in">UIPageViewControllerDataSource</span>&gt; dataSource;</div><div class="line"><span class="comment">//获取翻页风格</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>) <span class="built_in">UIPageViewControllerTransitionStyle</span> transitionStyle;</div><div class="line"><span class="comment">//获取翻页方向</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>) <span class="built_in">UIPageViewControllerNavigationOrientation</span> navigationOrientation;</div><div class="line"><span class="comment">//获取书轴类型</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>) <span class="built_in">UIPageViewControllerSpineLocation</span> spineLocation;</div><div class="line"><span class="comment">//设置是否双面显示</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">getter</span>=isDoubleSided) <span class="built_in">BOOL</span> doubleSided;</div><div class="line"><span class="comment">//设置要显示的视图控制器</span></div><div class="line">- (<span class="keyword">void</span>)setViewControllers:(<span class="keyword">nullable</span> <span class="built_in">NSArray</span>&lt;<span class="built_in">UIViewController</span> *&gt; *)viewControllers direction:(<span class="built_in">UIPageViewControllerNavigationDirection</span>)direction animated:(<span class="built_in">BOOL</span>)animated completion:(<span class="keyword">void</span> (^ __<span class="keyword">nullable</span>)(<span class="built_in">BOOL</span> finished))completion;</div></pre></td></tr></table></figure>
+<p>上面只有spineLocation属性有些难于理解，其枚举如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">UIPageViewControllerSpineLocation</span>) &#123;</div><div class="line">    <span class="comment">//对于SCrollView类型的滑动效果 没有书轴 会返回下面这个枚举值</span></div><div class="line">    <span class="built_in">UIPageViewControllerSpineLocationNone</span> = <span class="number">0</span>, </div><div class="line">    <span class="comment">//以左边或者上边为轴进行翻转 界面同一时间只显示一个View</span></div><div class="line">    <span class="built_in">UIPageViewControllerSpineLocationMin</span> = <span class="number">1</span>,  </div><div class="line">    <span class="comment">//以中间为轴进行翻转 界面同时可以显示两个View</span></div><div class="line">    <span class="built_in">UIPageViewControllerSpineLocationMid</span> = <span class="number">2</span>, </div><div class="line">    <span class="comment">//以下边或者右边为轴进行翻转 界面同一时间只显示一个View</span></div><div class="line">    <span class="built_in">UIPageViewControllerSpineLocationMax</span> = <span class="number">3</span>   </div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h2 id="UIPageViewControllerDataSource中方法解析"><a href="#UIPageViewControllerDataSource中方法解析" class="headerlink" title="UIPageViewControllerDataSource中方法解析"></a>UIPageViewControllerDataSource中方法解析</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//向前翻页展示的ViewController</span></div><div class="line">- (<span class="keyword">nullable</span> <span class="built_in">UIViewController</span> *)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController viewControllerBeforeViewController:(<span class="built_in">UIViewController</span> *)viewController;</div><div class="line"><span class="comment">//向后翻页展示的ViewController</span></div><div class="line">- (<span class="keyword">nullable</span> <span class="built_in">UIViewController</span> *)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController viewControllerAfterViewController:(<span class="built_in">UIViewController</span> *)viewController;</div><div class="line"><span class="comment">//设置分页控制器的分页点数</span></div><div class="line">- (<span class="built_in">NSInteger</span>)presentationCountForPageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">6</span>_0);</div><div class="line"><span class="comment">//设置当前分页控制器所高亮的点</span></div><div class="line">- (<span class="built_in">NSInteger</span>)presentationIndexForPageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">6</span>_0);</div></pre></td></tr></table></figure>
+<h2 id="UIPageViewControllerDelegate中方法解析"><a href="#UIPageViewControllerDelegate中方法解析" class="headerlink" title="UIPageViewControllerDelegate中方法解析"></a>UIPageViewControllerDelegate中方法解析</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//翻页视图控制器将要翻页时执行的方法</span></div><div class="line">- (<span class="keyword">void</span>)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController willTransitionToViewControllers:(<span class="built_in">NSArray</span>&lt;<span class="built_in">UIViewController</span> *&gt; *)pendingViewControllers <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">6</span>_0);</div><div class="line"><span class="comment">//翻页动画执行完成后回调的方法</span></div><div class="line">- (<span class="keyword">void</span>)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController didFinishAnimating:(<span class="built_in">BOOL</span>)finished previousViewControllers:(<span class="built_in">NSArray</span>&lt;<span class="built_in">UIViewController</span> *&gt; *)previousViewControllers transitionCompleted:(<span class="built_in">BOOL</span>)completed;</div><div class="line"><span class="comment">//屏幕防线改变时回到的方法，可以通过返回值重设书轴类型枚举</span></div><div class="line">- (<span class="built_in">UIPageViewControllerSpineLocation</span>)pageViewController:(<span class="built_in">UIPageViewController</span> *)pageViewController spineLocationForInterfaceOrientation:(<span class="built_in">UIInterfaceOrientation</span>)orientation;</div></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/翻页/">翻页</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://yoursite.com/blog/2016/06/23/ios-fan-ye-shi-tu-kong-zhi-qi/" data-title="iOS - 翻页视图控制器 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/07/31/aria2-an-zhuang-he-shi-yong/" title="Aria2 安装和使用">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--Aria2 安装和使用</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/05/27/ios-duo-yu-yan-ben-di-hua/"  title="iOS - 多语言本地化">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>iOS - 多语言本地化-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

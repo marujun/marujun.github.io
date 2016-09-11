@@ -1,0 +1,468 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>在iOS开发中使用自定义字体 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="在iOS的项目开发中经常遇到需要使用一些自定义的字体文件，之前我们为了使用这些自定义的字体，在应用的资源包中放入这些字体文件。
+因为字体文件通常比较大，这样打包后的ipa文件的体积就可能会变得很大，对于只有个别的模块需要特殊的字体样式的应用来说很不划算，那么在iOS6.0以后苹果就开放了动态加载字体的权限。下面就iOS中使用字体的这两种方式进行介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在iOS开发中使用自定义字体">
+<meta property="og:url" content="http://yoursite.com/blog/2016/04/08/zai-ioskai-fa-zhong-shi-yong-zi-ding-yi-zi-ti/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="在iOS的项目开发中经常遇到需要使用一些自定义的字体文件，之前我们为了使用这些自定义的字体，在应用的资源包中放入这些字体文件。
+因为字体文件通常比较大，这样打包后的ipa文件的体积就可能会变得很大，对于只有个别的模块需要特殊的字体样式的应用来说很不划算，那么在iOS6.0以后苹果就开放了动态加载字体的权限。下面就iOS中使用字体的这两种方式进行介绍。">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/custom_font_1.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/custom_font_2.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/custom_font_3.png">
+<meta property="og:image" content="http://yoursite.com/images/2016/04/custom_font_4.png">
+<meta property="og:updated_time" content="2016-09-11T09:04:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在iOS开发中使用自定义字体">
+<meta name="twitter:description" content="在iOS的项目开发中经常遇到需要使用一些自定义的字体文件，之前我们为了使用这些自定义的字体，在应用的资源包中放入这些字体文件。
+因为字体文件通常比较大，这样打包后的ipa文件的体积就可能会变得很大，对于只有个别的模块需要特殊的字体样式的应用来说很不划算，那么在iOS6.0以后苹果就开放了动态加载字体的权限。下面就iOS中使用字体的这两种方式进行介绍。">
+<meta name="twitter:image" content="http://yoursite.com/images/2016/04/custom_font_1.png">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/04/08/zai-ioskai-fa-zhong-shi-yong-zi-ding-yi-zi-ti/" title="在iOS开发中使用自定义字体" itemprop="url">在iOS开发中使用自定义字体</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-04-08T06:46:30.000Z" itemprop="datePublished"> 发表于 2016-04-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用静态字体"><span class="toc-number">1.</span> <span class="toc-text">使用静态字体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#将字体文件拷贝到项目工程中"><span class="toc-number">1.1.</span> <span class="toc-text">将字体文件拷贝到项目工程中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用时直接按照如下方式即可："><span class="toc-number">1.2.</span> <span class="toc-text">使用时直接按照如下方式即可：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他说明："><span class="toc-number">1.3.</span> <span class="toc-text">其他说明：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#打印出当前所有可用的字体，查找对应的字体名称"><span class="toc-number">1.3.1.</span> <span class="toc-text">打印出当前所有可用的字体，查找对应的字体名称</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过Mac自带的字体册查看字体的名称"><span class="toc-number">1.3.2.</span> <span class="toc-text">通过Mac自带的字体册查看字体的名称</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用动态字体"><span class="toc-number">2.</span> <span class="toc-text">使用动态字体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#动态下载自定义的字体"><span class="toc-number">2.1.</span> <span class="toc-text">动态下载自定义的字体</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#下载字体文件"><span class="toc-number">2.1.1.</span> <span class="toc-text">下载字体文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解压zip压缩包"><span class="toc-number">2.1.2.</span> <span class="toc-text">解压zip压缩包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注册指定路径下的字体文件"><span class="toc-number">2.1.3.</span> <span class="toc-text">注册指定路径下的字体文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#判断字体是否加载"><span class="toc-number">2.1.4.</span> <span class="toc-text">判断字体是否加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他说明"><span class="toc-number">2.1.5.</span> <span class="toc-text">其他说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态下载苹果提供的字体"><span class="toc-number">2.2.</span> <span class="toc-text">动态下载苹果提供的字体</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#苹果支持下载的字体列表"><span class="toc-number">2.2.1.</span> <span class="toc-text">苹果支持下载的字体列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#官方提供的示例代码"><span class="toc-number">2.2.2.</span> <span class="toc-text">官方提供的示例代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#判断字体是否已经被下载过"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">判断字体是否已经被下载过</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#下载字体"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">下载字体</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#说明"><span class="toc-number">2.2.3.</span> <span class="toc-text">说明</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<!-- { % img fancybox /images/2016/04/demo.png %} --> 
+<p>在iOS的项目开发中经常遇到需要使用一些自定义的字体文件，之前我们为了使用这些自定义的字体，在应用的资源包中放入这些字体文件。</p>
+<p>因为字体文件通常比较大，这样打包后的ipa文件的体积就可能会变得很大，对于只有个别的模块需要特殊的字体样式的应用来说很不划算，那么在iOS6.0以后苹果就开放了动态加载字体的权限。下面就iOS中使用字体的这两种方式进行介绍。<br><a id="more"></a></p>
+<h2 id="使用静态字体"><a href="#使用静态字体" class="headerlink" title="使用静态字体"></a>使用静态字体</h2><h3 id="将字体文件拷贝到项目工程中"><a href="#将字体文件拷贝到项目工程中" class="headerlink" title="将字体文件拷贝到项目工程中"></a>将字体文件拷贝到项目工程中</h3><p>在 <code>Info.plist</code> 文件中添加 <code>Fonts provided by application</code> 的配置项，其中每一个Item对应的是字体文件的名称，如 <code>DS-DIGI.TTF</code> 。</p>
+<img src="/images/2016/04/custom_font_1.png" class="fancybox">
+<h3 id="使用时直接按照如下方式即可："><a href="#使用时直接按照如下方式即可：" class="headerlink" title="使用时直接按照如下方式即可："></a>使用时直接按照如下方式即可：</h3><p><code>_textLabel1.font = [UIFont fontWithName:@&quot;DS-Digital&quot; size:40];</code></p>
+<p>效果如下：</p>
+<img src="/images/2016/04/custom_font_2.png" class="fancybox">
+<h3 id="其他说明："><a href="#其他说明：" class="headerlink" title="其他说明："></a>其他说明：</h3><p><code>+ (UIFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize;</code> 这个方法中需要指定的fontName不是前面设置的字体文件的文件名，而应该是字体的名称，如何获取字体的名称可以通过如下方式：<br><br></p>
+<h4 id="打印出当前所有可用的字体，查找对应的字体名称"><a href="#打印出当前所有可用的字体，查找对应的字体名称" class="headerlink" title="打印出当前所有可用的字体，查找对应的字体名称"></a>打印出当前所有可用的字体，查找对应的字体名称</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)printAllFonts  </div><div class="line">&#123;  </div><div class="line">    <span class="built_in">NSArray</span> *fontFamilies = [<span class="built_in">UIFont</span> familyNames];  </div><div class="line">    <span class="keyword">for</span> (<span class="built_in">NSString</span> *fontFamily <span class="keyword">in</span> fontFamilies)  </div><div class="line">    &#123;  </div><div class="line">        <span class="built_in">NSArray</span> *fontNames = [<span class="built_in">UIFont</span> fontNamesForFamilyName:fontFamily];  </div><div class="line">        <span class="built_in">NSLog</span> (<span class="string">@"%@: %@"</span>, fontFamily, fontNames);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><br></p>
+<h4 id="通过Mac自带的字体册查看字体的名称"><a href="#通过Mac自带的字体册查看字体的名称" class="headerlink" title="通过Mac自带的字体册查看字体的名称"></a>通过Mac自带的字体册查看字体的名称</h4><p>直接双击字体即可打开字体册，如果系统没有安装该字体按照要求安装即可，然后可以在字体的详细信息中找到对应的字体的名称：</p>
+<img src="/images/2016/04/custom_font_3.png" class="fancybox">
+<h2 id="使用动态字体"><a href="#使用动态字体" class="headerlink" title="使用动态字体"></a>使用动态字体</h2><h3 id="动态下载自定义的字体"><a href="#动态下载自定义的字体" class="headerlink" title="动态下载自定义的字体"></a>动态下载自定义的字体</h3><p>在网易新闻iOS客户端中可以使用自定义的字体，对于未下载的字体可先下载然后安装下次就能自动设置为该字体，效果如下：</p>
+<img src="/images/2016/04/custom_font_4.png" class="fancybox">
+<p>下面就该功能简单介绍实现的步骤:</p>
+<p>第一次进入该页面会自动到服务器上获取可使用的字体的列表，示例如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[  </div><div class="line">  &#123;  </div><div class="line">      <span class="string">"fontTitle"</span>: <span class="string">"华康圆体"</span>,  </div><div class="line">      <span class="string">"regularName"</span>: <span class="string">"DFYuanW3-GB"</span>,  </div><div class="line">      <span class="string">"boldName"</span>: <span class="string">"DFYuanW5-GB"</span>,  </div><div class="line">      <span class="string">"author"</span>: <span class="string">"华康科技"</span>,  </div><div class="line">      <span class="string">"date"</span>: <span class="string">"2012-10-11"</span>,  </div><div class="line">      <span class="string">"fileUrl"</span>: <span class="string">"http://xxxx/font/dfgb_y.zip"</span>,  </div><div class="line">      <span class="string">"fileSize"</span>: <span class="string">"3.3MB"</span>,  </div><div class="line">      <span class="string">"previewUrl"</span>: <span class="string">"http://yyyy/font/ios_yuanti.png"</span>  </div><div class="line">  &#125;  </div><div class="line">]</div></pre></td></tr></table></figure>
+<p>上面的内容指明了字体的名称，下载地址等信息，从上面的内容可以看出下载回来的字体文件是一个zip压缩包，再使用前还需要进行解压处理。<br><br></p>
+<h4 id="下载字体文件"><a href="#下载字体文件" class="headerlink" title="下载字体文件"></a>下载字体文件</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)downloadZipFile:(<span class="built_in">NSString</span> *)fileUrl toPath:(<span class="built_in">NSString</span> *)path  </div><div class="line">&#123;  </div><div class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;  </div><div class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:fileUrl];  </div><div class="line">    <span class="built_in">NSString</span> *fileName = [url lastPathComponent];  </div><div class="line">    <span class="built_in">NSData</span> *data = [<span class="built_in">NSData</span> dataWithContentsOfURL:url options:<span class="number">0</span> error:&amp;error];  </div><div class="line">    <span class="keyword">if</span>(!error)  </div><div class="line">    &#123;  </div><div class="line">        <span class="built_in">NSString</span> *zipPath = [path stringByAppendingPathComponent:fileName];  </div><div class="line">        [data writeToFile:zipPath options:<span class="number">0</span> error:&amp;error];  </div><div class="line">        <span class="keyword">if</span>(!error)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">return</span> zipPath;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><br></p>
+<h4 id="解压zip压缩包"><a href="#解压zip压缩包" class="headerlink" title="解压zip压缩包"></a>解压zip压缩包</h4><p>iOS中解压zip压缩文件非常方便，使用ZipArchive这个开源项目按照如下的方式即可快速解压zip文件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span> *)expandZipFile:(<span class="built_in">NSString</span> *)src toPath:(<span class="built_in">NSString</span> *)desc  </div><div class="line">&#123;  </div><div class="line">    ZipArchive *za = [[ZipArchive alloc] init];  </div><div class="line">    <span class="keyword">if</span> ([za UnzipOpenFile:src])  </div><div class="line">    &#123;  </div><div class="line">        <span class="built_in">BOOL</span> ret = [za UnzipFileTo:desc overWrite:<span class="literal">YES</span>];<span class="comment">//解压文件  </span></div><div class="line">        <span class="keyword">if</span>(ret)  </div><div class="line">        &#123;  </div><div class="line">            <span class="built_in">NSString</span> *zipName = [src lastPathComponent];<span class="comment">//获取zip文件的文件名  </span></div><div class="line">            [[<span class="built_in">NSFileManager</span> defaultManager] removeItemAtPath:zipPath error:<span class="literal">nil</span>];<span class="comment">//删除zip压缩包  </span></div><div class="line">            zipName = [zipName substringToIndex:[zipName rangeOfString:<span class="string">@".zip"</span>].location];<span class="comment">//获取解压到的文件夹  </span></div><div class="line">            <span class="keyword">return</span> [<span class="keyword">self</span>.downloadPath stringByAppendingPathComponent:zipName];  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>ZipArchive</code> 项目地址：<a href="https://github.com/mattconnolly/ZipArchive" target="_blank" rel="external">https://github.com/mattconnolly/ZipArchive</a><br><br></p>
+<h4 id="注册指定路径下的字体文件"><a href="#注册指定路径下的字体文件" class="headerlink" title="注册指定路径下的字体文件"></a>注册指定路径下的字体文件</h4><p>下载回来的字体文件如果不做处理是不能直接使用的，使用前需要先注册然后才能使用，注册方式如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)registerFont:(<span class="built_in">NSString</span> *)fontPath  </div><div class="line">&#123;  </div><div class="line">    <span class="built_in">NSData</span> *dynamicFontData = [<span class="built_in">NSData</span> dataWithContentsOfFile:fontPath];  </div><div class="line">    <span class="keyword">if</span> (!dynamicFontData)  </div><div class="line">    &#123;  </div><div class="line">        <span class="keyword">return</span>;  </div><div class="line">    &#125;  </div><div class="line">    <span class="built_in">CFErrorRef</span> error;  </div><div class="line">    <span class="built_in">CGDataProviderRef</span> providerRef = <span class="built_in">CGDataProviderCreateWithCFData</span>((__bridge <span class="built_in">CFDataRef</span>)dynamicFontData);  </div><div class="line">    <span class="built_in">CGFontRef</span> font = <span class="built_in">CGFontCreateWithDataProvider</span>(providerRef);  </div><div class="line">    <span class="keyword">if</span> (! <span class="built_in">CTFontManagerRegisterGraphicsFont</span>(font, &amp;error))  </div><div class="line">    &#123;  </div><div class="line">        <span class="comment">//注册失败  </span></div><div class="line">        <span class="built_in">CFStringRef</span> errorDescription = <span class="built_in">CFErrorCopyDescription</span>(error);  </div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Failed to load font: %@"</span>, errorDescription);  </div><div class="line">        <span class="built_in">CFRelease</span>(errorDescription);  </div><div class="line">    &#125;  </div><div class="line">    <span class="built_in">CFRelease</span>(font);  </div><div class="line">    <span class="built_in">CFRelease</span>(providerRef);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>需要先引入 <code>#import &lt;CoreText/CoreText.h&gt;</code> 框架。<br><br></p>
+<h4 id="判断字体是否加载"><a href="#判断字体是否加载" class="headerlink" title="判断字体是否加载"></a>判断字体是否加载</h4><p>在使用字体文件前最好是先判断字体是否已经被加载过了，判断方式如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isFontDownloaded:(<span class="built_in">NSString</span> *)fontName  </div><div class="line">&#123;  </div><div class="line">    <span class="built_in">UIFont</span>* aFont = [<span class="built_in">UIFont</span> fontWithName:fontName size:<span class="number">12.0</span>];  </div><div class="line">    <span class="built_in">BOOL</span> isDownloaded = (aFont &amp;&amp; ([aFont.fontName compare:fontName] == <span class="built_in">NSOrderedSame</span> || [aFont.familyName compare:fontName] == <span class="built_in">NSOrderedSame</span>));  </div><div class="line">    <span class="keyword">return</span> isDownloaded;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><br></p>
+<h4 id="其他说明"><a href="#其他说明" class="headerlink" title="其他说明"></a>其他说明</h4><p>经测试注册过的字体在应用关闭后下次开启应用，判断字体是否加载时返回为NO，为了保证正常使用需要每次启动应用的时候先遍历一遍字体文件夹将里面的字体文件都再次注册一遍即可。参考代码如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//注册fonts目录下面的所有字体文件  </span></div><div class="line"><span class="built_in">NSArray</span> *ary = [[<span class="built_in">NSFileManager</span> defaultManager] contentsOfDirectoryAtPath:<span class="keyword">self</span>.downloadPath error:<span class="literal">nil</span>];  </div><div class="line"><span class="keyword">for</span> (<span class="built_in">NSString</span> *p1 <span class="keyword">in</span> ary)  </div><div class="line">&#123;  </div><div class="line">  <span class="built_in">NSString</span> *t1 = [<span class="keyword">self</span>.downloadPath stringByAppendingPathComponent:p1];  </div><div class="line">  <span class="built_in">NSArray</span> *ary1 = [[<span class="built_in">NSFileManager</span> defaultManager] contentsOfDirectoryAtPath:t1 error:<span class="literal">nil</span>];  </div><div class="line">  <span class="keyword">for</span> (<span class="built_in">NSString</span> *p1 <span class="keyword">in</span> ary1)  </div><div class="line">  &#123;  </div><div class="line">      <span class="built_in">NSString</span> *t2 = [t1 stringByAppendingPathComponent:p1];  </div><div class="line">      <span class="keyword">if</span>([t2 rangeOfString:<span class="string">@".ttf"</span>].location != <span class="built_in">NSNotFound</span>)  </div><div class="line">      &#123;  </div><div class="line">          [<span class="keyword">self</span> registerFont:t2];  </div><div class="line">      &#125;  </div><div class="line">  &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="动态下载苹果提供的字体"><a href="#动态下载苹果提供的字体" class="headerlink" title="动态下载苹果提供的字体"></a>动态下载苹果提供的字体</h3><p>大多数的中文字体是有版权的，在应用中加入特殊中文字体还需要处理相应的版权问题。从iOS6开始，苹果就支持动态下载中文字体到系统中。<br><br></p>
+<h4 id="苹果支持下载的字体列表"><a href="#苹果支持下载的字体列表" class="headerlink" title="苹果支持下载的字体列表"></a>苹果支持下载的字体列表</h4><ul>
+<li>iOS6字体列表：<a href="http://support.apple.com/zh-cn/HT202599" target="_blank" rel="external">http://support.apple.com/zh-cn/HT202599</a></li>
+<li>iOS7字体列表：<a href="http://support.apple.com/zh-cn/HT5878" target="_blank" rel="external">http://support.apple.com/zh-cn/HT5878</a><br><br></li>
+</ul>
+<h4 id="官方提供的示例代码"><a href="#官方提供的示例代码" class="headerlink" title="官方提供的示例代码"></a>官方提供的示例代码</h4><p><a href="https://developer.apple.com/library/ios/samplecode/DownloadFont/Introduction/Intro.html" target="_blank" rel="external">https://developer.apple.com/library/ios/samplecode/DownloadFont/Introduction/Intro.html</a>下载示例程序。</p>
+<p>针对示例程序简单介绍如下：<br><br></p>
+<h5 id="判断字体是否已经被下载过"><a href="#判断字体是否已经被下载过" class="headerlink" title="判断字体是否已经被下载过"></a>判断字体是否已经被下载过</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIFont</span>* aFont = [<span class="built_in">UIFont</span> fontWithName:fontName size:<span class="number">12.</span>];  </div><div class="line"><span class="keyword">if</span> (aFont &amp;&amp; ([aFont.fontName compare:fontName] == <span class="built_in">NSOrderedSame</span> || [aFont.familyName compare:fontName] == <span class="built_in">NSOrderedSame</span>)) &#123;  </div><div class="line">  <span class="comment">// 字体已经被加载过，可以直接使用  </span></div><div class="line">  <span class="keyword">return</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><br></p>
+<h5 id="下载字体"><a href="#下载字体" class="headerlink" title="下载字体"></a>下载字体</h5><p>根据字体的PostScript名称构建下载字体所需的参数：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//使用字体的PostScript名称构建一个字典  </span></div><div class="line"><span class="built_in">NSMutableDictionary</span> *attrs = [<span class="built_in">NSMutableDictionary</span> dictionaryWithObjectsAndKeys:fontName, kCTFontNameAttribute, <span class="literal">nil</span> <span class="literal">nil</span>];  </div><div class="line"><span class="comment">//根据上面的字典创建一个字体描述对象  </span></div><div class="line"><span class="built_in">CTFontDescriptorRef</span> desc = <span class="built_in">CTFontDescriptorCreateWithAttributes</span>((__bridge <span class="built_in">CFDictionaryRef</span>)attrs);  </div><div class="line"><span class="comment">//将字体描述对象放到一个数组中  </span></div><div class="line"><span class="built_in">NSMutableArray</span> *descs = [<span class="built_in">NSMutableArray</span> arrayWithCapacity:<span class="number">0</span>];  </div><div class="line">[descs addObject:(__bridge <span class="keyword">id</span>)desc];  </div><div class="line"><span class="built_in">CFRelease</span>(desc);</div></pre></td></tr></table></figure>
+<p>下载字体文件：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">_block <span class="built_in">BOOL</span> errorDuringDownload = <span class="literal">NO</span>;  </div><div class="line"><span class="built_in">CTFontDescriptorMatchFontDescriptorsWithProgressHandler</span>( (__bridge <span class="built_in">CFArrayRef</span>)descs, <span class="literal">NULL</span>,  ^(<span class="built_in">CTFontDescriptorMatchingState</span> state, <span class="built_in">CFDictionaryRef</span> progressParameter) &#123;  </div><div class="line">    <span class="comment">//下载的进度      </span></div><div class="line">  <span class="keyword">double</span> progressValue = [[(__bridge <span class="built_in">NSDictionary</span> *)progressParameter objectForKey:(<span class="keyword">id</span>)kCTFontDescriptorMatchingPercentage] doubleValue];  </div><div class="line">  <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidBegin) &#123;  </div><div class="line">      <span class="built_in">dispatch_async</span>( dispatch_get_main_queue(), ^ &#123;  </div><div class="line">          <span class="comment">//开始匹配  </span></div><div class="line">          <span class="built_in">NSLog</span>(<span class="string">@"Begin Matching"</span>);  </div><div class="line">      &#125;);  </div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidFinish) &#123;  </div><div class="line">      <span class="built_in">dispatch_async</span>( dispatch_get_main_queue(), ^ &#123;  </div><div class="line">          <span class="keyword">if</span> (!errorDuringDownload) &#123;  </div><div class="line">              <span class="comment">//字体下载完成  </span></div><div class="line">              <span class="built_in">NSLog</span>(<span class="string">@"%@ downloaded"</span>, fontName);  </div><div class="line">               <span class="comment">//<span class="doctag">TODO:</span>在此修改UI控件的字体样式  </span></div><div class="line">          &#125;  </div><div class="line">      &#125;);  </div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingWillBeginDownloading) &#123;  </div><div class="line">      <span class="comment">//开始下载  </span></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Begin Downloading"</span>);  </div><div class="line">        <span class="built_in">dispatch_async</span>( dispatch_get_main_queue(), ^ &#123;  </div><div class="line">          <span class="comment">//<span class="doctag">TODO:</span>在此显示下载进度提示  </span></div><div class="line">      &#125;);  </div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidFinishDownloading) &#123;  </div><div class="line">      <span class="comment">//下载完成  </span></div><div class="line">      <span class="built_in">NSLog</span>(<span class="string">@"Finish downloading"</span>);  </div><div class="line">      <span class="built_in">dispatch_async</span>( dispatch_get_main_queue(), ^ &#123;  </div><div class="line">          <span class="comment">//<span class="doctag">TODO:</span>在此修改UI控件的字体样式，隐藏下载进度提示  </span></div><div class="line">      &#125;);  </div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDownloading) &#123;  </div><div class="line">      <span class="comment">//正在下载  </span></div><div class="line">      <span class="built_in">NSLog</span>(<span class="string">@"Downloading %.0f%% complete"</span>, progressValue);  </div><div class="line">      <span class="built_in">dispatch_async</span>( dispatch_get_main_queue(), ^ &#123;  </div><div class="line">          <span class="comment">//<span class="doctag">TODO:</span>在此修改下载进度条的数值  </span></div><div class="line">      &#125;);  </div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (state == kCTFontDescriptorMatchingDidFailWithError) &#123;  </div><div class="line">      <span class="comment">//下载遇到错误，获取错误信息  </span></div><div class="line">      <span class="built_in">NSError</span> *error = [(__bridge <span class="built_in">NSDictionary</span> *)progressParameter objectForKey:(<span class="keyword">id</span>)kCTFontDescriptorMatchingError];  </div><div class="line">      <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, [error localizedDescription]);  </div><div class="line">      <span class="comment">//设置下载错误标志  </span></div><div class="line">      errorDuringDownload = <span class="literal">YES</span>;  </div><div class="line">  &#125;  </div><div class="line">    <span class="keyword">return</span> (<span class="keyword">bool</span>)<span class="literal">YES</span>;  </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><ol>
+<li>使用动态下载中文字体的API可以动态地向iOS系统中添加字体文件，这些字体文件都是下载到系统的目录中（目录是/private/var/mobile/Library/Assets/com_apple_MobileAsset_Font/），所以并不会造成应用体积的增加，而且可以在多个应用中共享。</li>
+<li>如何获取字体的PostScript和FontName？可以通过Mac系统自带的字体册来查看。具体请参考前面的步骤。</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/字体/">字体</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://yoursite.com/blog/2016/04/08/zai-ioskai-fa-zhong-shi-yong-zi-ding-yi-zi-ti/" data-title="在iOS开发中使用自定义字体 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/04/09/iosshi-pin-bian-xia-bian-bo-huan-cun-bo-fang-shu-ju-liu/" title="iOS视频边下边播--缓存播放数据流">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS视频边下边播--缓存播放数据流</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/04/02/zai-octopresszhong-tian-jia-biao-qian/"  title="在Octopress中添加标签">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>在Octopress中添加标签-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Octopress/" title="Octopress">Octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
