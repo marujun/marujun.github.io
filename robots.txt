@@ -1,0 +1,8 @@
+---
+layout: null
+---
+User-agent: *
+Disallow: /tags/
+Disallow: /blog/categories/
+
+Sitemap: {{ site.url }}/sitemap.xml 
