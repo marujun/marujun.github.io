@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://devma.cn/blog/2016/09/08/ios-ben-di-zi-dong-da-bao-gong-ju/</loc>
+    
+    <lastmod>2016-09-12T11:20:27.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/09/11/migrate-to-hexo-from-octopress/</loc>
     
     <lastmod>2016-09-12T02:28:08.000Z</lastmod>
@@ -16,14 +23,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/06/06/ios-dan-yuan-ce-shi-zhi-xctest/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2015/06/02/shen-ru-li-jie-runloop/</loc>
+    <loc>http://devma.cn/blog/2015/08/08/gcdshi-yong-zhi-dispatch-group/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -44,14 +44,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/</loc>
+    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
+    <loc>http://devma.cn/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -86,14 +86,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/28/octopress-da-jian-liu-cheng/</loc>
+    <loc>http://devma.cn/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/</loc>
+    <loc>http://devma.cn/blog/2016/03/28/octopress-da-jian-liu-cheng/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -107,13 +107,6 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/29/zai-octopresszhong-tian-jia-tu-pian-fang-da/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://devma.cn/blog/2016/03/30/ios-kai-fa-chang-yong-shu-xue-han-shu/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
@@ -121,7 +114,21 @@
   </url>
   
   <url>
+    <loc>http://devma.cn/blog/2016/03/29/zai-octopresszhong-tian-jia-tu-pian-fang-da/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/04/01/ru-he-sheng-cheng-wen-zi-lou-kong-de-tu-pian/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/04/09/iosshi-pin-bian-xia-bian-bo-huan-cun-bo-fang-shu-ju-liu/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -142,14 +149,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/09/iosshi-pin-bian-xia-bian-bo-huan-cun-bo-fang-shu-ju-liu/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2015/08/08/gcdshi-yong-zhi-dispatch-group/</loc>
+    <loc>http://devma.cn/blog/2015/06/02/shen-ru-li-jie-runloop/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -177,14 +177,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/13/ioskai-fa-zhi-dong-hua-coreanimation/</loc>
+    <loc>http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/</loc>
+    <loc>http://devma.cn/blog/2016/04/13/ioskai-fa-zhi-dong-hua-coreanimation/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -261,14 +261,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/09/08/ios-ben-di-zi-dong-da-bao-gong-ju/</loc>
+    <loc>http://devma.cn/blog/2015/05/31/zi-ding-yi-core-data-qian-yi/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/05/31/zi-ding-yi-core-data-qian-yi/</loc>
+    <loc>http://devma.cn/blog/2015/06/06/ios-dan-yuan-ce-shi-zhi-xctest/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
