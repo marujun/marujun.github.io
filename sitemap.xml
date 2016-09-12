@@ -4,7 +4,7 @@
   <url>
     <loc>http://devma.cn/blog/2016/09/11/migrate-to-hexo-from-octopress/</loc>
     
-    <lastmod>2016-09-12T02:22:39.000Z</lastmod>
+    <lastmod>2016-09-12T02:28:08.000Z</lastmod>
     
   </url>
   
@@ -37,13 +37,6 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://devma.cn/blog/2015/08/25/gcdshi-yong-jing-yan-yu-ji-qiao-qian-tan/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
@@ -51,14 +44,21 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
+    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
+    <loc>http://devma.cn/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -107,6 +107,13 @@
   </url>
   
   <url>
+    <loc>http://devma.cn/blog/2016/03/29/zai-octopresszhong-tian-jia-tu-pian-fang-da/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/03/30/ios-kai-fa-chang-yong-shu-xue-han-shu/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
@@ -115,13 +122,6 @@
   
   <url>
     <loc>http://devma.cn/blog/2016/04/01/ru-he-sheng-cheng-wen-zi-lou-kong-de-tu-pian/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/03/29/zai-octopresszhong-tian-jia-tu-pian-fang-da/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -156,6 +156,13 @@
   </url>
   
   <url>
+    <loc>http://devma.cn/blog/2016/04/11/iphone6fen-bian-lu-yu-gua-pei/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/04/11/zai-ios9zhong-shi-yong-3d-touch/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
@@ -170,6 +177,13 @@
   </url>
   
   <url>
+    <loc>http://devma.cn/blog/2016/04/13/ioskai-fa-zhi-dong-hua-coreanimation/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
@@ -177,7 +191,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/13/ioskai-fa-zhi-dong-hua-coreanimation/</loc>
+    <loc>http://devma.cn/blog/2016/04/22/ios-cao-zuo-zi-fu-chuan/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -240,13 +254,6 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/05/31/zi-ding-yi-core-data-qian-yi/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://devma.cn/blog/2016/08/22/ios-wang-luo-an-quan-zhi-https/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
@@ -261,21 +268,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/22/ios-cao-zuo-zi-fu-chuan/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/04/11/iphone6fen-bian-lu-yu-gua-pei/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/google3d60f5c411000328.html</loc>
+    <loc>http://devma.cn/blog/2015/05/31/zi-ding-yi-core-data-qian-yi/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -283,6 +276,13 @@
   
   <url>
     <loc>http://devma.cn/baidu_verify_EeQXnjlUrD.html</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/google3d60f5c411000328.html</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
