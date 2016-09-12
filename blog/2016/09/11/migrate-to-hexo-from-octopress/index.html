@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="极致的技术博客">
 <meta property="og:description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。
 调研了一下，最终决定迁移到 Hexo，主要的原因是：">
-<meta property="og:updated_time" content="2016-09-11T14:27:16.000Z">
+<meta property="og:updated_time" content="2016-09-12T01:36:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="将博客从Octopress迁移往Hexo">
 <meta name="twitter:description" content="之前一直使用Octopress，折腾过好多次，出问题不少，而且生成文章速度越来越慢，需要自己添加各种插件，还弄过支持TOC一直没成功。
@@ -83,7 +83,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#迁移到Hexo"><span class="toc-number">1.</span> <span class="toc-text">迁移到Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#迁移和配置"><span class="toc-number">2.</span> <span class="toc-text">迁移和配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装hexo-deployer-git："><span class="toc-number">2.1.</span> <span class="toc-text">安装hexo-deployer-git：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Sitemap插件"><span class="toc-number">2.2.</span> <span class="toc-text">安装Sitemap插件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置主题"><span class="toc-number">3.</span> <span class="toc-text">配置主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传到Github"><span class="toc-number">4.</span> <span class="toc-text">上传到Github</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新Hexo"><span class="toc-number">5.</span> <span class="toc-text">更新Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用命令"><span class="toc-number">6.</span> <span class="toc-text">常用命令</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#迁移到Hexo"><span class="toc-number">1.</span> <span class="toc-text">迁移到Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#迁移和配置"><span class="toc-number">2.</span> <span class="toc-text">迁移和配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装hexo-deployer-git："><span class="toc-number">2.1.</span> <span class="toc-text">安装hexo-deployer-git：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Sitemap插件"><span class="toc-number">2.2.</span> <span class="toc-text">安装Sitemap插件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置主题"><span class="toc-number">3.</span> <span class="toc-text">配置主题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传到Github"><span class="toc-number">4.</span> <span class="toc-text">上传到Github</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新Hexo"><span class="toc-number">5.</span> <span class="toc-text">更新Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用命令"><span class="toc-number">6.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见问题"><span class="toc-number">7.</span> <span class="toc-text">常见问题</span></a></li></ol>
 		
 		</div>
 		
@@ -97,7 +97,7 @@
 <li>Hexo 对 Octopress 的迁移很友好，图片引用方式完全一样，所以我的博客文章不需要做什么改动。</li>
 </ul>
 <h2 id="迁移到Hexo"><a href="#迁移到Hexo" class="headerlink" title="迁移到Hexo"></a>迁移到Hexo</h2><p>因为GFW的存在，我在运行 <code>npm</code> 命令的时候都在前面加上了 <code>proxychains4</code>: <a href="/blog/2016/03/28/ming-ling-xing-gong-ju-xia-shi-yong-shadowsocks">详细教程</a> </p>
-<p><strong>安装nodejs</strong>：我使用的是 <a href="https://nodejs.org/en/" target="_blank" rel="external">v4.5.0 稳定版</a></p>
+<p><strong>安装nodejs</strong>：我使用的是 <a href="https://nodejs.org/dist/v4.5.0/node-v4.5.0.pkg" target="_blank" rel="external">v4.5.0 稳定版</a>：<a href="https://nodejs.org/en" target="_blank" rel="external">https://nodejs.org/en</a></p>
 <p><strong>安装Hexo：</strong> <code>npm install -g hexo-cli</code></p>
 <p><strong>初始化目录：</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo init &lt;blog&gt;</div><div class="line"><span class="built_in">cd</span> &lt;blog&gt;</div><div class="line">npm install</div></pre></td></tr></table></figure>
@@ -113,14 +113,16 @@
 <h2 id="迁移和配置"><a href="#迁移和配置" class="headerlink" title="迁移和配置"></a>迁移和配置</h2><p>迁移起来还是很方便，把以前 Octopress 的 <code>source/_post</code> 目录下的文章，拷贝到 Hexo 的同名目录下即可。</p>
 <p>以前的图片目录，也可以直接拷贝到 <code>source/images</code> 目录下。</p>
 <p>将之前的 <code>CNAME</code> 文件以及 <code>百度和Google的验证文件</code> 放到source目录下即可。</p>
+<p>然后修改 Hexo <code>_config.yml</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Site</span></div><div class="line">title: <span class="string">'极致的技术博客'</span></div><div class="line">subtitle: <span class="string">'这是我用来记录平日学习笔记的地方，欢迎您的访问.'</span></div><div class="line">author: JiZhi</div><div class="line">language: zh-CN</div><div class="line"></div><div class="line"><span class="comment"># URL</span></div><div class="line"><span class="comment">## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'</span></div><div class="line">url: http://devma.cn</div><div class="line">root: /</div><div class="line">permalink: blog/:year/:month/:day/:title/</div><div class="line"></div><div class="line"><span class="comment"># Writing</span></div><div class="line">new_post_name: :year-:month-:day-:title.markdown <span class="comment"># File name of new posts</span></div></pre></td></tr></table></figure>
 <h3 id="安装hexo-deployer-git："><a href="#安装hexo-deployer-git：" class="headerlink" title="安装hexo-deployer-git："></a>安装hexo-deployer-git：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-generator-sitemap --save</div></pre></td></tr></table></figure>
 <p>添加 <code>--save</code> 参数安装的模块的名字及其版本信息会出现在 <code>package.json</code> 的 <code>dependencies</code> 选项中。</p>
-<p>修改hexo_config.yml</p>
+<p>修改 Hexo <code>_config.yml</code></p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">deploy:</span></div><div class="line">  <span class="symbol">type:</span> git <span class="comment">##部署类型，其它类型自行google之</span></div><div class="line">  <span class="symbol">repo:</span> &lt;repository url&gt; <span class="comment">##git仓库地址</span></div><div class="line">  <span class="symbol">branch:</span> [branch] <span class="comment">##git 页面分支</span></div><div class="line">  <span class="symbol">message:</span> [message] <span class="comment">##git message建议默认字段update 可以自定义</span></div></pre></td></tr></table></figure>
 <p>如果要同时部署在GitHub和Coding上，可以按照下面格式填写：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">   type: git</div><div class="line">   repo: </div><div class="line">      github: git@github.com:&lt;username&gt;/&lt;username&gt;.github.io.git,master</div><div class="line">      coding: git@git.coding.net:&lt;username&gt;/&lt;username&gt;.git,coding-pages</div></pre></td></tr></table></figure>
 <h3 id="安装Sitemap插件"><a href="#安装Sitemap插件" class="headerlink" title="安装Sitemap插件"></a>安装Sitemap插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-generator-sitemap --save</div></pre></td></tr></table></figure>
-<p>修改hexo_config.yml</p>
+<p>修改 Hexo <code>_config.yml</code></p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">plugins:</span></div><div class="line">    -hexo-generator-sitemap  <span class="comment">#插件名</span></div></pre></td></tr></table></figure>
 <h2 id="配置主题"><a href="#配置主题" class="headerlink" title="配置主题"></a>配置主题</h2><p>之前Octopress还弄过侧边栏、多说评论、摘要、访客记录、回到顶部、谷歌统计等，现在没有怪可惜的，但发现Hexo的主题Jacman居然已经帮忙支持了这些功能，还有TOC，这实在是令人欣喜！</p>
 <p><strong>安装主题：</strong></p>
@@ -128,14 +130,14 @@
 <p><strong>使用主题：</strong></p>
 <p>修改 _config.yml 文件如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">theme: jacman</div><div class="line">stylus:</div><div class="line">  compress: true</div></pre></td></tr></table></figure>
-<p>compress值为true，会自动压缩 CSS 文件。</p>
+<p><code>compress</code> 值为true，在 <code>hexo deploy</code> 的时候会自动压缩 CSS 文件。</p>
 <p><strong>更新主题：</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd themes/jacman</div><div class="line">git pull origin master</div></pre></td></tr></table></figure>
 <p><strong>修改主题：</strong></p>
 <p>根据自己的需要修改themes/jacman/_config.yml文件。</p>
 <p>相关的配置教程：<a href="https://github.com/wuchong/jacman/wiki/%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97" target="_blank" rel="external">官方配置指南</a></p>
 <p><a href="https://github.com/marujun/jacman.git" target="_blank" rel="external">这是我 Fork 出来的 jacman 项目地址</a></p>
-<p><strong>添加标签云widget: </strong></p>
+<p><strong>添加 标签云 widget: </strong></p>
 <p>在themes/jacman/_config.yml中，添加如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">widgets:</div><div class="line">- tagcloud</div></pre></td></tr></table></figure>
 <h2 id="上传到Github"><a href="#上传到Github" class="headerlink" title="上传到Github"></a>上传到Github</h2><p>将原来在Github上的Repository删掉重建，格式依旧是<name>.github.io。</name></p>
@@ -146,7 +148,16 @@
 <h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">hexo new &quot;&quot;        #新建文章</div><div class="line">hexo new page &quot;&quot;   #新建页面</div><div class="line">hexo generate      #生成静态页面至public目录</div><div class="line">hexo server        #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos; 关闭server）</div><div class="line">hexo deploy        #将.deploy目录部署到GitHub</div><div class="line">hexo help          #查看帮助</div><div class="line">hexo version       #查看Hexo的版本</div><div class="line">hexo deploy -g     #生成加部署</div><div class="line">hexo server -g     #生成加预览</div></pre></td></tr></table></figure>
 <p>命令简写：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hexo n = hexo new</div><div class="line">hexo g = hexo generate</div><div class="line">hexo s = hexo server</div><div class="line">hexo d = hexo deploy</div></pre></td></tr></table></figure>
-<p>有可能用到的链接：<a href="https://hyxxsfwy.github.io/2016/01/15/Hexo-Markdown-%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/" target="_blank" rel="external">Hexo Markdown 简明语法手册</a></p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
+<li><p>执行 <code>npm install</code> 的时候报错：<code>Error: EACCES: permission denied, open &#39;/Users/name/.npm</code><br> 解决办法：<code>sudo chown -R $(whoami) $HOME/.npm</code></p>
+</li>
+<li><p>Mac 运行 <code>hexo</code> 命令时报错：</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123; [Error: Cannot find module <span class="string">'./build/Release/DTraceProviderBindings'</span>] code: <span class="string">'MODULE_NOT_FOUND'</span> &#125;</div><div class="line">&#123; [Error: Cannot find module <span class="string">'./build/default/DTraceProviderBindings'</span>] code: <span class="string">'MODULE_NOT_FOUND'</span> &#125;</div><div class="line">&#123; [Error: Cannot find module <span class="string">'./build/Debug/DTraceProviderBindings'</span>] code: <span class="string">'MODULE_NOT_FOUND'</span> &#125;</div></pre></td></tr></table></figure>
+<p> 解决办法：安装 <code>hexo-cli</code> 的时候使用翻墙工具 <code>proxychains4 npm install -g hexo-cli</code></p>
+</li>
+<li><p>Markdown 语法：<a href="https://hyxxsfwy.github.io/2016/01/15/Hexo-Markdown-%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/" target="_blank" rel="external">Hexo Markdown 简明语法手册</a></p>
+</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
