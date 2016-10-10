@@ -1,0 +1,469 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Chisel-LLDB命令插件，让调试更Easy | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="LLDB 是一个有着 REPL 的特性和 C++ ,Python 插件的开源调试器。LLDB 绑定在 Xcode 内部，存在于主窗口底部的控制台中。调试器允许你在程序运行的特定时暂停它，你可以查看变量的值，执行自定的指令，并且按照你所认为合适的步骤来操作程序的进展。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chisel-LLDB命令插件，让调试更Easy">
+<meta property="og:url" content="http://devma.cn/blog/2016/08/05/chisel-lldb-ming-ling-cha-jian-rang-diao-shi-geng-easy/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="LLDB 是一个有着 REPL 的特性和 C++ ,Python 插件的开源调试器。LLDB 绑定在 Xcode 内部，存在于主窗口底部的控制台中。调试器允许你在程序运行的特定时暂停它，你可以查看变量的值，执行自定的指令，并且按照你所认为合适的步骤来操作程序的进展。">
+<meta property="og:updated_time" content="2016-10-10T01:40:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chisel-LLDB命令插件，让调试更Easy">
+<meta name="twitter:description" content="LLDB 是一个有着 REPL 的特性和 C++ ,Python 插件的开源调试器。LLDB 绑定在 Xcode 内部，存在于主窗口底部的控制台中。调试器允许你在程序运行的特定时暂停它，你可以查看变量的值，执行自定的指令，并且按照你所认为合适的步骤来操作程序的进展。">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/08/05/chisel-lldb-ming-ling-cha-jian-rang-diao-shi-geng-easy/" title="Chisel-LLDB命令插件，让调试更Easy" itemprop="url">Chisel-LLDB命令插件，让调试更Easy</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-08-05T01:18:03.000Z" itemprop="datePublished"> 发表于 2016-08-05</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装Chisel"><span class="toc-number">1.</span> <span class="toc-text">安装Chisel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内置命令"><span class="toc-number">2.</span> <span class="toc-text">内置命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pviews"><span class="toc-number">2.1.</span> <span class="toc-text">pviews</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pvc"><span class="toc-number">2.2.</span> <span class="toc-text">pvc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#visualize"><span class="toc-number">2.3.</span> <span class="toc-text">visualize</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fv-amp-fvc"><span class="toc-number">2.4.</span> <span class="toc-text">fv & fvc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#show-amp-hide"><span class="toc-number">2.5.</span> <span class="toc-text">show & hide</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mask-umask-border-unborder"><span class="toc-number">2.6.</span> <span class="toc-text">mask/umask border/unborder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#caflush"><span class="toc-number">2.7.</span> <span class="toc-text">caflush</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bmessage"><span class="toc-number">2.8.</span> <span class="toc-text">bmessage</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义命令"><span class="toc-number">3.</span> <span class="toc-text">自定义命令</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img fancybox /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>LLDB 是一个有着 REPL 的特性和 C++ ,Python 插件的开源调试器。LLDB 绑定在 Xcode 内部，存在于主窗口底部的控制台中。调试器允许你在程序运行的特定时暂停它，你可以查看变量的值，执行自定的指令，并且按照你所认为合适的步骤来操作程序的进展。<a id="more"></a>(<a href="http://eli.thegreenplace.net/2011/01/23/how-debuggers-work-part-1.html" target="_blank" rel="external">这里</a>有一个关于调试器如何工作的总体的解释。)</p>
+<p>相信每个人或多或少都在用LLDB来调试，比如 <code>po</code> 一个对象。LLDB的是非常强大的，且有内建的，完整的 Python 支持。今天我们主要介绍一个 facebook 开源的 lldb 插件 Chisel。可以让你的调试更Easy.</p>
+<h2 id="安装Chisel"><a href="#安装Chisel" class="headerlink" title="安装Chisel"></a>安装Chisel</h2><p>源码地址： <a href="https://github.com/facebook/chisel" target="_blank" rel="external">https://github.com/facebook/chisel</a></p>
+<p>Chisel 使用 homebrew 来安装，如果你没有安装homebrew, 参考 <a href="http://brew.sh/index_zh-cn.html" target="_blank" rel="external">homebrew</a>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">brew update</div><div class="line">brew install chisel</div></pre></td></tr></table></figure>
+<p>安装完成按照安装日志上的提示，在 <code>~/.lldbinit</code> 文件中添加一行，没有则新建。 提示类似如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">==&gt; Caveats</div><div class="line">Add the following line to ~/.lldbinit to load chisel when Xcode launches:</div><div class="line">  <span class="built_in">command</span> script import /usr/<span class="built_in">local</span>/opt/chisel/libexec/fblldb.py</div></pre></td></tr></table></figure>
+<p>做好上面的步骤，然后重启Xcode就可以尝试下了。</p>
+<h2 id="内置命令"><a href="#内置命令" class="headerlink" title="内置命令"></a>内置命令</h2><p>Chisel 为lldb提供了新增的便捷命令，是非常实用的命令</p>
+<h3 id="pviews"><a href="#pviews" class="headerlink" title="pviews"></a>pviews</h3><p>这个命令可以递归打印所有的view，并能标示层级，相当于 UIView 的私有辅助方法 <code>[view recursiveDescription]</code> 。 善用使用这个功能会让你在调试定位问题时省去很多麻烦。</p>
+<p>使用示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">(lldb) pviews view</div><div class="line">&lt;TestView: 0x18df8070; baseClass = UIControl; frame = (144 9; 126 167); layer = &lt;CALayer: 0x18df8150&gt;&gt;</div><div class="line">   | &lt;UIView: 0x18df81d0; frame = (0 0; 126 126); userInteractionEnabled = NO; layer = &lt;CALayer: 0x18df8240&gt;&gt;</div><div class="line">   | &lt;UIImageView: 0x18df8330; frame = (0 0; 126 126); clipsToBounds = YES; opaque = NO; userInteractionEnabled = NO; layer = &lt;CALayer: 0x18df83b0&gt;&gt;</div><div class="line">   | &lt;UILabel: 0x18df8460; frame = (0 135; 126 14); text = <span class="string">'haha'</span>; userInteractionEnabled = NO; layer = &lt;_UILabelLayer: 0x18df7fb0&gt;&gt;</div><div class="line">   |    | &lt;_UILabelContentLayer: 0x131a3d50&gt; (layer)</div><div class="line">   | &lt;UILabel: 0x18df8670; frame = (0 155; 126 12); text = <span class="string">'hahaha'</span>; userInteractionEnabled = NO; layer = &lt;_UILabelLayer: 0x18df8730&gt;&gt;</div><div class="line">   |    | &lt;_UILabelContentLayer: 0x131bea10&gt; (layer)</div><div class="line">   | &lt;UIImageView: 0x18df88d0; frame = (0 9; 28 27); hidden = YES; opaque = NO; userInteractionEnabled = NO; layer = &lt;CALayer: 0x18df8ba0&gt;&gt;</div></pre></td></tr></table></figure>
+<h3 id="pvc"><a href="#pvc" class="headerlink" title="pvc"></a>pvc</h3><p>这个命令也是递归打印层级，但是不是view，而是viewController。利用它我们可以对viewController的结构一目了然。 其实苹果在IOS8也默默的添加了 UIViewController 的一个私有辅助方法 <code>[UIViewController _printHierarchy]</code> 同样的效果。</p>
+<p>预览效果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">(lldb) pvc</div><div class="line">&lt;TabBarController: 0x13772fd0; view = &lt;UILayoutContainerView; 0x151b3a30&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   | &lt;UINavigationController: 0x1602b800; view = &lt;UILayoutContainerView; 0x1b00aca0&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   |   | &lt;FirstViewController: 0x16029c00; view = &lt;UIView; 0x1b01e1c0&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   | &lt;UINavigationController: 0x138c5200; view = &lt;UILayoutContainerView; 0x1316a080&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   |   | &lt;SecondViewController: 0x16030400; view = &lt;UIView; 0x2094b370&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   |   |   | &lt;SecondChildViewController: 0x15af6000; view = &lt;UIView; 0x18d4e650&gt;; frame = (0, 64; 414, 628)&gt;</div><div class="line">   | &lt;UINavigationController: 0x1383ca00; view = &lt;UILayoutContainerView; 0x13180070&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   |   | &lt;ThirdViewController: 0x138ddc00; view = &lt;UIView; 0x18df6650&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   |   |   | &lt;ThirdChild1ViewController: 0x1393fe00; view = &lt;UIView; 0x131ec000&gt;; frame = (0, 0; 414, 672)&gt;</div><div class="line">   |   |   | &lt;ThirdChild2ViewController: 0x138dce00; view = &lt;UIView; 0x204075a0&gt;; frame = (414, 0; 414, 672)&gt;</div><div class="line">   |   |   | &lt;ThirdChild3ViewController: 0x138a8e00; view = &lt;UIView; 0x20426250&gt;; frame = (828, 0; 414, 672)&gt;</div><div class="line">   | &lt;UINavigationController: 0x160eca00; view = &lt;UILayoutContainerView; 0x152f7d90&gt;; frame = (0, 0; 414, 736)&gt;</div><div class="line">   |   | &lt;FourViewController: 0x13157cc0; view not loaded&gt;</div></pre></td></tr></table></figure>
+<p>是不是方便很多呢，而且还可以看到 viewController 是否已经 viewDidLoad .</p>
+<h3 id="visualize"><a href="#visualize" class="headerlink" title="visualize"></a>visualize</h3><p>这是个很有意思的功能，它可以让你使用Mac的预览打开一个 UIImage, CGImageRef, UIView, 或 CALayer。 这个功能或许可以帮我们用来截图、用来定位一个view的具体内容。 但是在我试用了一下，发现暂时还是只能在模拟器时使用，真机还不行。</p>
+<p>使用简单: <code>(lldb) visualize imageView</code></p>
+<h3 id="fv-amp-fvc"><a href="#fv-amp-fvc" class="headerlink" title="fv &amp; fvc"></a>fv &amp; fvc</h3><p><code>fv</code> 和 <code>fvc</code> 这两个命令是用来通过类名搜索当前内存中存在的view和viewController实例的命令，支持正则搜索。</p>
+<p>如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">(lldb) fv scrollView</div><div class="line">0x18d3b8c0 UIScrollView</div><div class="line">0x137d0c50 UIScrollView</div><div class="line">0x131b1580 UIScrollView</div><div class="line">0x131b2070 UIScrollView</div><div class="line">(lldb) fvc Home</div><div class="line">0x1393fe00 HomeFeedsViewController</div><div class="line">0x138a8e00 HomeFeedsViewController</div><div class="line">(lldb)</div></pre></td></tr></table></figure>
+<h3 id="show-amp-hide"><a href="#show-amp-hide" class="headerlink" title="show &amp; hide"></a>show &amp; hide</h3><p>这两个命令用来显示和隐藏一个指定的 UIView . 你甚至不需要Continue Progress. 就可以看到效果。</p>
+<h3 id="mask-umask-border-unborder"><a href="#mask-umask-border-unborder" class="headerlink" title="mask/umask border/unborder"></a>mask/umask border/unborder</h3><p>这两组命令用来标识一个view或layer的位置时用， mask用来在view上覆盖一个半透明的矩形， border可以给view添加边框。但是在我实际使用的过程中mask总是会报错，估计是有bug， 那么mask/unmask 一般不要用好了，用border命令是一样的效果，反正二者的用途都是找到一个对应的view.</p>
+<h3 id="caflush"><a href="#caflush" class="headerlink" title="caflush"></a>caflush</h3><p>这个命令会重新渲染，即可以重新绘制界面， 相当于执行了 <code>[CATransaction flush]</code> 方法，要注意如果在动画过程中执行这个命令，就直接渲染出动画结束的效果。</p>
+<p>当你想在调试界面颜色、坐标之类的时候，可以直接在控制台修改属性，然后caflush就可以看到效果啦，是不是要比改代码，然后重新build省事多了呢。</p>
+<p>例, 其中 <code>$122</code> 即是目标UIView：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(lldb) p view</div><div class="line">(long) <span class="variable">$122</span> = 140718754142192</div><div class="line">(lldb) e (void)[<span class="variable">$122</span> <span class="built_in">set</span>BackgroundColor:[UIColor greenColor]]</div><div class="line">(lldb) caflush</div></pre></td></tr></table></figure>
+<h3 id="bmessage"><a href="#bmessage" class="headerlink" title="bmessage"></a>bmessage</h3><p>这个命令就是用来打断点用的了，虽然大家断点可能都喜欢在图形界面里面打，但是考虑一种情况：我们想在 <code>[MyViewController viewWillAppear:]</code> 里面打断点，但是 MyViewController并没有实现 <code>viewWillAppear:</code> 方法， 以往的作法可能就是在子类中实现下 <code>viewWillAppear:</code>，然后打断点，然后rebuild。</p>
+<p>那么幸好有了 <code>bmessage</code> 命令。我们可以不用这样就可以打这个效果的断点： <code>(lldb) bmessage -[MyViewController viewWillAppear:]</code> 上面命令会在其父类的 <code>viewWillAppear:</code> 方法中打断点，并添加上了条件：<code>[self isKindOfClass:[MyViewController class]]</code></p>
+<h2 id="自定义命令"><a href="#自定义命令" class="headerlink" title="自定义命令"></a>自定义命令</h2><p>我们也可以自定义插件，不过前提是要懂一些 python。 比如设计一个打印keyWindow的windowLevel的命令：</p>
+<p>创建python脚本文件 <code>/magical/commands/example.py</code>:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># Example file with custom commands, located at /magical/commands/example.py</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> lldb</div><div class="line"><span class="keyword">import</span> fblldbbase <span class="keyword">as</span> fb</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">lldbcommands</span><span class="params">()</span>:</span></div><div class="line">  <span class="keyword">return</span> [ PrintKeyWindowLevel() ]</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrintKeyWindowLevel</span><span class="params">(fb.FBCommand)</span>:</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">name</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'pkeywinlevel'</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">description</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">'An incredibly contrived command that prints the window level of the key window.'</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self, arguments, options)</span>:</span></div><div class="line">    <span class="comment"># It's a good habit to explicitly cast the type of all return</span></div><div class="line">    <span class="comment"># values and arguments. LLDB can't always find them on its own.</span></div><div class="line">    lldb.debugger.HandleCommand(<span class="string">'p (CGFloat)[(id)[(id)[UIApplication sharedApplication] keyWindow] windowLevel]'</span>)</div></pre></td></tr></table></figure>
+<p>其中定义了 <code>PrintKeyWindowLevel</code> 的类，需要实现 <code>name</code> <code>description</code> <code>run</code> 方法来分别告诉名称、描述、和执行实体。</p>
+<p>创建好脚本后，然后在前面安装时创建的 <code>~/.lldbinit</code> 文件中添加一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">script fblldb.loadCommandsInDirectory(<span class="string">'/magical/commands/'</span>)</div></pre></td></tr></table></figure>
+<p>然后重启Xcode之后就可以使用自定义的命令啦。</p>
+<p>参考文献：</p>
+<ol>
+<li><a href="https://github.com/facebook/chisel/blob/master/README.md" target="_blank" rel="external">Chisel官方说明</a></li>
+<li><a href="https://objccn.io/issue-19-2/" target="_blank" rel="external">与调试器共舞 – LLDB 的华尔兹</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mac/">Mac</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Xcode/">Xcode</a><a href="/tags/LLDB/">LLDB</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://devma.cn/blog/2016/08/05/chisel-lldb-ming-ling-cha-jian-rang-diao-shi-geng-easy/" data-title="Chisel-LLDB命令插件，让调试更Easy | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/08/10/xcodedi-san-fang-cha-jian-an-zhuang-bu-liao-de-jie-jue-ban-fa/" title="Xcode 第三方插件无法安装的解决办法">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--Xcode 第三方插件无法安装的解决办法</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/08/01/cgimagesource-du-qu-tu-xiang-shu-ju/"  title="CGImageSource读取图像数据">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>CGImageSource读取图像数据-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+    </div>
+  </div>
+
+
+  <div class="aboutme">
+    <br />
+    <p class="asidetitle">关于我</p>
+    <p style="margin-top: 8px;">iOS开发新人，以前在 <a target="_blank" style="color: #2ca6cb;text-decoration: underline;" href="http://blog.csdn.net/marujunyy">CSDN</a> 写博客.</p>
+    <!--<img src="/images/weixin-qr.jpg" width="220px" />-->
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
