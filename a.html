@@ -9,29 +9,16 @@
   <meta name="format-detection" content="telephone=no">
 </head>
 <body>
-<h1>WebViewJavascript2</h1>
 <script>
-//  function connectWebViewJavascriptBridge(callback) {
-//    if (window.WebViewJavascriptBridge) {
-//      callback(WebViewJavascriptBridge)
-//    } else {
-//      document.addEventListener('WebViewJavascriptBridgeReady', function() {
-//        callback(WebViewJavascriptBridge)
-//      }, false)
-//    }
-//  }
-
-function connectWebViewJavascriptBridge(callback) {
-  if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
-  if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
-  window.WVJBCallbacks = [callback];
-  var WVJBIframe = document.createElement('iframe');
-  WVJBIframe.style.display = 'none';
-  WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
-  document.documentElement.appendChild(WVJBIframe);
-  setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
-}
-alert("test");
+  function connectWebViewJavascriptBridge(callback) {
+    if (window.WebViewJavascriptBridge) {
+      callback(WebViewJavascriptBridge)
+    } else {
+      document.addEventListener('WebViewJavascriptBridgeReady', function() {
+        callback(WebViewJavascriptBridge)
+      }, false)
+    }
+  }
   connectWebViewJavascriptBridge(function(bridge) {
     bridge.init();
 
@@ -41,9 +28,7 @@ alert("test");
       var isAndroid = ua.indexOf('Mozilla/5.0') > -1 && ua.indexOf('Android ') > -1 && ua.indexOf('AppleWebKit') > -1 && ua.indexOf('Chrome') === -1;
       var isIosWebView = ua.indexOf('Mac') > -1 && ua.indexOf('Mobile') > -1 && ua.indexOf('Safari') === -1;
 
-      // 获取用户信息
       bridge.callHandler('PopView', {}, function(d) {
-        alert(d);
         console.log(d);
       });
 
@@ -54,6 +39,7 @@ alert("test");
     })
   })
 </script>
+<h3>点击左上角按钮返回</h3>
 </body>
 </html>
 
