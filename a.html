@@ -22,6 +22,12 @@
   connectWebViewJavascriptBridge(function(bridge) {
     bridge.init();
 
+    // 获取用户信息
+    bridge.callHandler('DeviceInfo', {}, function(d) {
+      // alert(d)
+      console.log(d);
+    });
+
     $(function () {
       var ua = navigator.userAgent;
       var isIos = ua.indexOf('Mac') > -1 && ua.indexOf('Mobile') > -1;
