@@ -9,7 +9,7 @@
   <meta name="format-detection" content="telephone=no">
 </head>
 <body>
-<h1>WebViewJavascript1</h1>
+<h1>WebViewJavascript2</h1>
 <script>
 //  function connectWebViewJavascriptBridge(callback) {
 //    if (window.WebViewJavascriptBridge) {
@@ -31,6 +31,7 @@ function connectWebViewJavascriptBridge(callback) {
   document.documentElement.appendChild(WVJBIframe);
   setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
+alert("test");
   connectWebViewJavascriptBridge(function(bridge) {
     bridge.init();
 
