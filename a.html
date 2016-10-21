@@ -1,0 +1,48 @@
+
+  
+    <!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <meta charset="UTF-8">
+  <title>兑换</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+
+<script>
+  function connectWebViewJavascriptBridge(callback) {
+    if (window.WebViewJavascriptBridge) {
+      callback(WebViewJavascriptBridge)
+    } else {
+      document.addEventListener('WebViewJavascriptBridgeReady', function() {
+        callback(WebViewJavascriptBridge)
+      }, false)
+    }
+  }
+  connectWebViewJavascriptBridge(function(bridge) {
+    bridge.init();
+
+    $(function () {
+      var ua = navigator.userAgent;
+      var isIos = ua.indexOf('Mac') > -1 && ua.indexOf('Mobile') > -1;
+      var isAndroid = ua.indexOf('Mozilla/5.0') > -1 && ua.indexOf('Android ') > -1 && ua.indexOf('AppleWebKit') > -1 && ua.indexOf('Chrome') === -1;
+      var isIosWebView = ua.indexOf('Mac') > -1 && ua.indexOf('Mobile') > -1 && ua.indexOf('Safari') === -1;
+
+      // 获取用户信息
+      bridge.callHandler('PopView', {}, function(d) {
+        console.log(d);
+      });
+
+      // 获取用户信息
+      bridge.callHandler('PushView', "MCExchangeViewController", function(d) {
+        console.log(d);
+      })
+    })
+  })
+</script>
+<h1>WebViewJavascriptBridge Demo</h1>
+</body>
+</html>
+
+  
