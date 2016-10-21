@@ -2,13 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://devma.cn/a.html</loc>
-    
-    <lastmod>2016-10-21T11:05:42.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://devma.cn/blog/2016/09/08/ios-ben-di-zi-dong-da-bao-gong-ju/</loc>
     
     <lastmod>2016-10-21T07:03:41.000Z</lastmod>
@@ -37,7 +30,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/11/iphone6fen-bian-lu-yu-gua-pei/</loc>
+    <loc>http://devma.cn/blog/2016/04/09/wget-ming-ling-yong-fa-xiang-jie/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2015/08/25/gcdshi-yong-jing-yan-yu-ji-qiao-qian-tan/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -149,14 +149,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/09/wget-ming-ling-yong-fa-xiang-jie/</loc>
+    <loc>http://devma.cn/blog/2015/06/02/shen-ru-li-jie-runloop/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/06/02/shen-ru-li-jie-runloop/</loc>
+    <loc>http://devma.cn/blog/2016/04/11/iphone6fen-bian-lu-yu-gua-pei/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -290,13 +290,6 @@
   
   <url>
     <loc>http://devma.cn/google3d60f5c411000328.html</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2015/08/25/gcdshi-yong-jing-yan-yu-ji-qiao-qian-tan/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
