@@ -22,9 +22,24 @@
   connectWebViewJavascriptBridge(function(bridge) {
     bridge.init();
 
-    // 获取用户信息
+    // 获取设备信息
     bridge.callHandler('DeviceInfo', {}, function(d) {
       // alert(d)
+      console.log(d);
+    });
+
+    // 获取用户信息
+    bridge.callHandler('UserInfo', {}, function(d) {
+      // alert(d)
+      console.log(d);
+    });
+
+    bridge.callHandler('PopView', {}, function(d) {
+      console.log(d);
+    });
+
+    // 获取用户信息
+    bridge.callHandler('PushView', "MCExchangeViewController", function(d) {
       console.log(d);
     });
 
@@ -33,25 +48,10 @@
       var isIos = ua.indexOf('Mac') > -1 && ua.indexOf('Mobile') > -1;
       var isAndroid = ua.indexOf('Mozilla/5.0') > -1 && ua.indexOf('Android ') > -1 && ua.indexOf('AppleWebKit') > -1 && ua.indexOf('Chrome') === -1;
       var isIosWebView = ua.indexOf('Mac') > -1 && ua.indexOf('Mobile') > -1 && ua.indexOf('Safari') === -1;
-
-      // 获取用户信息
-      bridge.callHandler('UserInfo', {}, function(d) {
-        // alert(d)
-        console.log(d);
-      });
-
-      bridge.callHandler('PopView', {}, function(d) {
-        console.log(d);
-      });
-
-      // 获取用户信息
-      bridge.callHandler('PushView', "MCExchangeViewController", function(d) {
-        console.log(d);
-      })
     })
   })
 </script>
-<h3>点击左上角按钮返回1</h3>
+<h3>点击左上角按钮返回2</h3>
 </body>
 </html>
 
