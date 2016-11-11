@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://devma.cn/images/2016/04/custom_font_2.png">
 <meta property="og:image" content="http://devma.cn/images/2016/04/custom_font_3.png">
 <meta property="og:image" content="http://devma.cn/images/2016/04/custom_font_4.png">
-<meta property="og:updated_time" content="2016-09-12T01:01:13.000Z">
+<meta property="og:updated_time" content="2016-11-11T02:22:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在iOS开发中使用自定义字体">
 <meta name="twitter:description" content="在iOS的项目开发中经常遇到需要使用一些自定义的字体文件，之前我们为了使用这些自定义的字体，在应用的资源包中放入这些字体文件。
@@ -92,21 +92,21 @@
 		
 		</div>
 		
-		<!-- { % img fancybox /images/2016/04/demo.png %} --> 
+		<!-- { % img /images/2016/04/demo.png %} --> 
 <p>在iOS的项目开发中经常遇到需要使用一些自定义的字体文件，之前我们为了使用这些自定义的字体，在应用的资源包中放入这些字体文件。</p>
 <p>因为字体文件通常比较大，这样打包后的ipa文件的体积就可能会变得很大，对于只有个别的模块需要特殊的字体样式的应用来说很不划算，那么在iOS6.0以后苹果就开放了动态加载字体的权限。下面就iOS中使用字体的这两种方式进行介绍。<br><a id="more"></a></p>
 <h2 id="使用静态字体"><a href="#使用静态字体" class="headerlink" title="使用静态字体"></a>使用静态字体</h2><h3 id="将字体文件拷贝到项目工程中"><a href="#将字体文件拷贝到项目工程中" class="headerlink" title="将字体文件拷贝到项目工程中"></a>将字体文件拷贝到项目工程中</h3><p>在 <code>Info.plist</code> 文件中添加 <code>Fonts provided by application</code> 的配置项，其中每一个Item对应的是字体文件的名称，如 <code>DS-DIGI.TTF</code> 。</p>
-<img src="/images/2016/04/custom_font_1.png" class="fancybox">
+<img src="/images/2016/04/custom_font_1.png">
 <h3 id="使用时直接按照如下方式即可："><a href="#使用时直接按照如下方式即可：" class="headerlink" title="使用时直接按照如下方式即可："></a>使用时直接按照如下方式即可：</h3><p><code>_textLabel1.font = [UIFont fontWithName:@&quot;DS-Digital&quot; size:40];</code></p>
 <p>效果如下：</p>
-<img src="/images/2016/04/custom_font_2.png" class="fancybox">
+<img src="/images/2016/04/custom_font_2.png">
 <h3 id="其他说明："><a href="#其他说明：" class="headerlink" title="其他说明："></a>其他说明：</h3><p><code>+ (UIFont *)fontWithName:(NSString *)fontName size:(CGFloat)fontSize;</code> 这个方法中需要指定的fontName不是前面设置的字体文件的文件名，而应该是字体的名称，如何获取字体的名称可以通过如下方式：<br><br></p>
 <h4 id="打印出当前所有可用的字体，查找对应的字体名称"><a href="#打印出当前所有可用的字体，查找对应的字体名称" class="headerlink" title="打印出当前所有可用的字体，查找对应的字体名称"></a>打印出当前所有可用的字体，查找对应的字体名称</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)printAllFonts  </div><div class="line">&#123;  </div><div class="line">    <span class="built_in">NSArray</span> *fontFamilies = [<span class="built_in">UIFont</span> familyNames];  </div><div class="line">    <span class="keyword">for</span> (<span class="built_in">NSString</span> *fontFamily <span class="keyword">in</span> fontFamilies)  </div><div class="line">    &#123;  </div><div class="line">        <span class="built_in">NSArray</span> *fontNames = [<span class="built_in">UIFont</span> fontNamesForFamilyName:fontFamily];  </div><div class="line">        <span class="built_in">NSLog</span> (<span class="string">@"%@: %@"</span>, fontFamily, fontNames);  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><br></p>
 <h4 id="通过Mac自带的字体册查看字体的名称"><a href="#通过Mac自带的字体册查看字体的名称" class="headerlink" title="通过Mac自带的字体册查看字体的名称"></a>通过Mac自带的字体册查看字体的名称</h4><p>直接双击字体即可打开字体册，如果系统没有安装该字体按照要求安装即可，然后可以在字体的详细信息中找到对应的字体的名称：</p>
-<img src="/images/2016/04/custom_font_3.png" class="fancybox">
+<img src="/images/2016/04/custom_font_3.png">
 <h2 id="使用动态字体"><a href="#使用动态字体" class="headerlink" title="使用动态字体"></a>使用动态字体</h2><h3 id="动态下载自定义的字体"><a href="#动态下载自定义的字体" class="headerlink" title="动态下载自定义的字体"></a>动态下载自定义的字体</h3><p>在网易新闻iOS客户端中可以使用自定义的字体，对于未下载的字体可先下载然后安装下次就能自动设置为该字体，效果如下：</p>
-<img src="/images/2016/04/custom_font_4.png" class="fancybox">
+<img src="/images/2016/04/custom_font_4.png">
 <p>下面就该功能简单介绍实现的步骤:</p>
 <p>第一次进入该页面会自动到服务器上获取可使用的字体的列表，示例如下：</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[  </div><div class="line">  &#123;  </div><div class="line">      <span class="string">"fontTitle"</span>: <span class="string">"华康圆体"</span>,  </div><div class="line">      <span class="string">"regularName"</span>: <span class="string">"DFYuanW3-GB"</span>,  </div><div class="line">      <span class="string">"boldName"</span>: <span class="string">"DFYuanW5-GB"</span>,  </div><div class="line">      <span class="string">"author"</span>: <span class="string">"华康科技"</span>,  </div><div class="line">      <span class="string">"date"</span>: <span class="string">"2012-10-11"</span>,  </div><div class="line">      <span class="string">"fileUrl"</span>: <span class="string">"http://xxxx/font/dfgb_y.zip"</span>,  </div><div class="line">      <span class="string">"fileSize"</span>: <span class="string">"3.3MB"</span>,  </div><div class="line">      <span class="string">"previewUrl"</span>: <span class="string">"http://yyyy/font/ios_yuanti.png"</span>  </div><div class="line">  &#125;  </div><div class="line">]</div></pre></td></tr></table></figure>
@@ -245,7 +245,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 

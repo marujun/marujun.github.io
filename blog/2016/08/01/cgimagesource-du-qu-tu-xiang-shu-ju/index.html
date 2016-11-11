@@ -25,7 +25,7 @@
 <meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationDownMirrored.jpg">
 <meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationLeftMirrored.jpg">
 <meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationRightMirrored.jpg">
-<meta property="og:updated_time" content="2016-09-12T01:01:13.000Z">
+<meta property="og:updated_time" content="2016-11-11T02:24:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CGImageSource读取图像数据">
 <meta name="twitter:description" content="CGImageSource是对图像数据读取任务的抽象，通过它可以获得图像对象、缩略图、图像的属性(包括Exif信息)。">
@@ -93,7 +93,7 @@
 		
 		</div>
 		
-		<!-- { % img fancybox /images/2016/08/demo.png %} -->
+		<!-- { % img /images/2016/08/demo.png %} -->
 <p>CGImageSource是对图像数据读取任务的抽象，通过它可以获得图像对象、缩略图、图像的属性(包括Exif信息)。</p>
 <a id="more"></a>
 <p><br></p>
@@ -106,14 +106,14 @@
 <p>其中获取到的 <code>kCGImagePropertyPixelHeight</code> 和 <code>kCGImagePropertyPixelHeight</code> 的数值是原始的值，也就是旋转之前的数值;</p>
 <p>所以要获取到显示图像的宽和高，需要对应 <code>kCGImagePropertyOrientation</code> 的值，值分别从1-8，与UIImageOrientation有以下的映射关系：</p>
 <ul>
-<li><img src="/images/2016/08/UIImageOrientationUp.jpg" class="fancybox">  UIImageOrientationUp: 1 正常方向(默认值)</li>
-<li><img src="/images/2016/08/UIImageOrientationDown.jpg" class="fancybox">  UIImageOrientationDown: 3 旋转180度(朝左朝右当然是一样的)</li>
-<li><img src="/images/2016/08/UIImageOrientationLeft.jpg" class="fancybox">  UIImageOrientationLeft: 8 向左逆时针旋转90度</li>
-<li><img src="/images/2016/08/UIImageOrientationRight.jpg" class="fancybox">  UIImageOrientationRight: 6 向右顺时针旋转90度</li>
-<li><img src="/images/2016/08/UIImageOrientationUpMirrored.jpg" class="fancybox">  UIImageOrientationUpMirrored: 2 将原图水平的翻转到背面</li>
-<li><img src="/images/2016/08/UIImageOrientationDownMirrored.jpg" class="fancybox">  UIImageOrientationDownMirrored: 4 在水平翻转之后再旋转180度</li>
-<li><img src="/images/2016/08/UIImageOrientationLeftMirrored.jpg" class="fancybox">  UIImageOrientationLeftMirrored: 5 在水平翻转之后向左逆时针旋转90度</li>
-<li><img src="/images/2016/08/UIImageOrientationRightMirrored.jpg" class="fancybox">  UIImageOrientationRightMirrored: 7 在水平翻转之后向右顺时针旋转90度</li>
+<li><img src="/images/2016/08/UIImageOrientationUp.jpg">  UIImageOrientationUp: 1 正常方向(默认值)</li>
+<li><img src="/images/2016/08/UIImageOrientationDown.jpg">  UIImageOrientationDown: 3 旋转180度(朝左朝右当然是一样的)</li>
+<li><img src="/images/2016/08/UIImageOrientationLeft.jpg">  UIImageOrientationLeft: 8 向左逆时针旋转90度</li>
+<li><img src="/images/2016/08/UIImageOrientationRight.jpg">  UIImageOrientationRight: 6 向右顺时针旋转90度</li>
+<li><img src="/images/2016/08/UIImageOrientationUpMirrored.jpg">  UIImageOrientationUpMirrored: 2 将原图水平的翻转到背面</li>
+<li><img src="/images/2016/08/UIImageOrientationDownMirrored.jpg">  UIImageOrientationDownMirrored: 4 在水平翻转之后再旋转180度</li>
+<li><img src="/images/2016/08/UIImageOrientationLeftMirrored.jpg">  UIImageOrientationLeftMirrored: 5 在水平翻转之后向左逆时针旋转90度</li>
+<li><img src="/images/2016/08/UIImageOrientationRightMirrored.jpg">  UIImageOrientationRightMirrored: 7 在水平翻转之后向右顺时针旋转90度</li>
 </ul>
   
 	</div>
@@ -219,7 +219,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 

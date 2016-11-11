@@ -19,7 +19,7 @@
 <meta property="og:description" content="小伙伴们在升级 Xcode7 之后有些插件不能使用了。现提供如下解决办法:">
 <meta property="og:image" content="http://devma.cn/images/2016/08/xcode_plug-ins_install_0.png">
 <meta property="og:image" content="http://devma.cn/images/2016/08/xcode_plug-ins_install_1.png">
-<meta property="og:updated_time" content="2016-09-12T01:01:13.000Z">
+<meta property="og:updated_time" content="2016-11-11T02:25:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Xcode 第三方插件无法安装的解决办法">
 <meta name="twitter:description" content="小伙伴们在升级 Xcode7 之后有些插件不能使用了。现提供如下解决办法:">
@@ -87,16 +87,16 @@
 		
 		</div>
 		
-		<!-- { % img fancybox /images/2016/08/demo.png %} -->
+		<!-- { % img /images/2016/08/demo.png %} -->
 <p>小伙伴们在升级 Xcode7 之后有些插件不能使用了。现提供如下解决办法:</p>
 <a id="more"></a>
 <h2 id="首先查看-Xcode-的-UUID"><a href="#首先查看-Xcode-的-UUID" class="headerlink" title="首先查看 Xcode 的 UUID"></a>首先查看 Xcode 的 UUID</h2><p>在终端执行：<code>defaults read /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID</code></p>
 <p>会得到一串 <code>UUID</code> 码：</p>
-<img src="/images/2016/08/xcode_plug-ins_install_0.png" class="fancybox">
+<img src="/images/2016/08/xcode_plug-ins_install_0.png">
 <h2 id="找到-Xcode-插件所在的目录"><a href="#找到-Xcode-插件所在的目录" class="headerlink" title="找到 Xcode 插件所在的目录"></a>找到 Xcode 插件所在的目录</h2><p>在终端执行：<code>open ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins</code></p>
 <p>选择已安装的插件如：<code>VVDocumenter-Xcode</code>，右键显示包内容，找到 <code>info.plist</code></p>
 <p>找到 <code>DVTPlugInCompatibilityUUIDs</code> 的项目，添加一个Item，Value的值为当前Xcode的<code>UUID</code>，保存。</p>
-<img src="/images/2016/08/xcode_plug-ins_install_1.png" class="fancybox">
+<img src="/images/2016/08/xcode_plug-ins_install_1.png">
 <p>重启 Xcode 之后会提示 <code>Load bundle</code>、<code>Skip Bundle</code>，这里必须选择 <code>Load bundle</code>，不然插件无法使用。</p>
 <h2 id="如果手误点击了”Skip-Bundle”的解决办法"><a href="#如果手误点击了”Skip-Bundle”的解决办法" class="headerlink" title="如果手误点击了”Skip Bundle”的解决办法"></a>如果手误点击了”Skip Bundle”的解决办法</h2><p>找到该插件安装路径，继续打开 <code>info.plist</code> 删除与终端里面同样的<code>UUID</code>号，一般都是会在最后一行，自己添加的那一行也要删除掉。保存并重启Xcode。</p>
 <p>然后再次打开 <code>info.plist</code> 添加之前 Xcode 的 <code>UUID</code>。再次重启就又会出现插件提示。</p>
@@ -204,7 +204,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 

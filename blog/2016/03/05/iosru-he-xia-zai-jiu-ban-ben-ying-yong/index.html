@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_2.png">
 <meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_3.png">
 <meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_4.png">
-<meta property="og:updated_time" content="2016-09-12T01:01:13.000Z">
+<meta property="og:updated_time" content="2016-11-11T02:20:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS如何下载旧版本应用">
 <meta name="twitter:description" content="有时IOS应用更新至最新版本之后，新版UI风格、使用习惯、功能不喜欢，但又不知道如何降级安装旧版本。例如UC浏览器春节前更新版本，因某些原因下架了文件管理、离线视频、微信分享等功能，其App Store评分从四星半降至1星。同步助手曾提供下载App历史版本的功能，但现在也不复存在。
@@ -95,7 +95,7 @@
 		
 		</div>
 		
-		<!-- { % img fancybox /images/2016/03/demo.png %} -->
+		<!-- { % img /images/2016/03/demo.png %} -->
 <p>有时IOS应用更新至最新版本之后，新版UI风格、使用习惯、功能不喜欢，但又不知道如何降级安装旧版本。例如UC浏览器春节前更新版本，因某些原因下架了文件管理、离线视频、微信分享等功能，其App Store评分从四星半降至1星。同步助手曾提供下载App历史版本的功能，但现在也不复存在。</p>
 <p>本文将介绍如何使用iTunes下载安装App Store任意版本旧程序。</p>
 <a id="more"></a>
@@ -108,28 +108,28 @@
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>通过抓包软件查看App的历史版本ID，通过修改请求下载指定版本App。</p>
 <h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><h3 id="设置Charles"><a href="#设置Charles" class="headerlink" title="设置Charles"></a>设置Charles</h3><p>打开 Charles，选择菜单栏 -&gt; Help -&gt; SSL Proxying，然后安装SSL证书。<a href="/blog/2016/05/06/charles-cong-ru-men-dao-jing-tong#https-cert">详细教程</a></p>
 <p>注意：Charles 即使是安装完证书之后，默认也并不截取 Https 网络通讯的信息，如果你想对截取某个网站上的所有 Https 网络请求，可以在该请求上右击，选择 <code>Enable SSL Proxying</code></p>
-<h3 id="打开iTunes，搜索要下载的App"><a href="#打开iTunes，搜索要下载的App" class="headerlink" title="打开iTunes，搜索要下载的App"></a>打开iTunes，搜索要下载的App</h3><p>以 US 为例<br><br><img src="/images/2016/03/ios_old_ipa_0.png" class="fancybox"></p>
-<h3 id="点击下载，删除下载"><a href="#点击下载，删除下载" class="headerlink" title="点击下载，删除下载"></a>点击下载，删除下载</h3><p>点击 “下载” 按钮，右上角会出现一个箭头<br><br><img src="/images/2016/03/ios_old_ipa_6.png" class="fancybox"></p>
+<h3 id="打开iTunes，搜索要下载的App"><a href="#打开iTunes，搜索要下载的App" class="headerlink" title="打开iTunes，搜索要下载的App"></a>打开iTunes，搜索要下载的App</h3><p>以 US 为例<br><br><img src="/images/2016/03/ios_old_ipa_0.png"></p>
+<h3 id="点击下载，删除下载"><a href="#点击下载，删除下载" class="headerlink" title="点击下载，删除下载"></a>点击下载，删除下载</h3><p>点击 “下载” 按钮，右上角会出现一个箭头<br><br><img src="/images/2016/03/ios_old_ipa_6.png"></p>
 <p>点击箭头展开下载列表；选中正在下载的应用，按2次Delete键即可删除本次下载。</p>
 <h3 id="在Charles查找相关请求"><a href="#在Charles查找相关请求" class="headerlink" title="在Charles查找相关请求"></a>在Charles查找相关请求</h3><p>找到 <code>p15-buy.itunes.apple.com</code> URL开头为 <code>/WebObjects/MZBuy.woa</code> 的请求，点击选项卡上面的Response，就可以看到返回的相关数据。</p>
 <p>搜索找到 <code>softwareVersionExternalIdentifiers</code>，其后一系列数字为该APP版本号。从上往下为该 App 自第一个版本起每个版本在 App Store 中的版本 ID。</p>
-<img src="/images/2016/03/ios_old_ipa_1.png" class="fancybox">
+<img src="/images/2016/03/ios_old_ipa_1.png">
 <p>可以选择倒数第二个版本下载，如果需要精确下载某版本，可通过以下方式：</p>
 <p>请求下载时通过 <a href="#breakpoints">打断点</a> 修改appExtVrsId，然后查看Response中的 <code>bundleShortVersionString</code> 找到ID对应版本号。</p>
-<img src="/images/2016/03/ios_old_ipa_5.png" class="fancybox">
+<img src="/images/2016/03/ios_old_ipa_5.png">
 <p>注意：只能挨个打断点修改ID去试，暂时没找到其他方法</p>
 <h3 id="重新下载"><a href="#重新下载" class="headerlink" title="重新下载"></a>重新下载</h3><p>确认需要下载的版本ID后，复制。例如，下载US应用1.1.0版本的ID为815756613。</p>
 <p>在 iTunes 中重新搜索App。</p>
 <h3 id="打断点修改请求"><a href="#打断点修改请求" class="headerlink" title="打断点修改请求"></a><a name="breakpoints"></a>打断点修改请求</h3><p>切换到Charles，找到对应的请求一级一级展开，在最后一个节点上右键然后选中 <code>Breakpoints</code></p>
-<img src="/images/2016/03/ios_old_ipa_2.png" class="fancybox">
+<img src="/images/2016/03/ios_old_ipa_2.png">
 <p>返回 iTunes， 点击下载。</p>
 <p>回到Charles后会出现Breakpoints的选项卡，点击请求显示 <code>Edit Request</code> 栏编辑 appExtVrsId 为需要下载的版本 ID。</p>
-<img src="/images/2016/03/ios_old_ipa_3.png" class="fancybox">
+<img src="/images/2016/03/ios_old_ipa_3.png">
 <p>修改完成之后，点击 <code>Excute</code> 按钮发送请求，进行下载。 收到Response之后Breakpoints会再弹出来一次，直接点Excute通过就行。</p>
 <p>注意：下载过程中需要保持 Charles 和 iTunes 一同打开，不可关闭。</p>
 <h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><p>App下载完毕后，找到.ipa安装包，在常用的软件（PP助手、iTools）中安装。</p>
 <p>ipa包的安装路径，可以在iTunes -&gt; 偏好设置 -&gt; 高级 中找到</p>
-<img src="/images/2016/03/ios_old_ipa_4.png" class="fancybox">  
+<img src="/images/2016/03/ios_old_ipa_4.png">  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -233,7 +233,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 

@@ -1,0 +1,659 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS 崩溃Crash解析 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="iOS崩溃是让iOS开发人员比较头痛的事情，app崩溃了，说明代码写的有问题，这时如何快速定位到崩溃的地方很重要。调试阶段是比较容易找到出问题的地方的，但是已经上线的app并分析崩溃报告就比较麻烦了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 崩溃Crash解析">
+<meta property="og:url" content="http://devma.cn/blog/2016/11/10/ios-beng-kui-crash-jie-xi/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="iOS崩溃是让iOS开发人员比较头痛的事情，app崩溃了，说明代码写的有问题，这时如何快速定位到崩溃的地方很重要。调试阶段是比较容易找到出问题的地方的，但是已经上线的app并分析崩溃报告就比较麻烦了。">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_1.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_2.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_3.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_0.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_4.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_5.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_6.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_7.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_8.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_9.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_10.png">
+<meta property="og:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_11.png">
+<meta property="og:updated_time" content="2016-11-11T05:57:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 崩溃Crash解析">
+<meta name="twitter:description" content="iOS崩溃是让iOS开发人员比较头痛的事情，app崩溃了，说明代码写的有问题，这时如何快速定位到崩溃的地方很重要。调试阶段是比较容易找到出问题的地方的，但是已经上线的app并分析崩溃报告就比较麻烦了。">
+<meta name="twitter:image" content="http://devma.cn/images/2016/11/ios_crash_analysis_1.png">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/11/10/ios-beng-kui-crash-jie-xi/" title="iOS 崩溃Crash解析" itemprop="url">iOS 崩溃Crash解析</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-11-10T03:20:44.000Z" itemprop="datePublished"> 发表于 2016-11-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#崩溃分析"><span class="toc-number">1.</span> <span class="toc-text">崩溃分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#崩溃日志（crash-log）"><span class="toc-number">1.1.</span> <span class="toc-text">崩溃日志（crash log）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#根据符号表来监测崩溃位置"><span class="toc-number">1.1.1.</span> <span class="toc-text">根据符号表来监测崩溃位置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode中查看崩溃信息"><span class="toc-number">1.1.2.</span> <span class="toc-text">Xcode中查看崩溃信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#崩溃日志分析"><span class="toc-number">1.1.3.</span> <span class="toc-text">崩溃日志分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如何得到崩溃日志"><span class="toc-number">1.1.4.</span> <span class="toc-text">如何得到崩溃日志</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分析崩溃日志"><span class="toc-number">1.1.5.</span> <span class="toc-text">分析崩溃日志</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#野指针分析方法-Enable-Malloc-Scribble"><span class="toc-number">1.2.</span> <span class="toc-text">野指针分析方法 ( Enable Malloc Scribble )</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#僵尸模式-NSZombieEnabled"><span class="toc-number">1.3.</span> <span class="toc-text">僵尸模式 ( NSZombieEnabled )</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何找出问题"><span class="toc-number">1.3.1.</span> <span class="toc-text">如何找出问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enable-Address-Sanitizer（地址消毒剂）"><span class="toc-number">1.4.</span> <span class="toc-text">Enable Address Sanitizer（地址消毒剂）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Static-Analyzer（静态分析）"><span class="toc-number">1.5.</span> <span class="toc-text">Static Analyzer（静态分析）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unrecognized-selector-send-to-instancd-快速定位"><span class="toc-number">1.6.</span> <span class="toc-text">unrecognized selector send to instancd 快速定位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Signal和EXC-BAD-ACCESS错误分析"><span class="toc-number">1.7.</span> <span class="toc-text">Signal和EXC_BAD_ACCESS错误分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Signal"><span class="toc-number">1.7.1.</span> <span class="toc-text">Signal</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#EXC-BAD-ACCESS"><span class="toc-number">1.7.2.</span> <span class="toc-text">EXC_BAD_ACCESS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#崩溃类型收集"><span class="toc-number">2.</span> <span class="toc-text">崩溃类型收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新老操作系统兼容"><span class="toc-number">2.1.</span> <span class="toc-text">新老操作系统兼容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地存储的数据结构改变"><span class="toc-number">2.2.</span> <span class="toc-text">本地存储的数据结构改变</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#访问的数据为空或访问数据类型不对"><span class="toc-number">2.3.</span> <span class="toc-text">访问的数据为空或访问数据类型不对</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作了不该操作的对象，野指针之类"><span class="toc-number">2.4.</span> <span class="toc-text">操作了不该操作的对象，野指针之类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#野指针介绍"><span class="toc-number">2.4.1.</span> <span class="toc-text">野指针介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#野指针崩溃情况"><span class="toc-number">2.4.2.</span> <span class="toc-text">野指针崩溃情况</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存处理不当"><span class="toc-number">2.5.</span> <span class="toc-text">内存处理不当</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主线程UI长时间卡死，被系统杀掉"><span class="toc-number">2.6.</span> <span class="toc-text">主线程UI长时间卡死，被系统杀掉</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多线程之间切换访问引起的crash"><span class="toc-number">2.7.</span> <span class="toc-text">多线程之间切换访问引起的crash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多个-Crash-日志收集服务共存的坑"><span class="toc-number">3.</span> <span class="toc-text">多个 Crash 日志收集服务共存的坑</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img /images/2016/11/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>iOS崩溃是让iOS开发人员比较头痛的事情，app崩溃了，说明代码写的有问题，这时如何快速定位到崩溃的地方很重要。调试阶段是比较容易找到出问题的地方的，但是已经上线的app并分析崩溃报告就比较麻烦了。<br><a id="more"></a></p>
+<p>之前我总是找到一个改一个，并靠别人测试重现来找出问题的地方，这样往往比较耗费时间。而且比较难找到原因的时候每次都是到网上找各种资源搜索，解决了之后也没有认真分析原因及收集，时间长了之后就会忘记原来解决过的问题，别人来问我的时候我也不能很快找到答案。所以这里写一个关于崩溃的文章，以便之后自己查询用。</p>
+<h2 id="崩溃分析"><a href="#崩溃分析" class="headerlink" title="崩溃分析"></a>崩溃分析</h2><h3 id="崩溃日志（crash-log）"><a href="#崩溃日志（crash-log）" class="headerlink" title="崩溃日志（crash log）"></a><strong>崩溃日志（crash log）</strong></h3><p><br></p>
+<h4 id="根据符号表来监测崩溃位置"><a href="#根据符号表来监测崩溃位置" class="headerlink" title="根据符号表来监测崩溃位置"></a>根据符号表来监测崩溃位置</h4><ol>
+<li><p><strong>什么是符号表</strong></p>
+<p> 符号表就是指在Xcode项目编译后，在编译生成的二进制文件.app的同级目录下生成的同名的.dSYM文件。</p>
+<p> .dSYM文件其实是一个目录，在子目录中包含了一个16进制的保存函数地址映射信息的中转文件，所有Debug的symbols都在这个文件中(包括文件名、函数名、行号等)，所以也称之为调试符号信息文件。</p>
+</li>
+<li><p><strong>符号表有什么用</strong></p>
+<p> 符号表就是用来符号化 crash log（崩溃日志）。crash log中有一些方法16进制的内存地址等，通过符号表就能找到对应的能够直观看到的方法名之类。</p>
+</li>
+<li><p><strong>如何得到.dsYM文件</strong></p>
+<p> 我们在Archive的时候会生成.xcarchive文件，然后显示包内容就能够在里面找到.dsYM文件和.app文件。</p>
+</li>
+</ol>
+<p><br></p>
+<h4 id="Xcode中查看崩溃信息"><a href="#Xcode中查看崩溃信息" class="headerlink" title="Xcode中查看崩溃信息"></a>Xcode中查看崩溃信息</h4><p>Xcode-&gt;Window-&gt;Organizer-&gt;Crashes</p>
+<img src="/images/2016/11/ios_crash_analysis_1.png">
+<p><br></p>
+<h4 id="崩溃日志分析"><a href="#崩溃日志分析" class="headerlink" title="崩溃日志分析"></a>崩溃日志分析</h4><p>参考<a href="http://www.cocoachina.com/industry/20130725/6677.html" target="_blank" rel="external">iOS应用崩溃日志分析</a>里面有很详细的分析介绍。</p>
+<img src="/images/2016/11/ios_crash_analysis_2.png">
+<p>以上是一个完整的崩溃日志。</p>
+<p><br></p>
+<h4 id="如何得到崩溃日志"><a href="#如何得到崩溃日志" class="headerlink" title="如何得到崩溃日志"></a>如何得到崩溃日志</h4><ol>
+<li><p><strong>把设备连上电脑，得到自己设备的崩溃日志</strong></p>
+<p> 崩溃日志可以从xcode里打开Devices看到对应手机的一些崩溃信息。点击下图的View Device Logs就能看到崩溃日志。</p>
+ <img src="/images/2016/11/ios_crash_analysis_3.png">
+</li>
+<li><p><strong>使用第三方崩溃管理工具</strong></p>
+<p> 我暂时只使用过友盟，友盟里面有错误分析，就是截取的崩溃日志。</p>
+</li>
+<li><p><strong>自己截取崩溃日志</strong></p>
+<p> 自己写入代码，然后截取到崩溃日志，把崩溃日志发送到开发者邮箱里。 <a href="https://www.xingcheng.me/?p=305" target="_blank" rel="external">iOS Crash（崩溃）调试技巧</a>这篇文章中有介绍如何截取崩溃日志并发送到邮箱。</p>
+</li>
+</ol>
+<p><br></p>
+<h4 id="分析崩溃日志"><a href="#分析崩溃日志" class="headerlink" title="分析崩溃日志"></a>分析崩溃日志</h4><ol>
+<li><p><strong>崩溃日志中的（3）异常</strong></p>
+<p> Exception Type: 异常类型 通常包含1.7中的Signal信号和EXC_BAD_ACCESS。</p>
+<p> Exception Codes: 异常编码 0x8badf00d: 读做 “ate bad food”! (把数字换成字母，是不是很像 :p)该编码表示应用是因为发生watchdog超时而被iOS终止的。 通常是应用花费太多时间而无法启动、终止或响应用系统事件。</p>
+<p> 0xbad22222: 该编码表示 VoIP 应用因为过于频繁重启而被终止。</p>
+<p> 0xdead10cc: 读做 “dead lock”!该代码表明应用因为在后台运行时占用系统资源，如通讯录数据库不释放而被终止 。</p>
+<p> 0xdeadfa11: 读做 “dead fall”! 该代码表示应用是被用户强制退出的。根据苹果文档, 强制退出发生在用户长按开关按钮直到出现 “滑动来关机”, 然后长按 Home按钮。强制退出将产生 包含0xdeadfa11 异常编码的崩溃日志, 因为大多数是强制退出是因为应用阻塞了界面。</p>
+</li>
+<li><p><strong>崩溃日志中的（4）线程回溯</strong></p>
+<p> 这部分提供应用中所有线程的回溯日志。 回溯是闪退发生时所有活动帧清单。它包含闪退发生时调用函数的清单。看下面这行日志:</p>
+ <img src="/images/2016/11/ios_crash_analysis_0.png">
+<p> 它包括四列: 帧编号—— 此处是2。（数子从大到小为发生的顺序） 二进制库的名称 ——此处是 XYZLib. 调用方法的地址 ——此处是 0x34648e88. 第四列分为两个子列，一个基本地址和一个偏移量。此处是0×83000 + 8740, 第一个数字指向文件，第二个数字指向文件中的代码行。</p>
+</li>
+</ol>
+<h3 id="野指针分析方法-Enable-Malloc-Scribble"><a href="#野指针分析方法-Enable-Malloc-Scribble" class="headerlink" title="野指针分析方法 ( Enable Malloc Scribble )"></a><strong>野指针分析方法 ( Enable Malloc Scribble )</strong></h3><p>因为野指针的原因发生崩溃是常常出现的事，而且比较随机。关于一些原因及概念后面我们会讲到。所以我们要提高野指针的崩溃率好来帮我们快速找到有问题的代码。</p>
+<p>对象释放后只有出现被随机填入的数据是不可访问的时候才会必现Crash。</p>
+<p>这个地方我们可以做一下手脚，把这一随机的过程变成不随机的过程。对象释放后在内存上填上不可访问的数据，其实这种技术其实一直都有，xcode的Enable Scribble就是这个作用。</p>
+<img src="/images/2016/11/ios_crash_analysis_4.png">
+<p>更加详细的介绍可以参考：<a href="http://bugly.qq.com/bbs/forum.php?mod=viewthread&amp;tid=31&amp;highlight=%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8DObj-C%E9%87%8E%E6%8C%87%E9%92%88%E9%9A%8F%E6%9C%BACrash" target="_blank" rel="external">如何定位Obj-C野指针随机Crash</a>。</p>
+<h3 id="僵尸模式-NSZombieEnabled"><a href="#僵尸模式-NSZombieEnabled" class="headerlink" title="僵尸模式 ( NSZombieEnabled )"></a><strong>僵尸模式 ( NSZombieEnabled )</strong></h3><p>启用了NSZombieEnabled的话，它会用一个僵尸来替换默认的dealloc实现，也就是在引用计数降到0时，该僵尸实现会将该对象转换成僵尸对象。僵尸对象的作用是在你向它发送消息时，它会显示一段日志并自动跳入调试器。</p>
+<p>所以当启用NSZombieEnabled时，一个错误的内存访问就会变成一条无法识别的消息发送给僵尸对象。僵尸对象会显示接受到得信息，然后跳入调试器，这样你就可以查看到底是哪里出了问题。</p>
+<p>所以这时一般崩溃的原因是：调用了已经释放的内存空间，或者说重复释放了某个地址空间。</p>
+<p><br></p>
+<h4 id="如何找出问题"><a href="#如何找出问题" class="headerlink" title="如何找出问题"></a>如何找出问题</h4><ol>
+<li><p><strong>NSZombieEnabled</strong></p>
+<p> 打开NSZombieEnabled之后，如果遇到对应的崩溃类型既调用了已经释放的内存空间，或者说重复释放了某个地址空间。那么就能在GDB中看到对应的输出信息。</p>
+<p> 比如会出现如下这样的问题： <code>[__NSArrayM addObject:]: message sent to deallocated instance 0x7179910</code></p>
+</li>
+<li><p><strong>MallocStackLoggingNoCompact</strong></p>
+<p> 如果崩溃是发生在当前调用栈，通过上面的做法，系统就会把崩溃原因定位到具体代码中。但是，如果崩溃不在当前调用栈，系统就仅仅只能把崩溃地址告诉我们，而没办法定位到具体代码，这样我们也没法去修改错误。这时就可以修改scheme，让xcode记录每个地址alloc的历史，这样我们就可以用命令把这个地址还原出来。 如图：(跟设置 <code>NSZombieEnabled</code> 一样，添加 <code>MallocStackLoggingNoCompact</code>，并且设置为YES)</p>
+ <img src="/images/2016/11/ios_crash_analysis_5.png">
+<p> 这样，当出现崩溃原因是message sent to deallocated instance 0x7179910，我们可以使用以下命令，把内存地址还原：<code>(gdb) nfo malloc-history 0x7179910</code><br> 也可以使用下面的命令 <code>(gdb) shell malloc_history {pid/partial-process-name} {address}</code></p>
+<p> 这篇文章中有介绍<a href="http://www.cnblogs.com/vicstudio/p/3150557.html" target="_blank" rel="external">MallocStackLoggingNoCompact</a>的使用。</p>
+</li>
+<li><p><strong>总结</strong></p>
+<p> 还有官方文档 <a href="https://developer.apple.com/library/content/documentation/Performance/Conceptual/ManagingMemory/Articles/MallocDebug.html" target="_blank" rel="external">Enabling the Malloc Debugging Features</a> 介绍了类似<code>NSZombieEnabled</code>和<code>MallocStackLoggingNoCompact</code>这类的环境变量的作用。</p>
+<p> TODO：翻译Enabling the Malloc Debugging Features这篇文章，写对应的demo测试这类变量设置后如何找出内存出错问题。</p>
+</li>
+</ol>
+<h3 id="Enable-Address-Sanitizer（地址消毒剂）"><a href="#Enable-Address-Sanitizer（地址消毒剂）" class="headerlink" title="Enable Address Sanitizer（地址消毒剂）"></a><strong>Enable Address Sanitizer（地址消毒剂）</strong></h3><img src="/images/2016/11/ios_crash_analysis_6.png">
+<p>设置这个参数后就能看到一些更详细的错误信息提示，甚至会有内存使用情况的展示。</p>
+<img src="/images/2016/11/ios_crash_analysis_7.png">
+<p>C语言是一门危险的语言，内存安全是一个主要的问题。C语言中根本没有内存安全可言。像下面的代码，会被正常的编译，而且可能正常运行： <code>char *ptr = malloc(5); ptr[12] = 0</code>; 对于内存安全的验证已经有一些解决方案了。如Clang的静态代码分析，可以从代码中查找特定类型的内存安全问题。如Valgrind之类的程序可以在运行时检测到不安全的内存访问。</p>
+<p>Address Sanitizer是另外一种解决方案。它使用了一种新的方法，有利有弊。但仍不失为一个查找代码问题的有力工具。</p>
+<p>这类工具的理论依据是：<strong>访问内存时，通过比较访问的内存和程序实际分配的内存，验证内存访问的有效性，从而在bug发生时就检测到它们，而不会等到副作用产生时才有所察觉。</strong></p>
+<p>malloc函数总是最少分配16个字节。为了储存针对标准malloc的内存的保护，需要分配内存到16字节的范围内，因此，若分配的内存大小不是16字节的整数倍，余出的几个字节将不受保护。</p>
+<p>Address Sanitizer会追踪受限内存，使用了一种简单但是很巧妙的方法：<strong>它在进程的内存空间上保存了一个固定的区域，叫做“影子内存区”。用内存消毒剂的术语来说，一个被标记为受限的内存被称作“中毒”内存。“影子内存区”会记录哪些内存字节是中毒的。</strong>通过一个简单的公式，可以将进程中的内存空间映射到“影子内存区”中，即：每8字节的正常内存块映射到一个字节的影子内存上。在影子内存上，会跟踪这8字节的“中毒状态”。</p>
+<p><a href="https://mikeash.com/pyblog/friday-qa-2015-07-03-address-sanitizer.html" target="_blank" rel="external">Address Sanitizer</a> 这篇文章详细介绍了Enable Address Sanitizer，对应的中文翻译<a href="http://www.cocoachina.com/ios/20150730/12830.html" target="_blank" rel="external">在Xcode 7上直接使用Clang Address Sanitizer</a></p>
+<h3 id="Static-Analyzer（静态分析）"><a href="#Static-Analyzer（静态分析）" class="headerlink" title="Static Analyzer（静态分析）"></a><strong>Static Analyzer（静态分析）</strong></h3><p>Static Analyzer是一个非常好的工具去发现编译器警告不会提示的问题和一些个人的内错泄露和死存储（不会用到的赋了值的变量）错误。这个方法可能大大的提高内存使用和性能，以及提升应用的整体稳定性和代码质量。</p>
+<p>打开方式：Xcode-&gt;Product-Analyze 然后我们就能看到如下蓝色箭头所示的一些有问题的代码。</p>
+<img src="/images/2016/11/ios_crash_analysis_8.png">
+<h3 id="unrecognized-selector-send-to-instancd-快速定位"><a href="#unrecognized-selector-send-to-instancd-快速定位" class="headerlink" title="unrecognized selector send to instancd 快速定位"></a><strong>unrecognized selector send to instancd 快速定位</strong></h3><p>在debug navigator的断点栏里添加Create Symbolic Breakpoint。</p>
+<img src="/images/2016/11/ios_crash_analysis_9.png">
+<p>在Symbolic中填写如下方法签名： <code>-[NSObject(NSObject) doesNotRecognizeSelector:]</code></p>
+<img src="/images/2016/11/ios_crash_analysis_10.png">
+<p>设置完成后再遇到类似的错误就会定位到具体的代码。</p>
+<h3 id="Signal和EXC-BAD-ACCESS错误分析"><a href="#Signal和EXC-BAD-ACCESS错误分析" class="headerlink" title="Signal和EXC_BAD_ACCESS错误分析"></a><strong>Signal和EXC_BAD_ACCESS错误分析</strong></h3><p><br></p>
+<h4 id="Signal"><a href="#Signal" class="headerlink" title="Signal"></a>Signal</h4><p>在计算机科学中，信号（英语：Signals）是Unix、类Unix以及其他POSIX兼容的操作系统中进程间通讯的一种有限制的方式。它是一种异步的通知机制，用来提醒进程一个事件已经发生。当一个信号发送给一个进程，操作系统中断了进程正常的控制流程，此时，任何非原子操作都将被中断。如果进程定义了信号的处理函数，那么它将被执行，否则就执行默认的处理函数。</p>
+<p>在iOS中就是未被捕获的Objective-C异常（NSException），导致程序向自身发送了SIGABRT信号而崩溃。</p>
+<p><strong><font color="red">Signal信号的类型:</font></strong></p>
+<ul>
+<li>SIGABRT–程序中止命令中止信号</li>
+<li>SIGALRM–程序超时信号</li>
+<li>SIGFPE–程序浮点异常信号</li>
+<li>SIGILL–程序非法指令信号</li>
+<li>SIGHUP–程序终端中止信号</li>
+<li>SIGINT–程序键盘中断信号</li>
+<li>SIGKILL–程序结束接收中止信号</li>
+<li>SIGTERM–程序kill中止信号</li>
+<li>SIGSTOP–程序键盘中止信号　</li>
+<li>SIGSEGV–程序无效内存中止信号</li>
+<li>SIGBUS–程序内存字节未对齐中止信号</li>
+<li>SIGPIPE–程序Socket发送失败中止信号</li>
+</ul>
+<p><a href="http://www.iosxxx.com/blog/2015-08-29-iosyi-chang-bu-huo.html" target="_blank" rel="external">iOS异常捕获</a> 这篇文章中有对各种信号的解释。</p>
+<ol>
+<li><p><strong>SIGSEGV</strong></p>
+<p> <code>SIGSEGV</code>是当<code>SEGV</code>发生的时候，让代码终止的标识。这是在iOS中最为常见导致崩溃的原因。当App视图去<strong>访问没有被开辟的内存或者已经被释放的内存时</strong>，这样异常就会产生。</p>
+<p> 调试这样的Bug,需要找到已经被释放的变量，如果是在开发环境下发生这样的问题，可以使用Zombies来检测这样的问题。</p>
+<p> 在低内存的情况下，也可能发生类似的问题。这样非常难重现，在类和方法中跟踪堆栈可能会找到原因。</p>
+<p> 举个常见的例子，在使用代理的时候：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">   <span class="comment">// 代理应该是用weak修饰的</span></div><div class="line"><span class="keyword">self</span>.delegate = myView;</div><div class="line"></div><div class="line"><span class="comment">// myView从UINavigationController中Pop之后就会被销毁，而self.delegate仍然起作用，成了野指针</span></div><div class="line"></div><div class="line"><span class="comment">// 将会抛出异常</span></div><div class="line">[<span class="keyword">self</span>.delegate doSomething];</div></pre></td></tr></table></figure>
+<p> 避免这种异常可以在调用之前检查一下代理是否为空，是否能够响应所给的<code>Selector</code></p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="keyword">self</span>.delegate != <span class="literal">nil</span>) &#123;</div><div class="line">    <span class="keyword">if</span>([<span class="keyword">self</span>.delegate respondsToSelector:<span class="keyword">@selector</span>(doSomething)]) &#123;</div><div class="line">        [<span class="keyword">self</span>.delegate doSomething];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>NSInvalidArgumentException</strong></p>
+<p> 通常根据堆栈信息能够知道异常所发生的地方，最常见的引起<code>NSInvalidArgumentException</code>的原因就是<code>an unrecognized selector</code>，当调用一个对象不存在方法是就会抛出。</p>
+<p> 比如：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 因为对象不能响应所调用的方法, 这就会抛出NSInvalidArgumentException异常</span></div><div class="line">[@”myString” objectForKey:@”someKey”];</div></pre></td></tr></table></figure>
+<p> 像上面这种明显的错误是编译不过的，所以需要注意动态参数，比如序列化的<code>JSON</code>。</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// data =&gt; [‘item0’, ‘item1’, ‘item2’]</span></div><div class="line"><span class="built_in">NSDictionary</span> *json = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:data options:<span class="number">0</span> error:<span class="literal">nil</span>];</div><div class="line"><span class="comment">// JSON Data是个数组而不是一个字典</span></div><div class="line"></div><div class="line"><span class="comment">// 错误在数组中调用了字典的方法</span></div><div class="line">[json objectForKey:@”myKey”];</div></pre></td></tr></table></figure>
+<p> 解决这样的问题，可以在获取对象前，判断一下是否响应这个放否，数组是否包含了某个元素。</p>
+</li>
+<li><p><strong>SIGABRT</strong></p>
+<p> 这是一个让程序终止的标识，当存在一个未处理的异常的时候<code>debugger</code>显示。在一个已经发布的app中，<code>SIGABRT</code>会在断言或者在app内部、操作系统滴啊用终止方法的时候抛出。</p>
+<p> 如果堆栈的信息是比较晦涩，看不懂。很有可能是在苹果<code>SDK</code>内部终止了。这样的话，操作系统会杀死app并且抛出堆栈异常，这样非常难调试。</p>
+<blockquote>
+<p>注意：这并不一定意味着是系统的代码存在Bug,代码仅仅是成为了无效的状态，或者异常状态。</p>
+</blockquote>
+<p> <code>SIGABRT</code> 通常发生在异步执行系统方法的时候，所以一定小心，比如 <code>CoreData</code>，<code>Accessing files</code>, <code>NSUserDefaults</code>,还有一些其他的系统多线程操作。</p>
+</li>
+<li><p><strong>SIGBUS</strong></p>
+<p> 这个标识意味着 <code>BUS Error</code>，它和 <code>SIGABRT</code> 很容易混淆。两者都有相同点，都是在访问不可用内存的时候发生，<code>SIGBUS</code> 是在访问的地址不存在，或者无效的队列。换句话说，SIGBUS就是物理地址无效（不同于<code>SIGSEGV</code>，<code>SIGSEGV</code>是逻辑地址无效）</p>
+<p> <code>SIGBUS</code> 可能从大多数的同步方法中发出，当试图访问一个锁的时候可能会抛出这样的异常</p>
+</li>
+<li><p><strong>NSRangeException</strong></p>
+<p> 当代码中试图去访问对象的范围内不存在的索引的时候，根据堆栈信息可以追溯到这个异常，比如：</p>
+<p> <code>[__NSArrayM objectAtIndex:]: index 11 beyond bounds [0 .. 10]</code></p>
+<p> 大多数情况下引起这个问题的原因是数组和字符串，比如：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSArray</span> *arr = @[@<span class="number">1</span>, @<span class="number">2</span>, @<span class="number">3</span>, @<span class="number">4</span>];</div><div class="line"><span class="built_in">NSNumber</span> *num = [arr objectAtIndex:<span class="number">9</span>]; <span class="comment">// 抛出异常</span></div><div class="line"></div><div class="line"><span class="built_in">NSString</span> *mainString = @”myString”;</div><div class="line"><span class="built_in">NSString</span> *subString = [mainString substringToIndex:<span class="number">24</span>]; <span class="comment">// 抛出异常</span></div></pre></td></tr></table></figure>
+<p> 避免这种异常很简单，及时确保索引在对象的范围内，比如：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSNumber</span> *obj = <span class="literal">nil</span>; </div><div class="line"><span class="built_in">NSArray</span> *arr = @[@<span class="number">1</span>, @<span class="number">2</span>, @<span class="number">3</span>, @<span class="number">4</span>];</div><div class="line"></div><div class="line"><span class="keyword">if</span>([arr count] &gt; <span class="number">9</span>) &#123;</div><div class="line">    obj = [arr objectAtIndex:<span class="number">9</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">NSString</span> *subString = <span class="literal">nil</span>; </div><div class="line"><span class="built_in">NSString</span> *mainString = @”myString”;</div><div class="line"></div><div class="line"><span class="keyword">if</span>([mainString length] &gt; <span class="number">24</span>) &#123;</div><div class="line">    subString = [mainString substringToIndex:<span class="number">24</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p><a href="http://www.cnphp6.com/archives/109952" target="_blank" rel="external">截取Signal和Exception从容的崩溃</a></p>
+</li>
+</ol>
+<p><br></p>
+<h4 id="EXC-BAD-ACCESS"><a href="#EXC-BAD-ACCESS" class="headerlink" title="EXC_BAD_ACCESS"></a>EXC_BAD_ACCESS</h4><p>EXC_BAD_ACCESS是一个比较难处理的crash了，当一个app进入一种毁坏的状态，通常是由于内存管理问题而引起的时，就会出现出现这样的crash。通常1.7.1中的Signal信号错误都会提醒EXC_BAD_ACCESS。</p>
+<p>文中1.3就介绍了用一些变量设置来找出这类错误。</p>
+<h2 id="崩溃类型收集"><a href="#崩溃类型收集" class="headerlink" title="崩溃类型收集"></a>崩溃类型收集</h2><h3 id="新老操作系统兼容"><a href="#新老操作系统兼容" class="headerlink" title="新老操作系统兼容"></a><strong>新老操作系统兼容</strong></h3><ul>
+<li><p><strong>原因</strong></p>
+<p>  开发人员在进行开发的时候，常常使用的是某个操作系统版本，所以在开发人员进行开发测试的那个系统版本上基本不会出现问题。但在其他版本上开发人员无法进行完全的测试，这就导致了在新系统上运行正常，但在旧系统上却崩溃的情况。</p>
+<p>  在新 iOS 上正常的应用，到了老版本 iOS 上秒退最常见原因是系统动态链接库或Framework无法找到。这种情况通常是由于 App 引用了一个新版操作系统里的动态库（或者某动态库的新版本）或只有新 iOS 支持的 Framework，而又没有对老系统进行测试，于是当 App 运行在老系统上时便由于找不到而秒退。</p>
+<p>  还有就是有些方法是新版操作系统才支持的，而又没有对该方法是否存在于老系统中做出判断。这种情况其实还是比较难出现的，除非开发人员太low了，因为这类方法在xcode编码时编辑器都会有提醒的。</p>
+</li>
+<li><p>解决</p>
+<p>  这种问题一般就是用户升级操作系统或者开发人员修改问题以兼容老系统。</p>
+</li>
+</ul>
+<h3 id="本地存储的数据结构改变"><a href="#本地存储的数据结构改变" class="headerlink" title="本地存储的数据结构改变"></a><strong>本地存储的数据结构改变</strong></h3><ul>
+<li><p><strong>原因</strong></p>
+<p>  程序在升级时，修改了本地存储的数据结构，但是对用户既存的旧数据没有做好升级，结果导致初始化时因为无法正确读取用户数据而秒退。</p>
+</li>
+<li><p>解决</p>
+<p>  <font color="red">第一种：</font> 是把服务端传过来的一些信息保存在本地，使用的时候从本地数据库取。</p>
+<p>  刚开始的时候我是第一次从服务端得到数据的时候直接解析成对应的model然后存入plist文件里面。这时就有一个问题，比如服务端新传了字段newId，但是我旧版model里面没有定义过，存入本地的数据还是没有这个字段。</p>
+<p>  然后等我升级了程序，新程序里model，定义了这个newId字段，但是旧版里面数据已经保存过一遍了没有这个字段。这时再去取就取不到了。</p>
+<p>  所以后来我就把存储时解析数据改成了读取时解析数据。就是不管服务端传什么数据都把它存下来，然后在使用的时候再把它解析成对应的model，这样就不会丢失字段了。</p>
+<p>  <font color="red">第二种：</font> 自己的一些数据存储在本地SQLlite，新版的时候表结构改了。</p>
+<p>  SQLlite只支持更改一个表的名字，或者向表中增加一个字段（列），但是我们不能删除一个已经存在的字段，或者更改一个已经存在的字段的名称、数据类型、限定符等等。</p>
+<p>  这种就是有时候新版又添加字段了，或者改变了字段的名称了。一般来说原有的字段名称不应该改变，但是添加新字段是常有的事。</p>
+<p>  一般做法是在第一次创建表的时候加一些冗余字段，以防后面不时之需。但是如果真没办法需要在旧表上增加新字段了，那就要做数据迁移了。</p>
+<p>  这里有一个库在FMDB基础上管理SQLlite数据库了，可以用来做数据迁移用。FMDBMigrationManager</p>
+</li>
+</ul>
+<h3 id="访问的数据为空或访问数据类型不对"><a href="#访问的数据为空或访问数据类型不对" class="headerlink" title="访问的数据为空或访问数据类型不对"></a><strong>访问的数据为空或访问数据类型不对</strong></h3><ul>
+<li><p><strong>原因</strong></p>
+<p>  这类情况是比较常见的，后端传回了空数据，客户端没有做对应的判断继续执行下去了，这样就产生了crash。或者自己本地的某个数据为空数据而去使用了。还有就是访问的数据类型不是期望的数据类型而产生崩溃。</p>
+</li>
+<li><p>解决</p>
+<p>  <font color="red">第一种：</font> 服务端都加入默认值，不返回空内容或无key，但是服务端往往会不太愿意改，还有就是有些确实应该无值的话key也不用传，减少数据量的传输。</p>
+<p>  <font color="red">第二种：</font> 这种就是客户端自己做判断，如果每次都是自己去if判断是否为空或格式是否正确那肯定是比较麻烦的。所以这里用到了NSArray和NSDictionary的Category。一般我们访问的数据都是NSArray或NSDictionary，所以在取值方法里面做一下判断，返回正确的数据类型或默认值即可。</p>
+</li>
+</ul>
+<h3 id="操作了不该操作的对象，野指针之类"><a href="#操作了不该操作的对象，野指针之类" class="headerlink" title="操作了不该操作的对象，野指针之类"></a>操作了不该操作的对象，野指针之类</h3><p><br></p>
+<h4 id="野指针介绍"><a href="#野指针介绍" class="headerlink" title="野指针介绍"></a>野指针介绍</h4><p>iOS中有空指针和野指针两种概念。</p>
+<p>空指针是没有存储任何内存地址的指针。如<code>Student *s1 = NULL;</code>和<code>Student *s2 = nil;</code></p>
+<p>而野指针是指指向一个已删除的对象（”垃圾”内存既不可用内存）或未申请访问受限内存区域的指针。野指针是比较危险的。因为野指针指向的对象已经被释放了，不能用了，你再给被释放的对象发送消息就是违法的，所以会崩溃。</p>
+<p><a href="http://www.cnblogs.com/mjios/archive/2013/04/22/3034788.html#label1" target="_blank" rel="external">空指针和野指针</a>这篇文章介绍了空指针和野指针的概念。</p>
+<p><br></p>
+<h4 id="野指针崩溃情况"><a href="#野指针崩溃情况" class="headerlink" title="野指针崩溃情况"></a>野指针崩溃情况</h4><p>野指针访问已经释放的对象crash其实不是必现的，因为dealloc执行后只是告诉系统，这片内存我不用了，而系统并没有就让这片内存不能访问。</p>
+<p>所以野指针的崩溃是比较随机的，你在测试的时候可能没发生crash，但是用户在使用的时候就可能发生crash了。</p>
+<p><strong>现实出现问题大概是下面几种可能的情况：</strong></p>
+<ol>
+<li>对象释放后内存没被改动过，原来的内存保存完好，可能不Crash或者出现逻辑错误（随机Crash）。</li>
+<li>对象释放后内存没被改动过，但是它自己析构的时候已经删掉某些必要的东西，可能不Crash、Crash在访问依赖的对象比如类成员上、出现逻辑错误（随机Crash）。</li>
+<li>对象释放后内存被改动过，写上了不可访问的数据，直接就出错了很可能Crash在objc_msgSend上面（必现Crash，常见）。</li>
+<li>对象释放后内存被改动过，写上了可以访问的数据，可能不Crash、出现逻辑错误、间接访问到不可访问的数据（随机Crash）。</li>
+<li>对象释放后内存被改动过，写上了可以访问的数据，但是再次访问的时候执行的代码把别的数据写坏了，遇到这种Crash只能哭了（随机Crash，难度大，概率低）！！</li>
+<li>对象释放后再次release（几乎是必现Crash，但也有例外，很常见）。</li>
+</ol>
+<p>参考下面这张图：</p>
+<img src="/images/2016/11/ios_crash_analysis_11.png">
+<h3 id="内存处理不当"><a href="#内存处理不当" class="headerlink" title="内存处理不当"></a>内存处理不当</h3><p>说到因为内存处理不当崩溃就要涉及到内存管理问题了。内存管理是软件开发中一个重要的课题。iOS自从引入ARC机制后，对于内存的管理开发者好像轻松了很多，但是还会发生一些内存泄露之类的问题。</p>
+<p>那我们如何快速的来找出内存泄露呢？以前我们可能会使用Instruments来监测，但是我们会发现使用Instruments特别繁琐，而且不一定能定位到内存泄露。</p>
+<p>所以这里伟大的Facebook工程师们开源了一些自动化工具来解决监测内存泄露问题：<code>FBRetainCycleDetector</code>、<code>FBAllocationTracker</code>、<code>FBMemoryProfiler</code>。<br>原文介绍：<a href="https://code.facebook.com/posts/583946315094347/automatic-memory-leak-detection-on-ios/" target="_blank" rel="external">Automatic memory leak detection on iOS</a><br>中文翻译：<a href="http://www.cocoachina.com/ios/20160419/15954.html" target="_blank" rel="external">在iOS上自动检测内存泄露</a></p>
+<h3 id="主线程UI长时间卡死，被系统杀掉"><a href="#主线程UI长时间卡死，被系统杀掉" class="headerlink" title="主线程UI长时间卡死，被系统杀掉"></a>主线程UI长时间卡死，被系统杀掉</h3><p>主线程被卡住是非常常见的场景，具体表现就是程序不响应任何的UI交互。这时按下调试的暂停按钮，查看堆栈，就可以看到是到底是死锁、死循环等，导致UI线程被卡住。</p>
+<p>这部分需要研究多线程，还有如何看调试栏里的线程的信息。</p>
+<p><a href="http://www.qidiandasheng.com/2016/04/18/thread-deadlock/" target="_blank" rel="external">iOS调试里的进程跟线程</a> 这篇文章中有介绍多线程及死锁的原因。</p>
+<h3 id="多线程之间切换访问引起的crash"><a href="#多线程之间切换访问引起的crash" class="headerlink" title="多线程之间切换访问引起的crash"></a>多线程之间切换访问引起的crash</h3><p>多线程引起的崩溃大部分是因为使用数据库的时候多线程同时读写数据库而造成了crash。 <a href="http://blog.csdn.net/lixing333/article/details/42149893" target="_blank" rel="external">多线程导致的iOS闪退分析</a>这篇文章就是关于多线程crash的调试。</p>
+<h2 id="多个-Crash-日志收集服务共存的坑"><a href="#多个-Crash-日志收集服务共存的坑" class="headerlink" title="多个 Crash 日志收集服务共存的坑"></a>多个 Crash 日志收集服务共存的坑</h2><p>在自己的程序里集成多个 Crash 日志收集服务实在不是明智之举。通常情况下，第三方功能性 SDK 都会集成一个 Crash 收集服务，以及时发现自己 SDK 的问题。当各家的服务都以保证自己的 Crash 统计正确完整为目的时，难免出现时序手脚，强行覆盖等等的恶意竞争，总会有人默默被坑。</p>
+<ul>
+<li><p>如果同时有多方通过 NSSetUncaughtExceptionHandler 注册异常处理程序，和平的作法是：</p>
+<p>  后注册者通过 NSGetUncaughtExceptionHandler 将先前别人注册的 handler 取出并备份，在自己 handler 处理完后自觉把别人的 handler 注册回去，规规矩矩的传递。不传递强行覆盖的后果是，在其之前注册过的日志收集服务写出的 Crash 日志就会因为取不到 NSException 而丢失Last Exception Backtrace等信息。（P.S. iOS 系统自带的 Crash Reporter 不受影响）</p>
+</li>
+<li><p>在开发测试阶段，可以利用 fishhook 框架去 hookNSSetUncaughtExceptionHandler方法，这样就可以清晰的看到 handler 的传递流程断在哪里，快速定位污染环境者。不推荐利用调试器添加符号断点来检查，原因是一些 Crash 收集框架在调试状态下是不工作的。</p>
+</li>
+<li><p>检测事例代码：</p>
+  <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">	<span class="keyword">static</span> <span class="built_in">NSUncaughtExceptionHandler</span> *g_vaildUncaughtExceptionHandler;</div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span> (*ori_NSSetUncaughtExceptionHandler)( <span class="built_in">NSUncaughtExceptionHandler</span> * );</div><div class="line"><span class="keyword">void</span> my_NSSetUncaughtExceptionHandler( <span class="built_in">NSUncaughtExceptionHandler</span> * handler)</div><div class="line">&#123;</div><div class="line">    g_vaildUncaughtExceptionHandler = <span class="built_in">NSGetUncaughtExceptionHandler</span>();</div><div class="line">    <span class="keyword">if</span> (g_vaildUncaughtExceptionHandler != <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"UncaughtExceptionHandler=%p"</span>,g_vaildUncaughtExceptionHandler);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ori_NSSetUncaughtExceptionHandler(handler);</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,[<span class="built_in">NSThread</span> callStackSymbols]);</div><div class="line"></div><div class="line">    g_vaildUncaughtExceptionHandler = <span class="built_in">NSGetUncaughtExceptionHandler</span>();</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"UncaughtExceptionHandler=%p"</span>,g_vaildUncaughtExceptionHandler);</div><div class="line">&#125;</div></pre></td></tr></table></figure></li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Crash/">Crash</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://devma.cn/blog/2016/11/10/ios-beng-kui-crash-jie-xi/" data-title="iOS 崩溃Crash解析 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/11/02/ios-di-san-fang-ku-chong-tu-de-chu-li/"  title="iOS 第三方库冲突的处理">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>iOS 第三方库冲突的处理-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+    </div>
+  </div>
+
+
+  <div class="aboutme">
+    <br />
+    <p class="asidetitle">关于我</p>
+    <p style="margin-top: 8px;">iOS开发新人，以前在 <a target="_blank" style="color: #2ca6cb;text-decoration: underline;" href="http://blog.csdn.net/marujunyy">CSDN</a> 写博客.</p>
+    <!--<img src="/images/weixin-qr.jpg" width="220px" />-->
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

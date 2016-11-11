@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://devma.cn/blog/2016/11/02/ios-di-san-fang-ku-chong-tu-de-chu-li/index.html">
 <meta property="og:site_name" content="极致的技术博客">
 <meta property="og:description" content="最近项目组在做一些第三方功能的集成，不止一次的遇到第三方库冲突的问题，报错如下：">
-<meta property="og:updated_time" content="2016-11-03T01:41:34.000Z">
+<meta property="og:updated_time" content="2016-11-11T02:25:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 第三方库冲突的处理">
 <meta name="twitter:description" content="最近项目组在做一些第三方功能的集成，不止一次的遇到第三方库冲突的问题，报错如下：">
@@ -84,7 +84,7 @@
 		
 		</div>
 		
-		<!-- { % img fancybox /images/2016/04/demo.png %} -->
+		<!-- { % img /images/2016/04/demo.png %} -->
 <p>最近项目组在做一些第三方功能的集成，不止一次的遇到第三方库冲突的问题，报错如下：<br><a id="more"></a></p>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">duplicate symbol _OBJC_METACLASS<span class="number">_</span>$_XMPPElement in:</div><div class="line">    <span class="regexp">/Users/test</span><span class="regexp">/Xcode/</span>XXXProject/Vendors/MiPush/libMiPushSDK.a(XMPPElement.o)</div><div class="line">    /Users/test/Xcode/XXXProject/Vendors/EaseMobSDK/lib/libEaseMobClientSDKLite.a(XMPPElement.o)</div><div class="line">ld: <span class="number">186</span> duplicate symbols <span class="keyword">for</span> architecture arm64</div><div class="line">clang: error: linker command failed with <span class="keyword">exit</span> code <span class="number">1</span> (<span class="keyword">use</span> -v to see invocation)</div></pre></td></tr></table></figure>
 <p>在这个报错中，原因是两个第三方库都使用了XMPPFrameWork这个库。这种情况需要我们把其中一个第三方SDK中冲突的库移除掉，即将它拆包后重打包处理。</p>
@@ -149,6 +149,14 @@
 	<!---->
 <!--<nav class="article-nav clearfix">-->
  <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/11/10/ios-beng-kui-crash-jie-xi/" title="iOS 崩溃Crash解析">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS 崩溃Crash解析</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
 <!---->
 <!--<div class="next">-->
 <!--<a href="/blog/2016/09/11/migrate-to-hexo-from-octopress/"  title="从 Octopress 迁移到 Hexo">-->
@@ -210,7 +218,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 

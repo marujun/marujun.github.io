@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_2.jpg">
 <meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_5.jpg">
 <meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_6.jpg">
-<meta property="og:updated_time" content="2016-09-12T01:01:13.000Z">
+<meta property="og:updated_time" content="2016-11-11T02:23:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS - CoreText入门之字形">
 <meta name="twitter:description" content="Core Text是和Core Graphics配合使用的，一般是在UIView的drawRect方法中的Graphics Context上进行绘制的。 且Core Text真正负责绘制的是文本部分，图片还是需要自己去手动绘制，所以你必须关注很多绘制的细节部分。">
@@ -92,28 +92,28 @@
 		
 		</div>
 		
-		<!-- { % img fancybox /images/2016/04/demo.png %} -->
+		<!-- { % img /images/2016/04/demo.png %} -->
 <p>Core Text是和Core Graphics配合使用的，一般是在UIView的drawRect方法中的Graphics Context上进行绘制的。 且Core Text真正负责绘制的是文本部分，图片还是需要自己去手动绘制，所以你必须关注很多绘制的细节部分。<br><a id="more"></a></p>
 <h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>因为项目需要在工程里添加了自定义字体，但是遇到了一个问题：<font color="red"><strong>使用系统方法计算出来的字体高度和实际显示的高度偏差较大</strong></font>。</p>
-<img src="/images/2016/04/ios_coretext_glyphs_7.png" class="fancybox">
+<img src="/images/2016/04/ios_coretext_glyphs_7.png">
 <p><br> </p>
 <blockquote>
 <p>红色背景区域为计算出来的高度</p>
 </blockquote>
 <p>通过一番努力找到了原因：项目中使用的字体没有 <strong>下行高度</strong></p>
-<img src="/images/2016/04/ios_coretext_glyphs_4.jpg" class="fancybox">
+<img src="/images/2016/04/ios_coretext_glyphs_4.jpg">
 <p>下面讲解下字形相关的知识：</p>
 <h2 id="字符（Character）和字形（Glyphs）"><a href="#字符（Character）和字形（Glyphs）" class="headerlink" title="字符（Character）和字形（Glyphs）"></a>字符（Character）和字形（Glyphs）</h2><p>排版系统中文本显示的一个重要的过程就是字符到字形的转换。</p>
 <h3 id="字符"><a href="#字符" class="headerlink" title="字符"></a>字符</h3><p>字符是信息本身的元素，而字形是字符的图形表征，字符还会有其它表征比如发音。字符在计算机中其实就是一个编码，某个字符集中的编码，比如Unicode字符集，就囊括了大都数存在的字符。 </p>
 <h3 id="字形"><a href="#字形" class="headerlink" title="字形"></a>字形</h3><p>字形是图形，一般都存储在字体文件中，字形也有它的编码，也就是它在字体中的索引。 </p>
 <p>一个字符可以对应多个字形（不同的字体，或者同种字体的不同样式：粗体斜体等）；多个字符也可能对应一个字形，比如字符的连写（ Ligatures）。 </p>
-<img src="/images/2016/04/ios_coretext_glyphs_3.jpg" class="fancybox">
+<img src="/images/2016/04/ios_coretext_glyphs_3.jpg">
 <p><br>Roman Ligatures</p>
 <h2 id="字形度量Glyph-Metrics"><a href="#字形度量Glyph-Metrics" class="headerlink" title="字形度量Glyph Metrics"></a>字形度量Glyph Metrics</h2><p>字形度量就是字形的各个参数：</p>
-<img src="/images/2016/04/ios_coretext_glyphs_1.jpg" class="fancybox">
-<img src="/images/2016/04/ios_coretext_glyphs_2.jpg" class="fancybox">
-<img src="/images/2016/04/ios_coretext_glyphs_5.jpg" class="fancybox">
-<img src="/images/2016/04/ios_coretext_glyphs_6.jpg" class="fancybox">
+<img src="/images/2016/04/ios_coretext_glyphs_1.jpg">
+<img src="/images/2016/04/ios_coretext_glyphs_2.jpg">
+<img src="/images/2016/04/ios_coretext_glyphs_5.jpg">
+<img src="/images/2016/04/ios_coretext_glyphs_6.jpg">
 <ul>
 <li><p><code>bounding box</code>（边界框），这是一个假想的框子，它尽可能紧密的装入字形。</p>
 </li>
@@ -233,7 +233,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/Mac/" style="font-size: 16px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16px;">octopress</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 12px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 12px;">图片</a> <a href="/tags/多线程/" style="font-size: 14px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 12px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 
