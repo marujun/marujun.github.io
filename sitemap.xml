@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://devma.cn/blog/2016/08/16/guan-yu-xcode-de-other-linker-flags/</loc>
+    
+    <lastmod>2016-11-16T07:32:04.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/11/10/ios-beng-kui-crash-jie-xi/</loc>
     
     <lastmod>2016-11-11T09:42:26.000Z</lastmod>
