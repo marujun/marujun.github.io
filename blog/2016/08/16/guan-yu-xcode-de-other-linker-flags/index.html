@@ -11,16 +11,16 @@
     
 
     
-    <meta name="description" content="在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现selector not recognized的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在Other Linker Flags中加入 -ObjC 或者 -all_load 这样的解决方法。">
+    <meta name="description" content="在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现 selector not recognized 的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在Other Linker Flags中加入 -ObjC 或者 -all_load 这样的解决方法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于Xcode的Other Linker Flags">
 <meta property="og:url" content="http://devma.cn/blog/2016/08/16/guan-yu-xcode-de-other-linker-flags/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现selector not recognized的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在Other Linker Flags中加入 -ObjC 或者 -all_load 这样的解决方法。">
-<meta property="og:updated_time" content="2016-11-16T07:32:04.000Z">
+<meta property="og:description" content="在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现 selector not recognized 的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在Other Linker Flags中加入 -ObjC 或者 -all_load 这样的解决方法。">
+<meta property="og:updated_time" content="2016-11-18T01:35:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于Xcode的Other Linker Flags">
-<meta name="twitter:description" content="在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现selector not recognized的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在Other Linker Flags中加入 -ObjC 或者 -all_load 这样的解决方法。">
+<meta name="twitter:description" content="在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现 selector not recognized 的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在Other Linker Flags中加入 -ObjC 或者 -all_load 这样的解决方法。">
 
     
     
@@ -85,7 +85,7 @@
 		</div>
 		
 		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
-<p>在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现<code>selector not recognized</code>的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在<code>Other Linker Flags</code>中加入 <code>-ObjC</code> 或者 <code>-all_load</code> 这样的解决方法。<br><a id="more"></a><br>那么，Other Linker Flags 到底是用来干什么的呢？还有 -ObjC 和 -all_load 到底发挥了什么作用呢？</p>
+<p>在iOS开发过程中，有时候会用到第三方的静态库(.a文件)，然后导入后发现编译正常但运行时会出现 <code>selector not recognized</code> 的错误，从而导致app闪退。接着仔细阅读库文件的说明文档，你可能会在文档中发现诸如在<code>Other Linker Flags</code>中加入 <code>-ObjC</code> 或者 <code>-all_load</code> 这样的解决方法。<br><a id="more"></a><br>那么，Other Linker Flags 到底是用来干什么的呢？还有 -ObjC 和 -all_load 到底发挥了什么作用呢？</p>
 <h2 id="链接器"><a href="#链接器" class="headerlink" title="链接器"></a>链接器</h2><p>首先，要说明一下<code>Other Linker Flags</code>到底是用来干嘛的。说白了，就是ld命令除了默认参数外的其他参数。<code>ld</code>命令实现的是链接器的工作，详细说明可以在终端<code>man ld</code>查看。</p>
 <p>如果有人不清楚链接器是什么东西的话，我可以作个简单的说明。</p>
 <p>一个程序从简单易读的代码到可执行文件往往要经历以下步骤：</p>
