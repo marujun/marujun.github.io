@@ -4,31 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>iOS - CoreText入门之字形 | 极致的技术博客</title>
+    <title>iOS中KV数据库LevelDB的编译和使用 | 极致的技术博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="JiZhi">
     
 
     
-    <meta name="description" content="Core Text是和Core Graphics配合使用的，一般是在UIView的drawRect方法中的Graphics Context上进行绘制的。 且Core Text真正负责绘制的是文本部分，图片还是需要自己去手动绘制，所以你必须关注很多绘制的细节部分。">
+    <meta name="description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS - CoreText入门之字形">
-<meta property="og:url" content="http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/index.html">
+<meta property="og:title" content="iOS中KV数据库LevelDB的编译和使用">
+<meta property="og:url" content="http://devma.cn/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="Core Text是和Core Graphics配合使用的，一般是在UIView的drawRect方法中的Graphics Context上进行绘制的。 且Core Text真正负责绘制的是文本部分，图片还是需要自己去手动绘制，所以你必须关注很多绘制的细节部分。">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_7.png">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_4.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_3.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_1.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_2.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_5.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_6.jpg">
-<meta property="og:updated_time" content="2016-11-11T02:23:27.000Z">
+<meta property="og:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
+<meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-speed.png">
+<meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-fno-objc-arc.png">
+<meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-header-search-paths.png">
+<meta property="og:updated_time" content="2016-12-09T07:35:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS - CoreText入门之字形">
-<meta name="twitter:description" content="Core Text是和Core Graphics配合使用的，一般是在UIView的drawRect方法中的Graphics Context上进行绘制的。 且Core Text真正负责绘制的是文本部分，图片还是需要自己去手动绘制，所以你必须关注很多绘制的细节部分。">
-<meta name="twitter:image" content="http://devma.cn/images/2016/04/ios_coretext_glyphs_7.png">
+<meta name="twitter:title" content="iOS中KV数据库LevelDB的编译和使用">
+<meta name="twitter:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
+<meta name="twitter:image" content="http://devma.cn/images/2016/12/leveldb-speed.png">
 
     
     
@@ -76,10 +72,10 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/" title="iOS - CoreText入门之字形" itemprop="url">iOS - CoreText入门之字形</a>
+      <a href="/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/" title="iOS中KV数据库LevelDB的编译和使用" itemprop="url">iOS中KV数据库LevelDB的编译和使用</a>
   </h1>
   <p class="article-time">
-    <time datetime="2016-04-14T06:46:51.000Z" itemprop="datePublished"> 发表于 2016-04-14</time>
+    <time datetime="2016-12-09T05:54:41.000Z" itemprop="datePublished"> 发表于 2016-12-09</time>
     
   </p>
 </header>
@@ -88,48 +84,44 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#遇到的问题"><span class="toc-number">1.</span> <span class="toc-text">遇到的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符（Character）和字形（Glyphs）"><span class="toc-number">2.</span> <span class="toc-text">字符（Character）和字形（Glyphs）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#字符"><span class="toc-number">2.1.</span> <span class="toc-text">字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字形"><span class="toc-number">2.2.</span> <span class="toc-text">字形</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字形度量Glyph-Metrics"><span class="toc-number">3.</span> <span class="toc-text">字形度量Glyph Metrics</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#编译iOS静态库"><span class="toc-number">1.</span> <span class="toc-text">编译iOS静态库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在iOS中使用LevelDB"><span class="toc-number">2.</span> <span class="toc-text">在iOS中使用LevelDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤一：导入相关文件"><span class="toc-number">2.1.</span> <span class="toc-text">步骤一：导入相关文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤二：添加-fno-objc-arc-标签"><span class="toc-number">2.2.</span> <span class="toc-text">步骤二：添加 -fno-objc-arc 标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤三：添加-Header-Search-Paths"><span class="toc-number">2.3.</span> <span class="toc-text">步骤三：添加 Header Search Paths</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤四：添加-libc-dylib-Framework"><span class="toc-number">2.4.</span> <span class="toc-text">步骤四：添加 libc++.dylib Framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用Objective-LevelDB"><span class="toc-number">2.5.</span> <span class="toc-text">如何使用Objective-LevelDB</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<!-- { % img /images/2016/04/demo.png %} -->
-<p>Core Text是和Core Graphics配合使用的，一般是在UIView的drawRect方法中的Graphics Context上进行绘制的。 且Core Text真正负责绘制的是文本部分，图片还是需要自己去手动绘制，所以你必须关注很多绘制的细节部分。<br><a id="more"></a></p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>因为项目需要在工程里添加了自定义字体，但是遇到了一个问题：<font color="red"><strong>使用系统方法计算出来的字体高度和实际显示的高度偏差较大</strong></font>。</p>
-<img src="/images/2016/04/ios_coretext_glyphs_7.png">
-<p><br> </p>
-<blockquote>
-<p>红色背景区域为计算出来的高度</p>
-</blockquote>
-<p>通过一番努力找到了原因：项目中使用的字体没有 <strong>下行高度</strong></p>
-<img src="/images/2016/04/ios_coretext_glyphs_4.jpg">
-<p>下面讲解下字形相关的知识：</p>
-<h2 id="字符（Character）和字形（Glyphs）"><a href="#字符（Character）和字形（Glyphs）" class="headerlink" title="字符（Character）和字形（Glyphs）"></a>字符（Character）和字形（Glyphs）</h2><p>排版系统中文本显示的一个重要的过程就是字符到字形的转换。</p>
-<h3 id="字符"><a href="#字符" class="headerlink" title="字符"></a>字符</h3><p>字符是信息本身的元素，而字形是字符的图形表征，字符还会有其它表征比如发音。字符在计算机中其实就是一个编码，某个字符集中的编码，比如Unicode字符集，就囊括了大都数存在的字符。 </p>
-<h3 id="字形"><a href="#字形" class="headerlink" title="字形"></a>字形</h3><p>字形是图形，一般都存储在字体文件中，字形也有它的编码，也就是它在字体中的索引。 </p>
-<p>一个字符可以对应多个字形（不同的字体，或者同种字体的不同样式：粗体斜体等）；多个字符也可能对应一个字形，比如字符的连写（ Ligatures）。 </p>
-<img src="/images/2016/04/ios_coretext_glyphs_3.jpg">
-<p><br>Roman Ligatures</p>
-<h2 id="字形度量Glyph-Metrics"><a href="#字形度量Glyph-Metrics" class="headerlink" title="字形度量Glyph Metrics"></a>字形度量Glyph Metrics</h2><p>字形度量就是字形的各个参数：</p>
-<img src="/images/2016/04/ios_coretext_glyphs_1.jpg">
-<img src="/images/2016/04/ios_coretext_glyphs_2.jpg">
-<img src="/images/2016/04/ios_coretext_glyphs_5.jpg">
-<img src="/images/2016/04/ios_coretext_glyphs_6.jpg">
-<ul>
-<li><p><code>bounding box</code>（边界框），这是一个假想的框子，它尽可能紧密的装入字形。</p>
-</li>
-<li><p><code>baseline</code>（基线），一条假想的线,一行上的字形都以此线作为上下位置的参考，在这条线的左侧存在一个点叫做基线的原点</p>
-</li>
-<li><p><code>ascent</code>（上行高度），从原点到字体中最高（这里的高深都是以基线为参照线的）的字形的顶部的距离，ascent是一个正值</p>
-</li>
-<li><p><code>descent</code>（下行高度），从原点到字体中最深的字形底部的距离，descent是一个负值（比如一个字体原点到最深的字形的底部的距离为2，那么descent就为-2）</p>
-</li>
-<li><p><code>linegap</code>（行距），linegap也可以称作leading（其实准确点讲应该叫做External leading）</p>
-</li>
-<li><p><code>leading</code>，文档说的很含糊，其实是上一行字符的descent到下一行的ascent之间的距离</p>
-</li>
-</ul>
-<p>所以字体的高度是由三部分组成的：<code>leading + ascent + descent</code></p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">CTFontRef</span> ref = <span class="built_in">CTFontCreateWithName</span>((<span class="built_in">CFStringRef</span>)<span class="string">@"FZLTTHJW--GB1-0"</span>, fontsize, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line"><span class="built_in">CGFloat</span> GetLineHeightForFont(<span class="built_in">CTFontRef</span> iFont)</div><div class="line">&#123;</div><div class="line">    <span class="built_in">CGFloat</span> lineHeight = <span class="number">0.0</span>;</div><div class="line">    </div><div class="line">    <span class="comment">// Get the ascent from the font, already scaled for the font's size</span></div><div class="line">    lineHeight += <span class="built_in">CTFontGetAscent</span>(iFont);</div><div class="line">    </div><div class="line">    <span class="comment">// Get the descent from the font, already scaled for the font's size</span></div><div class="line">    lineHeight += <span class="built_in">CTFontGetDescent</span>(iFont);</div><div class="line">    </div><div class="line">    <span class="comment">// Get the leading from the font, already scaled for the font's size</span></div><div class="line">    lineHeight += <span class="built_in">CTFontGetLeading</span>(iFont);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> lineHeight;</div><div class="line">&#125;</div></pre></td></tr></table></figure>  
+		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。<br><a id="more"></a></p>
+<p>LevelDB开源并托管在GitHub上，项目的地址是：<a href="https://github.com/google/leveldb" target="_blank" rel="external">https://github.com/google/leveldb</a>。</p>
+<p>有个来自LevelDB官方对LevelDB、TreeDB和SQLite3进行性能对比分析的测试，测试结果如下图所示：</p>
+<img src="/images/2016/12/leveldb-speed.png" width="600" height="454">
+<p>结果显示，在顺序读写和随机写上，LevelDB 在性能上都遥遥领先。</p>
+<h2 id="编译iOS静态库"><a href="#编译iOS静态库" class="headerlink" title="编译iOS静态库"></a>编译iOS静态库</h2><p><strong>1.下载代码到本地</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/google/leveldb.git</div></pre></td></tr></table></figure>
+<p><strong>2.编译项目代码</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> leveldb</div><div class="line">CXXFLAGS=-stdlib=libc++ make PLATFORM=IO</div></pre></td></tr></table></figure>
+<p>如果出现如下报错信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">c++ -stdlib=libc++ -I. -I./include -std=c++0x  -DOS_MACOSX -DLEVELDB_PLATFORM_POSIX -DLEVELDB_ATOMIC_PRESENT -O2 -DNDEBUG <span class="_">-f</span>PIC -c db/builder.cc -o /db/builder.o</div><div class="line">error: unable to open output file <span class="string">'/db/builder.o'</span>: <span class="string">'Operation not permitted'</span></div><div class="line">1 error generated.</div><div class="line">make: *** [/db/builder.o] Error 1</div></pre></td></tr></table></figure>
+<p>使用 <code>sudo CXXFLAGS=-stdlib=libc++ make PLATFORM=IOS</code> 这行命令即可。</p>
+<p>说明：</p>
+<p>（1）编译完成之后在 <code>out-ios-universal</code> 这个目录下面会自动生成 <code>libleveldb.a</code> 和 <code>libmemenv.a</code> 两个文件。</p>
+<p>（2）可以用 <code>lipo -info libleveldb.a</code> 检测生成的静态库支持的架构情况。默认支持 <code>armv6 armv7 armv7s i386 x86_64 arm64</code> 所有的架构</p>
+<p>（3）头文件在<code>include</code>目录下面，后面会用到</p>
+<h2 id="在iOS中使用LevelDB"><a href="#在iOS中使用LevelDB" class="headerlink" title="在iOS中使用LevelDB"></a>在iOS中使用LevelDB</h2><p>LevelDB提供的是C++的API，可以在 <a href="https://rawgit.com/google/leveldb/master/doc/index.html" target="_blank" rel="external">https://rawgit.com/google/leveldb/master/doc/index.html</a> 这里查到具体的使用说明。</p>
+<p>使用C++确实是不太方便，不过已经有开源库将这些接口使用Objective-C进行了一下包装：<a href="https://github.com/matehat/Objective-LevelDB" target="_blank" rel="external">Objective-LevelDB</a>。</p>
+<p><code>Objective-LevelDB</code> 里面没有提供编译好的 <code>.a</code> 文件，我就拉取最新的代码编译好了.a文件并写了一个 <a href="https://github.com/marujun/USLevelDB.git" target="_blank" rel="external">DEMO</a></p>
+<p>下面记录下如何使用：<br><br></p>
+<h3 id="步骤一：导入相关文件"><a href="#步骤一：导入相关文件" class="headerlink" title="步骤一：导入相关文件"></a>步骤一：导入相关文件</h3><p>把 <a href="https://github.com/marujun/USLevelDB/tree/master/USLevelDB/LevelDB" target="_blank" rel="external">LevelDB</a> 整个文件夹拷贝到需要添加到的项目中<br><br></p>
+<h3 id="步骤二：添加-fno-objc-arc-标签"><a href="#步骤二：添加-fno-objc-arc-标签" class="headerlink" title="步骤二：添加 -fno-objc-arc 标签"></a>步骤二：添加 -fno-objc-arc 标签</h3><p>打开 <code>Target -&gt; Build Phases -&gt; Compile Sources</code> 找到 <code>LevelDB.mm、LDBSnapshot.mm、LDBWriteBatch.mm</code> 这3个文件</p>
+<p>然后加入 <code>-fno-objc-arc</code> 标签。</p>
+<img src="/images/2016/12/leveldb-fno-objc-arc.png">
+<p><br></p>
+<h3 id="步骤三：添加-Header-Search-Paths"><a href="#步骤三：添加-Header-Search-Paths" class="headerlink" title="步骤三：添加 Header Search Paths"></a>步骤三：添加 Header Search Paths</h3><p>打开 <code>Target -&gt; Build Settings -&gt; Header Search Paths</code> 加入 <code>LevelDB</code>文件夹在项目中的路径。</p>
+<p>参考：<code>$(PROJECT_DIR)/USLevelDB/LevelDB</code></p>
+<img src="/images/2016/12/leveldb-header-search-paths.png">
+<p><br></p>
+<h3 id="步骤四：添加-libc-dylib-Framework"><a href="#步骤四：添加-libc-dylib-Framework" class="headerlink" title="步骤四：添加 libc++.dylib Framework"></a>步骤四：添加 libc++.dylib Framework</h3><p>打开 <code>Target -&gt; General -&gt; Linked Frameworks and Libraries</code> </p>
+<p>然后在工程中链接上 <code>libc++.dylib</code><br><br></p>
+<h3 id="如何使用Objective-LevelDB"><a href="#如何使用Objective-LevelDB" class="headerlink" title="如何使用Objective-LevelDB"></a>如何使用Objective-LevelDB</h3><p>开源库的使用文档：<a href="https://github.com/matehat/Objective-LevelDB/blob/master/Readme.md#how-to-use" target="_blank" rel="external">https://github.com/matehat/Objective-LevelDB/blob/master/Readme.md#how-to-use</a></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -142,7 +134,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/字体/">字体</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/LevelDB/">LevelDB</a>
   </div>
 
 </div>
@@ -151,7 +143,7 @@
 
 	<!--<div class="article-share" id="share">-->
 	<!---->
-	  <!--<div data-url="http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/" data-title="iOS - CoreText入门之字形 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--<div data-url="http://devma.cn/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/" data-title="iOS中KV数据库LevelDB的编译和使用 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
 	  <!--</div>-->
 	<!---->
 	<!--</div>-->
@@ -164,19 +156,11 @@
 	<!---->
 <!--<nav class="article-nav clearfix">-->
  <!---->
- <!--<div class="prev" >-->
- <!--<a href="/blog/2016/04/22/ios-cao-zuo-zi-fu-chuan/" title="iOS - 操作字符串">-->
-  <!--<strong>上一篇：</strong><br/>-->
-  <!--<span>-->
-  <!--iOS - 操作字符串</span>-->
-<!--</a>-->
-<!--</div>-->
-<!---->
 <!---->
 <!--<div class="next">-->
-<!--<a href="/blog/2016/04/13/ios-quartz-2d-hui-tu-zhi-bitmap/"  title="iOS - Quartz 2D绘图之Bitmap">-->
+<!--<a href="/blog/2016/11/10/ios-beng-kui-crash-jie-xi/"  title="iOS 崩溃Crash解析">-->
  <!--<strong>下一篇：</strong><br/> -->
- <!--<span>iOS - Quartz 2D绘图之Bitmap-->
+ <!--<span>iOS 崩溃Crash解析-->
 <!--</span>-->
 <!--</a>-->
 <!--</div>-->
