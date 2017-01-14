@@ -4,26 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Lantern 2.x翻墙教程 | 极致的技术博客</title>
+    <title>iOS中IMP指针的作用 | 极致的技术博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="JiZhi">
     
 
     
-    <meta name="description" content="Lantern是一款新兴的翻墙软件，经过测试速度还算不错，下面简单普及下这个软件的基础使用教程…">
+    <meta name="description" content="可能大家一直看到有许多朋友在Runtime相关文章中介绍IMP指针的概念，那么IMP究竟有什么实际作用呢？让我们先从一个函数看起来。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lantern 2.x翻墙教程">
-<meta property="og:url" content="http://devma.cn/blog/2016/03/28/lantern-2-dot-xfan-qiang-jiao-cheng/index.html">
+<meta property="og:title" content="iOS中IMP指针的作用">
+<meta property="og:url" content="http://devma.cn/blog/2016/01/14/ios-zhong-imp-zhi-zhen-de-zuo-yong/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="Lantern是一款新兴的翻墙软件，经过测试速度还算不错，下面简单普及下这个软件的基础使用教程…">
-<meta property="og:image" content="http://devma.cn/images/2016/03/lantern_setting_info.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/lantern_yaml_info.png">
-<meta property="og:updated_time" content="2016-11-11T02:20:24.000Z">
+<meta property="og:description" content="可能大家一直看到有许多朋友在Runtime相关文章中介绍IMP指针的概念，那么IMP究竟有什么实际作用呢？让我们先从一个函数看起来。">
+<meta property="og:image" content="http://devma.cn/images/2016/01/runtime-imp-1.png">
+<meta property="og:image" content="http://devma.cn/images/2016/01/runtime-imp-5.png">
+<meta property="og:image" content="http://devma.cn/images/2016/01/runtime-imp-2.png">
+<meta property="og:image" content="http://devma.cn/images/2016/01/runtime-imp-3.png">
+<meta property="og:image" content="http://devma.cn/images/2016/01/runtime-imp-4.png">
+<meta property="og:updated_time" content="2017-01-14T06:40:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lantern 2.x翻墙教程">
-<meta name="twitter:description" content="Lantern是一款新兴的翻墙软件，经过测试速度还算不错，下面简单普及下这个软件的基础使用教程…">
-<meta name="twitter:image" content="http://devma.cn/images/2016/03/lantern_setting_info.png">
+<meta name="twitter:title" content="iOS中IMP指针的作用">
+<meta name="twitter:description" content="可能大家一直看到有许多朋友在Runtime相关文章中介绍IMP指针的概念，那么IMP究竟有什么实际作用呢？让我们先从一个函数看起来。">
+<meta name="twitter:image" content="http://devma.cn/images/2016/01/runtime-imp-1.png">
 
     
     
@@ -71,10 +74,10 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2016/03/28/lantern-2-dot-xfan-qiang-jiao-cheng/" title="Lantern 2.x翻墙教程" itemprop="url">Lantern 2.x翻墙教程</a>
+      <a href="/blog/2016/01/14/ios-zhong-imp-zhi-zhen-de-zuo-yong/" title="iOS中IMP指针的作用" itemprop="url">iOS中IMP指针的作用</a>
   </h1>
   <p class="article-time">
-    <time datetime="2016-03-28T13:30:36.000Z" itemprop="datePublished"> 发表于 2016-03-28</time>
+    <time datetime="2016-01-14T06:31:21.000Z" itemprop="datePublished"> 发表于 2016-01-14</time>
     
   </p>
 </header>
@@ -83,27 +86,34 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载"><span class="toc-number">1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-amp-使用"><span class="toc-number">2.</span> <span class="toc-text">安装&使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高级使用方法"><span class="toc-number">3.</span> <span class="toc-text">高级使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iOS-amp-Android"><span class="toc-number">4.</span> <span class="toc-text">iOS & Android</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Method-Swizzling"><span class="toc-number">1.</span> <span class="toc-text">Method Swizzling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IMP指针"><span class="toc-number">2.</span> <span class="toc-text">IMP指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<p>Lantern是一款新兴的翻墙软件，经过测试速度还算不错，下面简单普及下这个软件的基础使用教程…<br><a id="more"></a></p>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>此软件官方地址 <a href="https://getlantern.org" target="_blank" rel="external">https://getlantern.org</a> （GFWed）, 但是下载地址是通过amazonaws存储的因此并没有被墙…</p>
-<p>我们可以直接访问 <a href="https://s3.amazonaws.com/lantern/lantern-installer-beta.dmg" target="_blank" rel="external">https://s3.amazonaws.com/lantern/lantern-installer-beta.dmg</a> 来进行下载 (免翻墙)</p>
-<p>GitHub项目地址：<a href="https://github.com/getlantern/lantern" target="_blank" rel="external">https://github.com/getlantern/lantern</a></p>
-<h2 id="安装-amp-使用"><a href="#安装-amp-使用" class="headerlink" title="安装&amp;使用"></a>安装&amp;使用</h2><p>双击安装,所有操作自动完成..安装完成后自动打开WEB页面..</p>
-<p>Web 界面是: <a href="http://127.0.0.1:16823" target="_blank" rel="external">http://127.0.0.1:16823</a></p>
-<p>浏览器会被自动配置PAC代理, 遇到被墙的会自动翻墙.. 如果不希望使用PAC则取消浏览器的 <code>自动侦测代理脚本</code> 选项..</p>
-<p>如果不希望开机自动运行, 则到web页面后点击右下角的齿轮, 去掉 <code>系统启动时自动运行 Lantern</code></p>
-<img src="/images/2016/03/lantern_setting_info.png">
-<p>现在即可自由访问互联网了…</p>
-<h2 id="高级使用方法"><a href="#高级使用方法" class="headerlink" title="高级使用方法"></a>高级使用方法</h2><p>在Lantern启动后会在本地开放一个 HTTPS 代理的端口, 该端口为 <code>8787</code> 可以直接设置在Firefox、Chrome等浏览器上, 同样可作为Tor的前置代理..</p>
-<p><strong><span style="color:red">如果需要代理PAC列表之外的则需要选择代理全部流量,否则流量会绕过代理,即使设置了代理…</span></strong></p>
-<p>配置文件在 Lantern 的根目录下的 <code>lantern-2.0.*.yaml</code> (可能根据版本号不同而改变) 文件中..</p>
-<p>MAC系统在 <code>~/Library/Application Support/Lantern</code></p>
-<p>其中 addr 代表 HTTPS 端口地址, 默认值为 127.0.0.1:8787 如果希望局域网内其他用户可以通过你的电脑上网则修改成为 <code>局域网IP:8787</code></p>
-<p><img src="/images/2016/03/lantern_yaml_info.png"><br><br>修改完毕后，重启lantern即可应用…</p>
-<h2 id="iOS-amp-Android"><a href="#iOS-amp-Android" class="headerlink" title="iOS &amp; Android"></a>iOS &amp; Android</h2><p>找到当前的WiFi——HTTP代理——手动——192.168.x.x:8787 (你的局域网IP)</p>
+		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>可能大家一直看到有许多朋友在Runtime相关文章中介绍IMP指针的概念，那么IMP究竟有什么实际作用呢？让我们先从一个函数看起来。</p>
+<a id="more"></a>
+<h2 id="Method-Swizzling"><a href="#Method-Swizzling" class="headerlink" title="Method Swizzling"></a>Method Swizzling</h2><p>如果对Runtime有一定了解的话，一定听说过或者用过这个函数：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> method_exchangeImplementations(Method m1, Method m2)</div></pre></td></tr></table></figure>
+<p>它通常叫做 <code>method swizzling</code>，算是ObjC的”黑魔法”了，作用就是在程序运行期间动态的给两个方法互换实现，比如有这样一种使用场景：</p>
+<p>我们的程序中有许多个ViewController，我想在对项目改动最小的情况下，在当每个Controller执行完ViewDidLoad以后就在控制台把自己的名字打印出来，方便我去做调试或者了解项目结构。</p>
+<p>有许多朋友会这样说，让所有控制器都继承一个BaseController不就可以了吗？我在这里要解释一下这样做的缺点：假如你的项目里有许多Controller的话，你就需要把项目里凡是没有继承自BaseController的每个Controller都做一次修改了，而且随意更改层级结构会发生意想不到的错误。</p>
+<p>其实我们的目的就是重写ViewDidLoad的方法，并在他的方法最后加上几句Log，所以我们需要给UIViewController建立一个category，因为我们知道，如果在Catagory中重写一个方法，就会覆盖它的原有方法实现，但是，这样做以后就没有办法调用系统原有的方法，因为在一个方法里调用自己的方法会是一个死循环。所以我们的解决办法就是，另外写一个方法来和viewDidLoad“交换”，这样外部调用viewDidLoad就会调到新建的这个方法中，同样，我们调用新建的方法就会调用到系统的viewDidLoad中了。</p>
+<img src="/images/2016/01/runtime-imp-1.png">
+<h2 id="IMP指针"><a href="#IMP指针" class="headerlink" title="IMP指针"></a>IMP指针</h2><p>其实，还有一种更加简单的方法可以让我们办到相同的目的，运用IMP指针，<code>IMP</code>就是<code>Implementation</code>的缩写，顾名思义，它是指向一个方法实现的指针，每一个方法都有一个对应的IMP，所以，我们可以直接调用方法的IMP指针，来避免方法调用死循环的问题。</p>
+<p>调用一个IMP的方式和调用普通C函数相同，比如：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> returnObjc = someIMP(objc,SEL,params...);</div></pre></td></tr></table></figure>
+<p>不过如果你的项目没有做其他配置的话这样调用编译器是不会通过的，我们来看一下先它的定义：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> !OBJC_OLD_DISPATCH_PROTOTYPES</div><div class="line">	<span class="keyword">typedef</span> <span class="keyword">void</span> (*IMP)(<span class="keyword">void</span> <span class="comment">/* id, SEL, ... */</span> ); </div><div class="line"><span class="keyword">else</span></div><div class="line">	<span class="keyword">typedef</span> <span class="keyword">id</span> (*IMP)(<span class="keyword">id</span>, SEL, ...); </div><div class="line">endif</div></pre></td></tr></table></figure>
+<p>在默认情况下你的工程是打开这个配置的</p>
+<img src="/images/2016/01/runtime-imp-5.png">
+<p>这种情况下IMP被定义为无参数无返回值的函数。所以你需要到工程里搜索到这个选项并把它关闭。这样的麻烦就是，每次使用，你都需要修改工程配置，所以这里我再介绍另外一种办法：重新定义一个和有参数的IMP指针相同的指针类型，在获取IMP时把它强转为此类型。这样运用IMP指针后，就不需要额外的给ViewController写新的方法：</p>
+<img src="/images/2016/01/runtime-imp-2.png">
+<p>还有一个地方我们需要注意，如果这样直接调用IMP的话就会发生经典的EXC_BAD_ACCESS错误，我们定义的IMP指针是一个有返回值的类型，而其实我们获取的viewDidLoad这个方法是没有返回值的，所以我们需要新定义一个和IMP相同类型的函数指针比如VIMP，把他的返回值定位Void，这样如果你修改的方法有返回值就用IMP，没有返回值就用VIMP。</p>
+<img src="/images/2016/01/runtime-imp-3.png">
+<img src="/images/2016/01/runtime-imp-4.png">
+<p>值得注意的是，如果你重写的方法有返回值，不要忘记在最后做return。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>实际上直接调用一个方法的IMP指针的效率是高于调用方法本身的，所以，如果你有一个合适的时机获取到方法的IMP的话，你可以试着调用它。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -111,13 +121,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/lantern/">lantern</a>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/工具/">工具</a><a href="/tags/lantern/">lantern</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/IMP/">IMP</a>
   </div>
 
 </div>
@@ -126,7 +136,7 @@
 
 	<!--<div class="article-share" id="share">-->
 	<!---->
-	  <!--<div data-url="http://devma.cn/blog/2016/03/28/lantern-2-dot-xfan-qiang-jiao-cheng/" data-title="Lantern 2.x翻墙教程 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--<div data-url="http://devma.cn/blog/2016/01/14/ios-zhong-imp-zhi-zhen-de-zuo-yong/" data-title="iOS中IMP指针的作用 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
 	  <!--</div>-->
 	<!---->
 	<!--</div>-->
@@ -140,18 +150,18 @@
 <!--<nav class="article-nav clearfix">-->
  <!---->
  <!--<div class="prev" >-->
- <!--<a href="/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/" title="Shadowsocks 转换成http代理">-->
+ <!--<a href="/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/" title="iOS如何下载旧版本应用">-->
   <!--<strong>上一篇：</strong><br/>-->
   <!--<span>-->
-  <!--Shadowsocks 转换成http代理</span>-->
+  <!--iOS如何下载旧版本应用</span>-->
 <!--</a>-->
 <!--</div>-->
 <!---->
 <!---->
 <!--<div class="next">-->
-<!--<a href="/blog/2016/03/28/octopress-da-jian-liu-cheng/"  title="Octopress 搭建流程">-->
+<!--<a href="/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/"  title="CocoaPods 安装和使用">-->
  <!--<strong>下一篇：</strong><br/> -->
- <!--<span>Octopress 搭建流程-->
+ <!--<span>CocoaPods 安装和使用-->
 <!--</span>-->
 <!--</a>-->
 <!--</div>-->
