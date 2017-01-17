@@ -4,34 +4,28 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>iOS如何下载旧版本应用 | 极致的技术博客</title>
+    <title>Objective-C isa 指针 与 runtime 机制 | 极致的技术博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="JiZhi">
     
 
     
-    <meta name="description" content="有时IOS应用更新至最新版本之后，新版UI风格、使用习惯、功能不喜欢，但又不知道如何降级安装旧版本。例如UC浏览器春节前更新版本，因某些原因下架了文件管理、离线视频、微信分享等功能，其App Store评分从四星半降至1星。同步助手曾提供下载App历史版本的功能，但现在也不复存在。
-本文将介绍如何使用iTunes下载安装App Store任意版本旧程序。">
+    <meta name="description" content="每个Objective-C对象都有一个隐藏的数据结构，这个数据结构是Objective-C对象的第一个成员变量，它就是isa指针。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS如何下载旧版本应用">
-<meta property="og:url" content="http://devma.cn/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/index.html">
+<meta property="og:title" content="Objective-C isa 指针 与 runtime 机制">
+<meta property="og:url" content="http://devma.cn/blog/2015/08/17/objective-c-isa-zhi-zhen-yu-runtime-ji-zhi/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="有时IOS应用更新至最新版本之后，新版UI风格、使用习惯、功能不喜欢，但又不知道如何降级安装旧版本。例如UC浏览器春节前更新版本，因某些原因下架了文件管理、离线视频、微信分享等功能，其App Store评分从四星半降至1星。同步助手曾提供下载App历史版本的功能，但现在也不复存在。
-本文将介绍如何使用iTunes下载安装App Store任意版本旧程序。">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_0.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_6.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_1.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_5.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_2.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_3.png">
-<meta property="og:image" content="http://devma.cn/images/2016/03/ios_old_ipa_4.png">
-<meta property="og:updated_time" content="2016-11-11T02:20:04.000Z">
+<meta property="og:description" content="每个Objective-C对象都有一个隐藏的数据结构，这个数据结构是Objective-C对象的第一个成员变量，它就是isa指针。">
+<meta property="og:image" content="http://devma.cn/images/2015/08/ios-isa-runtime-1.jpeg">
+<meta property="og:image" content="http://devma.cn/images/2015/08/ios-isa-runtime-2.jpeg">
+<meta property="og:image" content="http://devma.cn/images/2015/08/ios-isa-runtime-3.png">
+<meta property="og:image" content="http://devma.cn/images/2015/08/ios-isa-runtime-4.jpeg">
+<meta property="og:updated_time" content="2017-01-17T10:38:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS如何下载旧版本应用">
-<meta name="twitter:description" content="有时IOS应用更新至最新版本之后，新版UI风格、使用习惯、功能不喜欢，但又不知道如何降级安装旧版本。例如UC浏览器春节前更新版本，因某些原因下架了文件管理、离线视频、微信分享等功能，其App Store评分从四星半降至1星。同步助手曾提供下载App历史版本的功能，但现在也不复存在。
-本文将介绍如何使用iTunes下载安装App Store任意版本旧程序。">
-<meta name="twitter:image" content="http://devma.cn/images/2016/03/ios_old_ipa_0.png">
+<meta name="twitter:title" content="Objective-C isa 指针 与 runtime 机制">
+<meta name="twitter:description" content="每个Objective-C对象都有一个隐藏的数据结构，这个数据结构是Objective-C对象的第一个成员变量，它就是isa指针。">
+<meta name="twitter:image" content="http://devma.cn/images/2015/08/ios-isa-runtime-1.jpeg">
 
     
     
@@ -79,10 +73,10 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/" title="iOS如何下载旧版本应用" itemprop="url">iOS如何下载旧版本应用</a>
+      <a href="/blog/2015/08/17/objective-c-isa-zhi-zhen-yu-runtime-ji-zhi/" title="Objective-C isa 指针 与 runtime 机制" itemprop="url">Objective-C isa 指针 与 runtime 机制</a>
   </h1>
   <p class="article-time">
-    <time datetime="2016-03-05T07:40:35.000Z" itemprop="datePublished"> 发表于 2016-03-05</time>
+    <time datetime="2015-08-17T10:19:16.000Z" itemprop="datePublished"> 发表于 2015-08-17</time>
     
   </p>
 </header>
@@ -91,58 +85,83 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作步骤"><span class="toc-number">3.</span> <span class="toc-text">操作步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#设置Charles"><span class="toc-number">3.1.</span> <span class="toc-text">设置Charles</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打开iTunes，搜索要下载的App"><span class="toc-number">3.2.</span> <span class="toc-text">打开iTunes，搜索要下载的App</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#点击下载，删除下载"><span class="toc-number">3.3.</span> <span class="toc-text">点击下载，删除下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在Charles查找相关请求"><span class="toc-number">3.4.</span> <span class="toc-text">在Charles查找相关请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新下载"><span class="toc-number">3.5.</span> <span class="toc-text">重新下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#打断点修改请求"><span class="toc-number">3.6.</span> <span class="toc-text">打断点修改请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下载安装"><span class="toc-number">3.7.</span> <span class="toc-text">下载安装</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#isa指针"><span class="toc-number">1.</span> <span class="toc-text">isa指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#runtime-机制"><span class="toc-number">2.</span> <span class="toc-text">runtime 机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#runtime的应用"><span class="toc-number">2.0.1.</span> <span class="toc-text">runtime的应用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关函数"><span class="toc-number">2.1.</span> <span class="toc-text">相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#增加"><span class="toc-number">2.1.1.</span> <span class="toc-text">增加</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取"><span class="toc-number">2.1.2.</span> <span class="toc-text">获取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换"><span class="toc-number">2.1.3.</span> <span class="toc-text">替换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他常用方法"><span class="toc-number">2.1.4.</span> <span class="toc-text">其他常用方法</span></a></li></ol></li></ol></li></ol>
 		
 		</div>
 		
-		<!-- { % img /images/2016/03/demo.png %} -->
-<p>有时IOS应用更新至最新版本之后，新版UI风格、使用习惯、功能不喜欢，但又不知道如何降级安装旧版本。例如UC浏览器春节前更新版本，因某些原因下架了文件管理、离线视频、微信分享等功能，其App Store评分从四星半降至1星。同步助手曾提供下载App历史版本的功能，但现在也不复存在。</p>
-<p>本文将介绍如何使用iTunes下载安装App Store任意版本旧程序。</p>
+		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>每个Objective-C对象都有一个隐藏的数据结构，这个数据结构是Objective-C对象的第一个成员变量，它就是isa指针。</p>
 <a id="more"></a>
-<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
-<li><p>下载安装iTunes，熟悉使用iTunes的App Store。</p>
-</li>
-<li><p>下载安装<a href="http://xclient.info/s/charles.html" target="_blank" rel="external">Charles</a>：<a href="https://www.charlesproxy.com/download/" target="_blank" rel="external">（官网下载）</a></p>
-</li>
+<h2 id="isa指针"><a href="#isa指针" class="headerlink" title="isa指针"></a>isa指针</h2><p>要认识什么是isa指针，我们得先明确一点：<br><br></p>
+<font color="red"><strong>在Objective-C中，任何类的定义都是对象。类和类的实例（对象）没有任何本质上的区别。任何对象都有isa指针。</strong></font>
+
+<p>那么什么是类呢？在xcode中用快捷键Shift＋Cmd＋O 打开文件objc.h 能看到类的定义：</p>
+<img src="/images/2015/08/ios-isa-runtime-1.jpeg"> 
+<p>可以看出:<br><br></p>
+<font color="red"><strong>Class 是一个 objc_class 结构类型的指针, id是一个 objc_object 结构类型的指针.</strong></font>
+
+<p>我们再来看看 objc_class 的定义：</p>
+<img src="/images/2015/08/ios-isa-runtime-2.jpeg"> 
+<p>稍微解释一下各个参数的意思：</p>
+<p>isa：是一个Class 类型的指针. 每个实例对象有个isa的指针,他指向对象的类，而Class里也有个isa的指针, 指向metaClass(元类)。</p>
+<p>元类保存了类方法的列表。当类方法被调用时，先会从本身查找类方法的实现，如果没有，元类会向他父类查找该方法。</p>
+<p>同时注意的是：<code>元类（metaClass）也是类，它也是对象</code>。元类也有isa指针,它的isa指针最终指向的是一个根元类(root metaClass).根元类的isa指针指向本身，这样形成了一个封闭的内循环。</p>
+<ul>
+<li>super_class：父类，如果该类已经是最顶层的根类,那么它为NULL。</li>
+<li>version：类的版本信息,默认为0</li>
+<li>info：供运行期使用的一些位标识。</li>
+<li>instance_size：该类的实例变量大小</li>
+<li>ivars：成员变量的数组</li>
+</ul>
+<p>再来看看各个类实例变量的继承关系：</p>
+<img src="/images/2015/08/ios-isa-runtime-3.png">
+<p><strong>每一个对象本质上都是一个类的实例。其中类定义了成员变量和成员方法的列表。对象通过对象的isa指针指向类。</strong></p>
+<p><strong>每一个类本质上都是一个对象，类其实是元类（meteClass）的实例。元类定义了类方法的列表。类通过类的isa指针指向元类。</strong></p>
+<p><strong>所有的元类最终继承一个根元类，根元类isa指针指向本身，形成一个封闭的内循环。</strong></p>
+<h2 id="runtime-机制"><a href="#runtime-机制" class="headerlink" title="runtime 机制"></a>runtime 机制</h2><p>runtime：指一个程序在运行（或者在被执行）的状态。也就是说，当你打开一个程序使它在电脑上运行的时候，那个程序就是处于运行时刻。在一些编程语言中，把某些可以重用的程序或者实例打包或者重建成为“运行库”。这些实例可以在它们运行的时候被连接或者被任何程序调用。</p>
+<p>objective-c中runtime：是一套比较底层的纯C语言API, 属于1个C语言库, 包含了很多底层的C语言API。 在我们平时编写的OC代码中, 程序运行过程时, 其实最终都是转成了runtime的C语言代码。<br><br></p>
+<h4 id="runtime的应用"><a href="#runtime的应用" class="headerlink" title="runtime的应用"></a>runtime的应用</h4><ol>
+<li>动态创建一个类(比如KVO的底层实现)</li>
+<li>动态地为某个类添加属性\方法, 修改属性值\方法</li>
+<li>遍历一个类的所有成员变量(属性)\所有方法</li>
 </ol>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>通过抓包软件查看App的历史版本ID，通过修改请求下载指定版本App。</p>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><h3 id="设置Charles"><a href="#设置Charles" class="headerlink" title="设置Charles"></a>设置Charles</h3><p>打开 Charles，选择菜单栏 -&gt; Help -&gt; SSL Proxying，然后安装SSL证书。<a href="/blog/2016/05/06/charles-cong-ru-men-dao-jing-tong#https-cert">详细教程</a></p>
-<p>注意：Charles 即使是安装完证书之后，默认也并不截取 Https 网络通讯的信息，如果你想对截取某个网站上的所有 Https 网络请求，可以在该请求上右击，选择 <code>Enable SSL Proxying</code></p>
-<h3 id="打开iTunes，搜索要下载的App"><a href="#打开iTunes，搜索要下载的App" class="headerlink" title="打开iTunes，搜索要下载的App"></a>打开iTunes，搜索要下载的App</h3><p>以 US 为例<br><br><img src="/images/2016/03/ios_old_ipa_0.png"></p>
-<h3 id="点击下载，删除下载"><a href="#点击下载，删除下载" class="headerlink" title="点击下载，删除下载"></a>点击下载，删除下载</h3><p>点击 “下载” 按钮，右上角会出现一个箭头<br><br><img src="/images/2016/03/ios_old_ipa_6.png"></p>
-<p>点击箭头展开下载列表；选中正在下载的应用，按2次Delete键即可删除本次下载。</p>
-<h3 id="在Charles查找相关请求"><a href="#在Charles查找相关请求" class="headerlink" title="在Charles查找相关请求"></a>在Charles查找相关请求</h3><p>找到 <code>p15-buy.itunes.apple.com</code> URL开头为 <code>/WebObjects/MZBuy.woa</code> 的请求，点击选项卡上面的Response，就可以看到返回的相关数据。</p>
-<p>搜索找到 <code>softwareVersionExternalIdentifiers</code>，其后一系列数字为该APP版本号。从上往下为该 App 自第一个版本起每个版本在 App Store 中的版本 ID。</p>
-<img src="/images/2016/03/ios_old_ipa_1.png">
-<p>可以选择倒数第二个版本下载，如果需要精确下载某版本，可通过以下方式：</p>
-<p>请求下载时通过 <a href="#breakpoints">打断点</a> 修改appExtVrsId，然后查看Response中的 <code>bundleShortVersionString</code> 找到ID对应版本号。</p>
-<img src="/images/2016/03/ios_old_ipa_5.png">
-<p>注意：只能挨个打断点修改ID去试，暂时没找到其他方法</p>
-<h3 id="重新下载"><a href="#重新下载" class="headerlink" title="重新下载"></a>重新下载</h3><p>确认需要下载的版本ID后，复制。例如，下载US应用1.1.0版本的ID为815756613。</p>
-<p>在 iTunes 中重新搜索App。</p>
-<h3 id="打断点修改请求"><a href="#打断点修改请求" class="headerlink" title="打断点修改请求"></a><a name="breakpoints"></a>打断点修改请求</h3><p>切换到Charles，找到对应的请求一级一级展开，在最后一个节点上右键然后选中 <code>Breakpoints</code></p>
-<img src="/images/2016/03/ios_old_ipa_2.png">
-<p>返回 iTunes， 点击下载。</p>
-<p>回到Charles后会出现Breakpoints的选项卡，点击请求显示 <code>Edit Request</code> 栏编辑 appExtVrsId 为需要下载的版本 ID。</p>
-<img src="/images/2016/03/ios_old_ipa_3.png">
-<p>修改完成之后，点击 <code>Excute</code> 按钮发送请求，进行下载。 收到Response之后Breakpoints会再弹出来一次，直接点Excute通过就行。</p>
-<p>注意：下载过程中需要保持 Charles 和 iTunes 一同打开，不可关闭。</p>
-<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><p>App下载完毕后，找到.ipa安装包，在常用的软件（PP助手、iTools）中安装。</p>
-<p>ipa包的安装路径，可以在iTunes -&gt; 偏好设置 -&gt; 高级 中找到</p>
-<img src="/images/2016/03/ios_old_ipa_4.png">  
+<p><strong>实质上，以上的是通过相关方法来获取对象或者类的isa指针来实现的。</strong><br><br></p>
+<h3 id="相关函数"><a href="#相关函数" class="headerlink" title="相关函数"></a>相关函数</h3><p><br></p>
+<h4 id="增加"><a href="#增加" class="headerlink" title="增加"></a>增加</h4><ul>
+<li>增加函数: <code>class_addMethod</code></li>
+<li>增加实例变量: <code>class_addIvar</code></li>
+<li>增加属性:<code>@dynamic</code>标签，或者<code>class_addMethod</code>，因为属性其实就是由getter和setter函数组成</li>
+<li>增加Protocol:<code>class_addProtocol</code></li>
+</ul>
+<h4 id="获取"><a href="#获取" class="headerlink" title="获取"></a>获取</h4><ul>
+<li>获取函数列表及每个函数的信息(函数指针、函数名等等): <code>class_getClassMethod</code> <code>method_getName</code> …</li>
+<li>获取属性列表及每个属性的信息: <code>class_copyPropertyList</code> <code>property_getName</code></li>
+<li>获取类本身的信息,如类名等：<code>class_getName</code> <code>class_getInstanceSize</code></li>
+<li>获取变量列表及变量信息：<code>class_copyIvarList</code></li>
+</ul>
+<h4 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h4><ul>
+<li>将实例替换成另一个类：<code>object_setClass</code></li>
+<li>替换类方法的定义：<code>class_replaceMethod</code></li>
+</ul>
+<h4 id="其他常用方法"><a href="#其他常用方法" class="headerlink" title="其他常用方法"></a>其他常用方法</h4><ul>
+<li>交换两个方法的实现：<code>method_exchangeImplementations</code>.</li>
+<li>设置一个方法的实现：<code>method_setImplementation</code>.</li>
+</ul>
+<img src="/images/2015/08/ios-isa-runtime-4.jpeg"> 
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Mac/">Mac</a>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Mac/">Mac</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/isa/">isa</a><a href="/tags/runtime/">runtime</a>
   </div>
 
 </div>
@@ -151,7 +170,7 @@
 
 	<!--<div class="article-share" id="share">-->
 	<!---->
-	  <!--<div data-url="http://devma.cn/blog/2016/03/05/iosru-he-xia-zai-jiu-ban-ben-ying-yong/" data-title="iOS如何下载旧版本应用 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--<div data-url="http://devma.cn/blog/2015/08/17/objective-c-isa-zhi-zhen-yu-runtime-ji-zhi/" data-title="Objective-C isa 指针 与 runtime 机制 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
 	  <!--</div>-->
 	<!---->
 	<!--</div>-->
@@ -165,18 +184,18 @@
 <!--<nav class="article-nav clearfix">-->
  <!---->
  <!--<div class="prev" >-->
- <!--<a href="/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/" title="解决Octopress博客访问慢的问题">-->
+ <!--<a href="/blog/2015/08/19/css-ju-zhong-wan-zheng-zhi-nan/" title="CSS居中完整指南">-->
   <!--<strong>上一篇：</strong><br/>-->
   <!--<span>-->
-  <!--解决Octopress博客访问慢的问题</span>-->
+  <!--CSS居中完整指南</span>-->
 <!--</a>-->
 <!--</div>-->
 <!---->
 <!---->
 <!--<div class="next">-->
-<!--<a href="/blog/2016/01/17/css-duo-xing-wen-ben-yi-chu-sheng-lue-xian-shi/"  title="CSS多行文本溢出省略显示">-->
+<!--<a href="/blog/2015/08/10/gcdzhi-dispatch-semaphore/"  title="GCD之dispatch_semaphore">-->
  <!--<strong>下一篇：</strong><br/> -->
- <!--<span>CSS多行文本溢出省略显示-->
+ <!--<span>GCD之dispatch_semaphore-->
 <!--</span>-->
 <!--</a>-->
 <!--</div>-->
