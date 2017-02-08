@@ -15,13 +15,15 @@
 <meta property="og:title" content="iOS 面试题之常见算法(2)">
 <meta property="og:url" content="http://devma.cn/blog/2015/02/08/ios-mian-shi-ti-zhi-chang-jian-suan-fa-2/index.html">
 <meta property="og:site_name" content="极致的技术博客">
+<meta property="og:image" content="http://devma.cn/images/2015/02/algorithm-1-1.png">
 <meta property="og:image" content="http://devma.cn/images/2015/02/algorithm-1.gif">
+<meta property="og:image" content="http://devma.cn/images/2015/02/algorithm-4.gif">
 <meta property="og:image" content="http://devma.cn/images/2015/02/algorithm-2.gif">
 <meta property="og:image" content="http://devma.cn/images/2015/02/algorithm-3.gif">
-<meta property="og:updated_time" content="2017-02-08T01:16:26.000Z">
+<meta property="og:updated_time" content="2017-02-08T02:20:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 面试题之常见算法(2)">
-<meta name="twitter:image" content="http://devma.cn/images/2015/02/algorithm-1.gif">
+<meta name="twitter:image" content="http://devma.cn/images/2015/02/algorithm-1-1.png">
 
     
     
@@ -81,15 +83,15 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序算法"><span class="toc-number">1.</span> <span class="toc-text">快速排序算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆排序算法"><span class="toc-number">2.</span> <span class="toc-text">堆排序算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归并排序"><span class="toc-number">3.</span> <span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二分查找算法"><span class="toc-number">4.</span> <span class="toc-text">二分查找算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BFPRT-线性查找算法"><span class="toc-number">5.</span> <span class="toc-text">BFPRT(线性查找算法)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DFS（深度优先搜索）"><span class="toc-number">6.</span> <span class="toc-text">DFS（深度优先搜索）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BFS-广度优先搜索"><span class="toc-number">7.</span> <span class="toc-text">BFS(广度优先搜索)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra算法"><span class="toc-number">8.</span> <span class="toc-text">Dijkstra算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态规划算法"><span class="toc-number">9.</span> <span class="toc-text">动态规划算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#朴素贝叶斯分类算法"><span class="toc-number">10.</span> <span class="toc-text">朴素贝叶斯分类算法</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序算法"><span class="toc-number">1.</span> <span class="toc-text">快速排序算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#冒泡排序"><span class="toc-number">2.</span> <span class="toc-text">冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆排序算法"><span class="toc-number">3.</span> <span class="toc-text">堆排序算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归并排序"><span class="toc-number">4.</span> <span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二分查找算法"><span class="toc-number">5.</span> <span class="toc-text">二分查找算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BFPRT-线性查找算法"><span class="toc-number">6.</span> <span class="toc-text">BFPRT(线性查找算法)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DFS（深度优先搜索）"><span class="toc-number">7.</span> <span class="toc-text">DFS（深度优先搜索）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BFS-广度优先搜索"><span class="toc-number">8.</span> <span class="toc-text">BFS(广度优先搜索)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dijkstra算法"><span class="toc-number">9.</span> <span class="toc-text">Dijkstra算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态规划算法"><span class="toc-number">10.</span> <span class="toc-text">动态规划算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#朴素贝叶斯分类算法"><span class="toc-number">11.</span> <span class="toc-text">朴素贝叶斯分类算法</span></a></li></ol>
 		
 		</div>
 		
 		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
 <a id="more"></a>
 <h2 id="快速排序算法"><a href="#快速排序算法" class="headerlink" title="快速排序算法"></a>快速排序算法</h2><blockquote>
-<p>快速排序是由东尼·霍尔所发展的一种排序算法。在平均状况下，排序 n 个项目要Ο(n log n)次比较。在最坏状况下则需要Ο(n2)次比较，但这种状况并不常见。</p>
-<p>事实上，快速排序通常明显比其他Ο(n log n)算法更快，因为它的内部循环（inner loop）可以在大部分的架构上很有效率地被实现出来。</p>
+<p>快速排序是由东尼·霍尔所发展的一种排序算法。在平均状况下，排序 n 个项目要Ο(N*logN)次比较。在最坏状况下则需要O(n^2)次比较，但这种状况并不常见。</p>
+<p>事实上，快速排序通常明显比其他Ο(N*logN)算法更快，因为它的内部循环（inner loop）可以在大部分的架构上很有效率地被实现出来。</p>
 <p>快速排序使用分治法（Divide and conquer）策略来把一个串行（list）分为两个子串行（sub-lists）。</p>
 </blockquote>
 <p><strong>算法步骤：</strong></p>
@@ -102,7 +104,22 @@
 </li>
 </ol>
 <p>递归的最底部情形，是数列的大小是零或一，也就是永远都已经被排序好了。虽然一直递归下去，但是这个算法总会退出，因为在每次的迭代（iteration）中，它至少会把一个元素摆到它最后的位置去。</p>
+<img src="/images/2015/02/algorithm-1-1.png">
 <img src="/images/2015/02/algorithm-1.gif">
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><blockquote>
+<p>冒泡算法是一种基础的排序算法。平均时间复杂度 O(n^2)，最差时间复杂度 O(n^2)，其空间复杂度是O(n)。</p>
+<p>这种算法会重复的比较数组中相邻的两个元素。如果一个元素比另一个元素大（小），那么就交换这两个元素的位置。重复这一比较直至最后一个元素。这一比较会重复n-1趟，每一趟比较n-j次，j是已经排序好的元素个数。每一趟比较都能找出未排序元素中最大或者最小的那个数字。这就如同水泡从水底逐个飘到水面一样。冒泡排序是一种时间复杂度较高，效率较低的排序方法。</p>
+</blockquote>
+<p><strong>算法步骤：</strong></p>
+<ol>
+<li><p>每一趟比较都比较数组中两个相邻元素的大小</p>
+</li>
+<li><p>如果i元素小于i-1元素，就调换两个元素的位置</p>
+</li>
+<li><p>重复n-1趟的比较</p>
+</li>
+</ol>
+<img src="/images/2015/02/algorithm-4.gif">
 <h2 id="堆排序算法"><a href="#堆排序算法" class="headerlink" title="堆排序算法"></a>堆排序算法</h2><blockquote>
 <p>堆排序（Heapsort）是指利用堆这种数据结构所设计的一种排序算法。堆积是一个近似完全二叉树的结构，并同时满足堆积的性质：即子结点的键值或索引总是小于（或者大于）它的父节点。</p>
 <p>堆排序的平均时间复杂度为Ο(nlogn) 。</p>
