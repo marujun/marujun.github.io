@@ -1,0 +1,469 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>iOS 面试题之常见算法(1) | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta property="og:type" content="article">
+<meta property="og:title" content="iOS 面试题之常见算法(1)">
+<meta property="og:url" content="http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:updated_time" content="2017-02-08T00:55:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS 面试题之常见算法(1)">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/" title="iOS 面试题之常见算法(1)" itemprop="url">iOS 面试题之常见算法(1)</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2015-02-07T10:17:13.000Z" itemprop="datePublished"> 发表于 2015-02-07</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#对以下一组数据进行降序排序（冒泡排序）"><span class="toc-number">1.</span> <span class="toc-text">对以下一组数据进行降序排序（冒泡排序）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对以下一组数据进行升序排序（选择排序）"><span class="toc-number">2.</span> <span class="toc-text">对以下一组数据进行升序排序（选择排序）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序算法"><span class="toc-number">3.</span> <span class="toc-text">快速排序算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归并排序"><span class="toc-number">4.</span> <span class="toc-text">归并排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现二分查找算法（编程语言不限）"><span class="toc-number">5.</span> <span class="toc-text">实现二分查找算法（编程语言不限）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何实现链表翻转（链表逆序）？"><span class="toc-number">6.</span> <span class="toc-text">如何实现链表翻转（链表逆序）？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现一个字符串“how-are-you”的逆序输出（编程语言不限）。"><span class="toc-number">7.</span> <span class="toc-text">实现一个字符串“how are you”的逆序输出（编程语言不限）。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？"><span class="toc-number">8.</span> <span class="toc-text">给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二叉树的先序遍历为FBACDEGH-中序遍历为：ABDCEFGH-请写出这个二叉树的后序遍历结果。"><span class="toc-number">9.</span> <span class="toc-text">二叉树的先序遍历为FBACDEGH,中序遍历为：ABDCEFGH,请写出这个二叉树的后序遍历结果。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打印2-100之间的素数。"><span class="toc-number">10.</span> <span class="toc-text">打印2-100之间的素数。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#求两个整数的最大公约数。"><span class="toc-number">11.</span> <span class="toc-text">求两个整数的最大公约数。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#给出一个由小写字母组成的字符串，把所有连续出现的2个a替换成bb（2个b），但是对于超过两个连续的a，那么这些字符都不作替换。"><span class="toc-number">12.</span> <span class="toc-text">给出一个由小写字母组成的字符串，把所有连续出现的2个a替换成bb（2个b），但是对于超过两个连续的a，那么这些字符都不作替换。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#给出一个字符串，其中只包含括号（大中小括号“-”），括号可以任意嵌套。如果同样的左右括号成对出现并且嵌套正确，那么认为它是匹配的。"><span class="toc-number">13.</span> <span class="toc-text">给出一个字符串，其中只包含括号（大中小括号“()[]{}”），括号可以任意嵌套。如果同样的左右括号成对出现并且嵌套正确，那么认为它是匹配的。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写一个函数，找出一个数组中出现次数超过一半的数字，如果数字不存在，则返回-1。"><span class="toc-number">14.</span> <span class="toc-text">写一个函数，找出一个数组中出现次数超过一半的数字，如果数字不存在，则返回-1。</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<a id="more"></a>
+<p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+<h2 id="对以下一组数据进行降序排序（冒泡排序）"><a href="#对以下一组数据进行降序排序（冒泡排序）" class="headerlink" title="对以下一组数据进行降序排序（冒泡排序）"></a>对以下一组数据进行降序排序（冒泡排序）</h2><p>“24，80，35，8，9，54，76，45，5，63”</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> array[<span class="number">10</span>] = &#123;<span class="number">24</span>, <span class="number">17</span>, <span class="number">85</span>, <span class="number">13</span>, <span class="number">9</span>, <span class="number">54</span>, <span class="number">76</span>, <span class="number">45</span>, <span class="number">5</span>, <span class="number">63</span>&#125;;</div><div class="line"><span class="keyword">int</span> num = <span class="keyword">sizeof</span>(array)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; num<span class="number">-1</span>; i++) &#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; num - <span class="number">1</span> - i; j++) &#123;</div><div class="line">        <span class="keyword">if</span>(array[j] &lt; array[j+<span class="number">1</span>]) &#123;</div><div class="line">            <span class="keyword">int</span> tmp = array[j];</div><div class="line">            array[j] = array[j+<span class="number">1</span>];</div><div class="line">            array[j+<span class="number">1</span>] = tmp;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">    </div><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</div><div class="line">    printf(<span class="string">"%d"</span>, array[i]);</div><div class="line">    <span class="keyword">if</span>(i == num<span class="number">-1</span>) &#123;</div><div class="line">        printf(<span class="string">"\n"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        printf(<span class="string">" "</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="对以下一组数据进行升序排序（选择排序）"><a href="#对以下一组数据进行升序排序（选择排序）" class="headerlink" title="对以下一组数据进行升序排序（选择排序）"></a>对以下一组数据进行升序排序（选择排序）</h2> <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> sort(<span class="keyword">int</span> a[],<span class="keyword">int</span> n)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> i, j, index;</div><div class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</div><div class="line">        index = i;</div><div class="line">        <span class="keyword">for</span>(j = i + <span class="number">1</span>; j &lt; n; j++) &#123;</div><div class="line">            <span class="keyword">if</span>(a[index] &gt; a[j]) &#123;</div><div class="line">                index = j;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">if</span>(index != i) &#123;</div><div class="line">            <span class="keyword">int</span> temp = a[i];</div><div class="line">            a[i] = a[index];</div><div class="line">            a[index] = temp;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">int</span> numArr[<span class="number">10</span>] = &#123;<span class="number">86</span>, <span class="number">37</span>, <span class="number">56</span>, <span class="number">29</span>, <span class="number">92</span>, <span class="number">73</span>, <span class="number">15</span>, <span class="number">63</span>, <span class="number">30</span>, <span class="number">8</span>&#125;;</div><div class="line">    sort(numArr, <span class="number">10</span>);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">        printf(<span class="string">"%d, "</span>, numArr[i]);</div><div class="line">    &#125;</div><div class="line">    printf(<span class="string">"\n"</span>);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="快速排序算法"><a href="#快速排序算法" class="headerlink" title="快速排序算法"></a>快速排序算法</h2> <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">void</span> sort(<span class="keyword">int</span> *a, <span class="keyword">int</span> left, <span class="keyword">int</span> right) &#123;</div><div class="line">    <span class="keyword">if</span>(left &gt;= right) &#123;</div><div class="line">        <span class="keyword">return</span> ;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">int</span> i = left;</div><div class="line">    <span class="keyword">int</span> j = right;</div><div class="line">    <span class="keyword">int</span> key = a[left];</div><div class="line">    </div><div class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</div><div class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; key &gt;= a[j]) &#123;</div><div class="line">            j--;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        a[i] = a[j];</div><div class="line">        </div><div class="line">        <span class="keyword">while</span> (i &lt; j &amp;&amp; key &lt;= a[i]) &#123;</div><div class="line">            i++;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        a[j] = a[i];</div><div class="line">    &#125;</div><div class="line">    a[i] = key;</div><div class="line">    </div><div class="line">    sort(a, left, i<span class="number">-1</span>);</div><div class="line">    sort(a, i+<span class="number">1</span>, right);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2> <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">void</span> merge(<span class="keyword">int</span> sourceArr[], <span class="keyword">int</span> tempArr[], <span class="keyword">int</span> startIndex, <span class="keyword">int</span> midIndex, <span class="keyword">int</span> endIndex) &#123;</div><div class="line">    <span class="keyword">int</span> i = startIndex;</div><div class="line">    <span class="keyword">int</span> j = midIndex + <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> k = startIndex;</div><div class="line">    </div><div class="line">    <span class="keyword">while</span> (i != midIndex + <span class="number">1</span> &amp;&amp; j != endIndex + <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (sourceArr[i] &gt;= sourceArr[j]) &#123;</div><div class="line">            tempArr[k++] = sourceArr[j++];</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            tempArr[k++] = sourceArr[i++];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (i != midIndex + <span class="number">1</span>) &#123;</div><div class="line">        tempArr[k++] = sourceArr[i++];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (j != endIndex + <span class="number">1</span>) &#123;</div><div class="line">        tempArr[k++] = sourceArr[j++];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> (i = startIndex; i &lt;= endIndex; i++) &#123;</div><div class="line">        sourceArr[i] = tempArr[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">void</span> sort(<span class="keyword">int</span> souceArr[], <span class="keyword">int</span> tempArr[], <span class="keyword">int</span> startIndex, <span class="keyword">int</span> endIndex) &#123;</div><div class="line">    <span class="keyword">int</span> midIndex;</div><div class="line">    <span class="keyword">if</span> (startIndex &lt; endIndex) &#123;</div><div class="line">        midIndex = (startIndex + endIndex) / <span class="number">2</span>;</div><div class="line">        sort(souceArr, tempArr, startIndex, midIndex);</div><div class="line">        sort(souceArr, tempArr, midIndex + <span class="number">1</span>, endIndex);</div><div class="line">        merge(souceArr, tempArr, startIndex, midIndex, endIndex);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">int</span> numArr[<span class="number">10</span>] = &#123;<span class="number">86</span>, <span class="number">37</span>, <span class="number">56</span>, <span class="number">29</span>, <span class="number">92</span>, <span class="number">73</span>, <span class="number">15</span>, <span class="number">63</span>, <span class="number">30</span>, <span class="number">8</span>&#125;;</div><div class="line">    <span class="keyword">int</span> tempArr[<span class="number">10</span>];</div><div class="line">    sort(numArr, tempArr, <span class="number">0</span>, <span class="number">9</span>);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">        printf(<span class="string">"%d, "</span>, numArr[i]);</div><div class="line">    &#125;</div><div class="line">    printf(<span class="string">"\n"</span>);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="实现二分查找算法（编程语言不限）"><a href="#实现二分查找算法（编程语言不限）" class="headerlink" title="实现二分查找算法（编程语言不限）"></a>实现二分查找算法（编程语言不限）</h2> <figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">int</span> bsearchWithoutRecursion(<span class="keyword">int</span> array[],<span class="keyword">int</span> low,<span class="keyword">int</span> high,<span class="keyword">int</span> target) &#123;</div><div class="line">    <span class="keyword">while</span>(low &lt;= high) &#123;</div><div class="line">        <span class="keyword">int</span> mid = (low + high) / <span class="number">2</span>;</div><div class="line">        <span class="keyword">if</span>(array[mid] &gt; target)</div><div class="line">        high = mid - <span class="number">1</span>;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(array[mid] &lt; target)</div><div class="line">        low = mid + <span class="number">1</span>;</div><div class="line">        <span class="keyword">else</span>	<span class="comment">//findthetarget</span></div><div class="line">        <span class="keyword">return</span> mid;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//the array does not contain the target</span></div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>###递归实现</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> binary_search(<span class="keyword">const</span> <span class="keyword">int</span> arr[],<span class="keyword">int</span> low,<span class="keyword">int</span> high,<span class="keyword">int</span> key)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> mid = low + (high - low) / <span class="number">2</span>;</div><div class="line">    <span class="keyword">if</span>(low &gt; high) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span>(arr[mid] == key) &#123;</div><div class="line">            <span class="keyword">return</span> mid;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(arr[mid] &gt; key) &#123;</div><div class="line">            <span class="keyword">return</span> binary_search(arr, low, mid<span class="number">-1</span>, key);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> binary_search(arr, mid+<span class="number">1</span>, high, key);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="如何实现链表翻转（链表逆序）？"><a href="#如何实现链表翻转（链表逆序）？" class="headerlink" title="如何实现链表翻转（链表逆序）？"></a>如何实现链表翻转（链表逆序）？</h2><p>思路：每次把第二个元素提到最前面来。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> NODE &#123;</div><div class="line">    <span class="keyword">struct</span> NODE *next;</div><div class="line">    <span class="keyword">int</span> num;</div><div class="line">&#125;node;</div><div class="line"></div><div class="line">node *createLinkList(<span class="keyword">int</span> length) &#123;</div><div class="line">    <span class="keyword">if</span> (length &lt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    node *head,*p,*q;</div><div class="line">    <span class="keyword">int</span> number = <span class="number">1</span>;</div><div class="line">    head = (node *)malloc(<span class="keyword">sizeof</span>(node));</div><div class="line">    head-&gt;num = <span class="number">1</span>;</div><div class="line">    head-&gt;next = head;</div><div class="line">    p = q = head;</div><div class="line">    <span class="keyword">while</span> (++number &lt;= length) &#123;</div><div class="line">        p = (node *)malloc(<span class="keyword">sizeof</span>(node));</div><div class="line">        p-&gt;num = number;</div><div class="line">        p-&gt;next = <span class="literal">NULL</span>;</div><div class="line">        q-&gt;next = p;</div><div class="line">        q = p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> head;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">void</span> printLinkList(node *head) &#123;</div><div class="line">    <span class="keyword">if</span> (head == <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    node *p = head;</div><div class="line">    <span class="keyword">while</span> (p) &#123;</div><div class="line">        printf(<span class="string">"%d "</span>, p-&gt;num);</div><div class="line">        p = p -&gt; next;</div><div class="line">    &#125;</div><div class="line">    printf(<span class="string">"\n"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">node *reverseFunc1(node *head) &#123;</div><div class="line">    <span class="keyword">if</span> (head == <span class="literal">NULL</span>) &#123;</div><div class="line">        <span class="keyword">return</span> head;</div><div class="line">    &#125;</div><div class="line">    node *p,*q;</div><div class="line">    p = head;</div><div class="line">    q = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">while</span> (p) &#123;</div><div class="line">        node *pNext = p -&gt; next;</div><div class="line">        p -&gt; next = q;</div><div class="line">        q = p;</div><div class="line">        p = pNext;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> q;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    node *head = createLinkList(<span class="number">7</span>);</div><div class="line">    <span class="keyword">if</span> (head) &#123;</div><div class="line">        printLinkList(head);</div><div class="line">        node *reHead = reverseFunc1(head);</div><div class="line">        printLinkList(reHead);</div><div class="line">        free(reHead);</div><div class="line">    &#125;</div><div class="line">    free(head);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="实现一个字符串“how-are-you”的逆序输出（编程语言不限）。"><a href="#实现一个字符串“how-are-you”的逆序输出（编程语言不限）。" class="headerlink" title="实现一个字符串“how are you”的逆序输出（编程语言不限）。"></a>实现一个字符串“how are you”的逆序输出（编程语言不限）。</h2><p>如给定字符串为“hello world”,输出结果应当为“world hello”。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> spliterFunc(<span class="keyword">char</span> *p) &#123;</div><div class="line">    <span class="keyword">char</span> c[<span class="number">100</span>][<span class="number">100</span>];</div><div class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span> (*p != <span class="string">'\0'</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (*p == <span class="string">' '</span>) &#123;</div><div class="line">            i++;</div><div class="line">            j = <span class="number">0</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            c[i][j] = *p;</div><div class="line">            j++;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> k = i; k &gt;= <span class="number">0</span>; k--) &#123;</div><div class="line">        printf(<span class="string">"%s"</span>, c[k]);</div><div class="line">        <span class="keyword">if</span> (k &gt; <span class="number">0</span>) &#123;</div><div class="line">            printf(<span class="string">" "</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            printf(<span class="string">"\n"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？"><a href="#给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？" class="headerlink" title="给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？"></a>给定一个字符串，输出本字符串中只出现一次并且最靠前的那个字符的位置？</h2><p>如 “abaccddeeef”,字符是b,输出应该是2。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> *strOutPut(<span class="keyword">char</span> *);</div><div class="line"></div><div class="line"><span class="keyword">int</span> compareDifferentChar(<span class="keyword">char</span>, <span class="keyword">char</span> *);</div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">char</span> *inputStr = <span class="string">"abaccddeeef"</span>;</div><div class="line">    <span class="keyword">char</span> *outputStr = strOutPut(inputStr);</div><div class="line">    printf(<span class="string">"%c \n"</span>, *outputStr);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">char</span> *strOutPut(<span class="keyword">char</span> *s) &#123;</div><div class="line">    <span class="keyword">char</span> str[<span class="number">100</span>];</div><div class="line">    <span class="keyword">char</span> *p = s;</div><div class="line">    <span class="keyword">int</span> index = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span> (*s != <span class="string">'\0'</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (compareDifferentChar(*s, p) == <span class="number">1</span>) &#123;</div><div class="line">            str[index] = *s;</div><div class="line">            index++;</div><div class="line">        &#125;</div><div class="line">        s++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> &amp;str;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> compareDifferentChar(<span class="keyword">char</span> c, <span class="keyword">char</span> *s) &#123;</div><div class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span> (*s != <span class="string">'\0'</span> &amp;&amp; i&lt;= <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (*s == c) &#123;</div><div class="line">            i++;</div><div class="line">        &#125;</div><div class="line">        s++;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (i == <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="二叉树的先序遍历为FBACDEGH-中序遍历为：ABDCEFGH-请写出这个二叉树的后序遍历结果。"><a href="#二叉树的先序遍历为FBACDEGH-中序遍历为：ABDCEFGH-请写出这个二叉树的后序遍历结果。" class="headerlink" title="二叉树的先序遍历为FBACDEGH,中序遍历为：ABDCEFGH,请写出这个二叉树的后序遍历结果。"></a>二叉树的先序遍历为FBACDEGH,中序遍历为：ABDCEFGH,请写出这个二叉树的后序遍历结果。</h2><p>ADECBHGF</p>
+<p>先序+中序遍历还原二叉树：先序遍历是：ABDEGCFH 中序遍历是：DBGEACHF</p>
+<p>首先从先序得到第一个为A，就是二叉树的根，回到中序，可以将其分为三部分：</p>
+<p>左子树的中序序列DBGE，根A，右子树的中序序列CHF</p>
+<p>接着将左子树的序列回到先序可以得到B为根，这样回到左子树的中序再次将左子树分割为三部分：</p>
+<p>左子树的左子树D，左子树的根B，左子树的右子树GE</p>
+<p>同样地，可以得到右子树的根为C</p>
+<p>类似地将右子树分割为根C，右子树的右子树HF，注意其左子树为空</p>
+<p>如果只有一个就是叶子不用再进行了，刚才的GE和HF再次这样运作，就可以将二叉树还原了。</p>
+<h2 id="打印2-100之间的素数。"><a href="#打印2-100之间的素数。" class="headerlink" title="打印2-100之间的素数。"></a>打印2-100之间的素数。</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> isPrime(<span class="keyword">int</span> n)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">    <span class="keyword">for</span>(i = <span class="number">2</span>; i &lt;= sqrt(n); i++)</div><div class="line">    <span class="keyword">if</span>(n % i == <span class="number">0</span>)  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[]) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">        <span class="keyword">int</span> r = isPrime(i);</div><div class="line">        <span class="keyword">if</span> (r == <span class="number">1</span>) &#123;</div><div class="line">            printf(<span class="string">"%d "</span>, i);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="求两个整数的最大公约数。"><a href="#求两个整数的最大公约数。" class="headerlink" title="求两个整数的最大公约数。"></a>求两个整数的最大公约数。</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> gcd(<span class="keyword">int</span> a, <span class="keyword">int</span> b) &#123;</div><div class="line">    <span class="keyword">int</span> temp = <span class="number">0</span>;</div><div class="line">    <span class="keyword">if</span> (a &lt; b) &#123;</div><div class="line">        temp = a;</div><div class="line">        a = b;</div><div class="line">        b = temp;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (b != <span class="number">0</span>) &#123;</div><div class="line">        temp = a % b;</div><div class="line">        a = b;</div><div class="line">        b = temp;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> a;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="给出一个由小写字母组成的字符串，把所有连续出现的2个a替换成bb（2个b），但是对于超过两个连续的a，那么这些字符都不作替换。"><a href="#给出一个由小写字母组成的字符串，把所有连续出现的2个a替换成bb（2个b），但是对于超过两个连续的a，那么这些字符都不作替换。" class="headerlink" title="给出一个由小写字母组成的字符串，把所有连续出现的2个a替换成bb（2个b），但是对于超过两个连续的a，那么这些字符都不作替换。"></a>给出一个由小写字母组成的字符串，把所有连续出现的2个a替换成bb（2个b），但是对于超过两个连续的a，那么这些字符都不作替换。</h2><p>例如：</p>
+<p>bad -&gt; bad（一个a，不替换）</p>
+<p>baad -&gt; bbbd（替换成bb）</p>
+<p>baaad -&gt; baaad（连续三个a，不替换）</p>
+<p>apaapaaapaa -&gt; apbbpaaapbb（这里连续的a出现了4次，只有第二段和最后一段被替换）</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">NSString</span>*)replace:(<span class="built_in">NSString</span>*)str</div><div class="line">&#123;</div><div class="line">    <span class="comment">// CODE HERE</span></div><div class="line">    <span class="built_in">NSMutableString</span> *retString = [<span class="built_in">NSMutableString</span> stringWithString:str];</div><div class="line">    </div><div class="line">    <span class="comment">// 准备替换的字符串</span></div><div class="line">    <span class="built_in">NSString</span>*replaceString = <span class="string">@"bb"</span>;</div><div class="line">    </div><div class="line">    <span class="comment">// 正则表达式 (^a&#123;2&#125;[^a]) 以aa（第三个字母不是a）开头，([^a]a&#123;2&#125;[^a]) 字符串中间的aa（前后都不是a），([^a]a&#123;2&#125;$) 以aa结尾（倒数第三个字母不是a）</span></div><div class="line">    <span class="built_in">NSRegularExpression</span> *regular = [[<span class="built_in">NSRegularExpression</span> alloc] initWithPattern:<span class="string">@"(^a&#123;2&#125;[^a])|([^a]a&#123;2&#125;[^a])|([^a]a&#123;2&#125;$)"</span> options:<span class="built_in">NSRegularExpressionCaseInsensitive</span> error:<span class="literal">nil</span>];</div><div class="line">    <span class="built_in">NSRange</span> range;</div><div class="line">    <span class="keyword">do</span>&#123;</div><div class="line">        range = [regular rangeOfFirstMatchInString:retString options:<span class="built_in">NSMatchingReportProgress</span> range:<span class="built_in">NSMakeRange</span>(<span class="number">0</span>, retString.length)];</div><div class="line">        <span class="keyword">if</span>(range.length ==<span class="number">4</span>) &#123;</div><div class="line">            <span class="comment">// 替换中间的aa</span></div><div class="line">            [retString replaceCharactersInRange:<span class="built_in">NSMakeRange</span>(range.location +<span class="number">1</span>,<span class="number">2</span>) withString:replaceString];</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(range.length &gt;<span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">if</span>(range.location ==<span class="number">0</span>) &#123;</div><div class="line">                <span class="comment">// 替换开头的aa</span></div><div class="line">                [retString replaceCharactersInRange:<span class="built_in">NSMakeRange</span>(range.location,<span class="number">2</span>) withString:replaceString];</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;<span class="comment">// 替换结尾的aa</span></div><div class="line">                </div><div class="line">                [retString replaceCharactersInRange:<span class="built_in">NSMakeRange</span>(retString.length <span class="number">-2</span>,<span class="number">2</span>) withString:replaceString];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">while</span> (range.length &gt;<span class="number">0</span>);</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> retString;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="给出一个字符串，其中只包含括号（大中小括号“-”），括号可以任意嵌套。如果同样的左右括号成对出现并且嵌套正确，那么认为它是匹配的。"><a href="#给出一个字符串，其中只包含括号（大中小括号“-”），括号可以任意嵌套。如果同样的左右括号成对出现并且嵌套正确，那么认为它是匹配的。" class="headerlink" title="给出一个字符串，其中只包含括号（大中小括号“()[]{}”），括号可以任意嵌套。如果同样的左右括号成对出现并且嵌套正确，那么认为它是匹配的。"></a>给出一个字符串，其中只包含括号（大中小括号“()[]{}”），括号可以任意嵌套。如果同样的左右括号成对出现并且嵌套正确，那么认为它是匹配的。</h2><p>例如：</p>
+<p>()  -&gt;  TRUE（匹配）</p>
+<p>[()]  -&gt;  TRUE（匹配，括号可以嵌套）</p>
+<p>()()   -&gt;  TRUE（匹配，括号可以并列排列）</p>
+<p>({}([]))  -&gt;  TRUE（匹配，括号可以任意嵌套，大括号不必在外）</p>
+<p>)   -&gt;  FALSE（不匹配，缺少左括号）</p>
+<p>(}   -&gt;  FALSE（不匹配，左右括号不一样）</p>
+<p>{)(}   -&gt;  FALSE（不匹配，左右括号相反）</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">- (<span class="built_in">BOOL</span>)isMatch:(<span class="built_in">NSString</span> *)str</div><div class="line">&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * CODE HERE</div><div class="line">     * 采用进站出站的思想，遍历完字符串时如果array为空则匹配成功，否则失败</div><div class="line">     */</div><div class="line">    <span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</div><div class="line">    <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str.length; i++ ) &#123;</div><div class="line">        <span class="keyword">int</span> tag = [<span class="keyword">self</span> createTagWithString:[str substringWithRange:<span class="built_in">NSMakeRange</span>(i, <span class="number">1</span>)]];</div><div class="line">        <span class="keyword">if</span> (tag != <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">int</span> lastTag = [[array lastObject] intValue];</div><div class="line">            <span class="keyword">if</span> ( (lastTag + tag) == <span class="number">0</span> ) &#123;</div><div class="line">                [array removeLastObject];</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                [array addObject:@(tag)];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> array.count == <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">- (<span class="keyword">int</span>)createTagWithString:(<span class="built_in">NSString</span> *)str</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> ([str isEqualToString:<span class="string">@"("</span>] ) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( [str isEqualToString:<span class="string">@")"</span>] ) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( [str isEqualToString:<span class="string">@"["</span>] ) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">-2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( [str isEqualToString:<span class="string">@"]"</span>] ) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( [str isEqualToString:<span class="string">@"&#123;"</span>] ) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">-3</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( [str isEqualToString:<span class="string">@"&#125;"</span>] ) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">3</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="写一个函数，找出一个数组中出现次数超过一半的数字，如果数字不存在，则返回-1。"><a href="#写一个函数，找出一个数组中出现次数超过一半的数字，如果数字不存在，则返回-1。" class="headerlink" title="写一个函数，找出一个数组中出现次数超过一半的数字，如果数字不存在，则返回-1。"></a>写一个函数，找出一个数组中出现次数超过一半的数字，如果数字不存在，则返回-1。</h2><p>例如：</p>
+<p>[0, 1, 2]             –&gt;     -1（每个数字只出现1次）</p>
+<p>[0, 1, 2, 1]         –&gt;    -1（1出现了2次，刚好一半）</p>
+<p>[0, 1, 2, 1, 1]     –&gt;     1（1出现了3次，超过一半）</p>
+<p>（注：数组不是按从小到达排序的，也许排序之后更容易找到这个数，但是有没有更好、更快的方法在不重新调整顺序的情况得到结果？）</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">int</span>)mode:(<span class="built_in">NSArray</span> *)array</div><div class="line">&#123;</div><div class="line">    <span class="comment">// CODE HERE</span></div><div class="line">    <span class="comment">// 将集合中得数字转存到字典中，数字做key，对应出现的次数做value</span></div><div class="line">    <span class="built_in">NSMutableDictionary</span> *modeMap = [<span class="built_in">NSMutableDictionary</span> dictionary];</div><div class="line">    [array enumerateObjectsUsingBlock:^(<span class="keyword">id</span> obj,<span class="built_in">NSUInteger</span> idx,<span class="built_in">BOOL</span> *stop) &#123;</div><div class="line">        <span class="built_in">NSString</span> *key = obj;</div><div class="line">        <span class="keyword">id</span> count = modeMap[key];</div><div class="line">        <span class="keyword">int</span> i = [(<span class="built_in">NSNumber</span> *)count intValue];</div><div class="line">        [modeMap setObject:@(i +<span class="number">1</span>) forKey:key];</div><div class="line">    &#125;];</div><div class="line">    </div><div class="line">    __block <span class="keyword">int</span> retInt =<span class="number">-1</span>;</div><div class="line">    <span class="comment">// 遍历字典，找出其中value大于集合一半的key并返回</span></div><div class="line">    [modeMap.allKeys enumerateObjectsUsingBlock:^(<span class="keyword">id</span> obj,<span class="built_in">NSUInteger</span> idx,<span class="built_in">BOOL</span> *stop) &#123;</div><div class="line">        <span class="built_in">NSString</span> *key = obj;</div><div class="line">        <span class="keyword">int</span> mode = [modeMap[key] intValue];</div><div class="line">        <span class="keyword">if</span>(mode &gt; array.count /<span class="number">2</span>) &#123;</div><div class="line">            retInt = key.intValue;</div><div class="line">            *stop =<span class="literal">YES</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">    <span class="keyword">return</span> retInt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/" data-title="iOS 面试题之常见算法(1) | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2015/02/08/ios-mian-shi-ti-zhi-chang-jian-suan-fa-2/" title="iOS 面试题之常见算法(2)">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS 面试题之常见算法(2)</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Web/" title="Web">Web</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IMP/" style="font-size: 10px;">IMP</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/LevelDB/" style="font-size: 10px;">LevelDB</a> <a href="/tags/Mac/" style="font-size: 16.67px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 10px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 13.33px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/css/" style="font-size: 11.67px;">css</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/isa/" style="font-size: 10px;">isa</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16.67px;">octopress</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 11.67px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 11.67px;">图片</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 11.67px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18.33px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/算法/" style="font-size: 11.67px;">算法</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+    </div>
+  </div>
+
+
+  <div class="aboutme">
+    <br />
+    <p class="asidetitle">关于我</p>
+    <p style="margin-top: 8px;">iOS开发新人，以前在 <a target="_blank" style="color: #2ca6cb;text-decoration: underline;" href="http://blog.csdn.net/marujunyy">CSDN</a> 写博客.</p>
+    <!--<img src="/images/weixin-qr.jpg" width="220px" />-->
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
