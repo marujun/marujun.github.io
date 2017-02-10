@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
+    
+    <lastmod>2017-02-10T06:04:32.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/</loc>
     
     <lastmod>2017-02-08T08:04:02.000Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://devma.cn/blog/2016/01/14/ios-zhong-imp-zhi-zhen-de-zuo-yong/</loc>
     
     <lastmod>2017-01-14T06:40:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
-    
-    <lastmod>2016-12-16T02:50:25.000Z</lastmod>
     
   </url>
   
