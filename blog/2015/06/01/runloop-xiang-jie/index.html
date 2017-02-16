@@ -1,0 +1,589 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>RunLoop实际使用 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="什么是Runloop简单点说就是一个do while的运行循环。主要的作用就是保持程序的持续运行。比如主线程的runloop从程序打开就一直在运行。一个线程对应着一个runloop。RunLoop在第一次获取时创建，在线程结束时销毁。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RunLoop实际使用">
+<meta property="og:url" content="http://devma.cn/blog/2015/06/01/runloop-xiang-jie/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="什么是Runloop简单点说就是一个do while的运行循环。主要的作用就是保持程序的持续运行。比如主线程的runloop从程序打开就一直在运行。一个线程对应着一个runloop。RunLoop在第一次获取时创建，在线程结束时销毁。">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-1.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-2.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-3.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-4.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-5.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-6.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-7.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-8.png">
+<meta property="og:image" content="http://devma.cn/images/2015/06/runloop-simple-9.png">
+<meta property="og:updated_time" content="2017-02-16T07:39:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RunLoop实际使用">
+<meta name="twitter:description" content="什么是Runloop简单点说就是一个do while的运行循环。主要的作用就是保持程序的持续运行。比如主线程的runloop从程序打开就一直在运行。一个线程对应着一个runloop。RunLoop在第一次获取时创建，在线程结束时销毁。">
+<meta name="twitter:image" content="http://devma.cn/images/2015/06/runloop-simple-1.png">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2015/06/01/runloop-xiang-jie/" title="RunLoop实际使用" itemprop="url">RunLoop实际使用</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2015-06-01T06:30:47.000Z" itemprop="datePublished"> 发表于 2015-06-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Runloop"><span class="toc-number">1.</span> <span class="toc-text">什么是Runloop</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一些基本概念"><span class="toc-number">1.1.</span> <span class="toc-text">一些基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Runloop内部结构"><span class="toc-number">1.2.</span> <span class="toc-text">Runloop内部结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Runloop的实际使用"><span class="toc-number">2.</span> <span class="toc-text">Runloop的实际使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常驻线程"><span class="toc-number">2.1.</span> <span class="toc-text">常驻线程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Runloop常驻线程等待block回调成功"><span class="toc-number">2.1.1.</span> <span class="toc-text">Runloop常驻线程等待block回调成功</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#保持子线程线程常驻例子"><span class="toc-number">2.1.2.</span> <span class="toc-text">保持子线程线程常驻例子</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NSTimer"><span class="toc-number">2.2.</span> <span class="toc-text">NSTimer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PerformSelecter"><span class="toc-number">2.3.</span> <span class="toc-text">PerformSelecter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Table-View延迟加载图片"><span class="toc-number">2.4.</span> <span class="toc-text">Table View延迟加载图片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#让Crash的APP回光返照"><span class="toc-number">2.5.</span> <span class="toc-text">让Crash的APP回光返照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Async-Test-Case"><span class="toc-number">2.6.</span> <span class="toc-text">Async Test Case</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何查看Runloop的调试栈信息"><span class="toc-number">3.</span> <span class="toc-text">如何查看Runloop的调试栈信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Autorelease对象什么时候释放"><span class="toc-number">4.</span> <span class="toc-text">Autorelease对象什么时候释放</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img /images/2015/06/runloop-simple-1.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<h2 id="什么是Runloop"><a href="#什么是Runloop" class="headerlink" title="什么是Runloop"></a>什么是Runloop</h2><p>简单点说就是一个do while的运行循环。主要的作用就是保持程序的持续运行。比如主线程的runloop从程序打开就一直在运行。一个线程对应着一个runloop。RunLoop在第一次获取时创建，在线程结束时销毁。</p>
+<a id="more"></a>
+<img src="/images/2015/06/runloop-simple-1.png">
+<h3 id="一些基本概念"><a href="#一些基本概念" class="headerlink" title="一些基本概念"></a>一些基本概念</h3><ul>
+<li><strong>为什么使用Runloop</strong></li>
+</ul>
+<blockquote>
+<ul>
+<li>使程序一直运行并接受用户输入</li>
+<li>决定程序在何时应该处理哪些Event</li>
+<li>调节解耦（Message Queue）<br>也就是主调方把消息放入一个队列，被调方只要去这个队列里取就行了。</li>
+<li>节省CPU时间<br>Runloop在没有事的时候会进入一个休眠状态，不会让CPU一直在运行程序。</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>CFRunLoopSource</strong></li>
+</ul>
+<blockquote>
+<p>Source是RunLoop的数据源抽象类,类似IOS中的protocol<br>RunLoop定义两个Version的Source</p>
+<p>Source0:处理App内部事件,App自己负责管理(触发),如UIEvent,CFSocket<br>Source1:由RunLoop和内核管理,Mach port驱动 如CFMach、CFMessage</p>
+</blockquote>
+<ul>
+<li><strong>CFRunLoopObserver</strong></li>
+</ul>
+<blockquote>
+<p>向内部报告RunLoop当前状态的更改 CAAnimation</p>
+</blockquote>
+<ul>
+<li><strong>RunLoopObserver 与 Autorelease Pool</strong></li>
+</ul>
+<blockquote>
+<p>UIKit通过RunLoopObserver在RunLoop两次Sleep间对AutoreleasePool进行pop和push,将这次Loop中产生的Autorelease对象释放。</p>
+</blockquote>
+<ul>
+<li><strong>RunLoop的挂起与唤醒</strong></li>
+</ul>
+<blockquote>
+<p>制定用于唤醒的mach_port端口<br>调用mach_msg监听唤醒端口,被唤醒前,系统内核将这个线程挂起,停留在mach_msg_trap<br>由另外一个线程(或另一个进程中的某个线程)向内核发送这个端口的msg后,trap状态被唤醒,RunLoop继续开始干活</p>
+<p>以下就是挂起时调用栈上的一个信息：</p>
+</blockquote>
+<img src="/images/2015/06/runloop-simple-2.png">
+<ul>
+<li><strong>CFRunLoopMode</strong></li>
+</ul>
+<blockquote>
+<p>RunLoop在同一时段只能且必须在一种特定Mode下Run<br>更换Mode时, 需要暂停当前的Loop,然后重启新的Loop</p>
+<p>NSDefalutRunLoopMode      默认状态.空闲状态<br>UITrackingRunLoopMode     滑动ScrollView<br>UIInitializationRunLoopMode    私有,App启动时<br>NSRunLoopCommonModes     默认包括上面第一和第二</p>
+</blockquote>
+<ul>
+<li><strong>UITrackingRunLoopMode 与 NSTimer</strong></li>
+</ul>
+<blockquote>
+<p>默认情况下NSTimer被加入NSDefalutRunLoopMode<br>如果不想NSTimer受到组件或者动画影响 添加到NSRunLoopCommonModes</p>
+</blockquote>
+<ul>
+<li><strong>RunLoopMode在滑动时切换</strong></li>
+</ul>
+<blockquote>
+<p>NSDefaultRunLoopMode-&gt;UITrackingRunLoopMode-&gt;NSDefalutRunLoopMode</p>
+</blockquote>
+<ul>
+<li><strong>Runloop跟GCD的关系</strong></li>
+</ul>
+<blockquote>
+<p>GCD中dispatch到main queue的block被分发到main Runloop中执行。dispatch_after同理。<br><br></p>
+</blockquote>
+<h3 id="Runloop内部结构"><a href="#Runloop内部结构" class="headerlink" title="Runloop内部结构"></a>Runloop内部结构</h3><p>NSRunloop其实是对CFRunloop的一层封装。CFRunloop是开源的，开源地址<a href="https://opensource.apple.com/tarballs/CF/" target="_blank" rel="external">CF Source</a>。</p>
+<img src="/images/2015/06/runloop-simple-3.png">
+<p>下面的 Source/Timer/Observer 被统称为 mode item，一个 item 可以被同时加入多个 mode。但一个 item 被重复加入同一个 mode 时是不会有效果的。如果一个 mode 中一个 item 都没有，则 RunLoop 会直接退出，不进入循环。</p>
+<ul>
+<li><strong>CFRunLoopSourceRef</strong></li>
+</ul>
+<blockquote>
+<p>CFRunLoopSourceRef 是事件产生的地方。Source有两个版本：Source0 和 Source1。</p>
+<p>Source0 只包含了一个回调（函数指针），它并不能主动触发事件。使用时，你需要先调用 CFRunLoopSourceSignal(source)，将这个 Source 标记为待处理，然后手动调用 CFRunLoopWakeUp(runloop) 来唤醒 RunLoop，让其处理这个事件。</p>
+<p>Source1 包含了一个 mach_port 和一个回调（函数指针），被用于通过内核和其他线程相互发送消息。这种 Source 能主动唤醒 RunLoop 的线程，其原理在下面会讲到。</p>
+</blockquote>
+<ul>
+<li><strong>CFRunLoopTimerRef</strong></li>
+</ul>
+<blockquote>
+<p>CFRunLoopTimerRef是基于时间的触发器，它和 NSTimer 是toll-free bridged 的，可以混用。其包含一个时间长度和一个回调（函数指针）。当其加入到 RunLoop 时，RunLoop会注册对应的时间点，当时间点到时，RunLoop会被唤醒以执行那个回调。</p>
+</blockquote>
+<ul>
+<li><strong>CFRunLoopObserverRef</strong></li>
+</ul>
+<blockquote>
+<p>CFRunLoopObserverRef 是观察者，每个 Observer 都包含了一个回调（函数指针），当 RunLoop 的状态发生变化时，观察者就能通过回调接受到这个变化。可以观测的时间点有以下几个：</p>
+</blockquote>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="built_in">CF_OPTIONS</span>(<span class="built_in">CFOptionFlags</span>, <span class="built_in">CFRunLoopActivity</span>) &#123;</div><div class="line">    kCFRunLoopEntry         = (<span class="number">1</span>UL &lt;&lt; <span class="number">0</span>), <span class="comment">// 即将进入Loop</span></div><div class="line">    kCFRunLoopBeforeTimers  = (<span class="number">1</span>UL &lt;&lt; <span class="number">1</span>), <span class="comment">// 即将处理 Timer</span></div><div class="line">    kCFRunLoopBeforeSources = (<span class="number">1</span>UL &lt;&lt; <span class="number">2</span>), <span class="comment">// 即将处理 Source</span></div><div class="line">    kCFRunLoopBeforeWaiting = (<span class="number">1</span>UL &lt;&lt; <span class="number">5</span>), <span class="comment">// 即将进入休眠</span></div><div class="line">    kCFRunLoopAfterWaiting  = (<span class="number">1</span>UL &lt;&lt; <span class="number">6</span>), <span class="comment">// 刚从休眠中唤醒</span></div><div class="line">    kCFRunLoopExit          = (<span class="number">1</span>UL &lt;&lt; <span class="number">7</span>), <span class="comment">// 即将退出Loop</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><br></p>
+<p>主线程几乎所有的函数都是从以下几个函数调起，这些很长的函数我们能在程序运行时打断点在左侧的调用栈中看到：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="comment">/// 1. 通知Observers，即将进入RunLoop</span></div><div class="line">    <span class="comment">/// 此处有Observer会创建AutoreleasePool: _objc_autoreleasePoolPush();</span></div><div class="line">    __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopEntry);</div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        <span class="comment">/// 2. 通知 Observers: 即将触发 Timer 回调。</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeTimers);</div><div class="line">        <span class="comment">/// 3. 通知 Observers: 即将触发 Source (非基于port的,Source0) 回调。</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeSources);</div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);</div><div class="line">        <span class="comment">/// 4. 触发 Source0 (非基于port的) 回调。</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(source0);</div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);</div><div class="line">        <span class="comment">/// 6. 通知Observers，即将进入休眠</span></div><div class="line">        <span class="comment">/// 此处有Observer释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeWaiting);</div><div class="line">        <span class="comment">/// 7. sleep to wait msg.</span></div><div class="line">        mach_msg() -&gt; mach_msg_trap();</div><div class="line">        <span class="comment">/// 8. 通知Observers，线程被唤醒</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopAfterWaiting);</div><div class="line">        <span class="comment">/// 9. 如果是被Timer唤醒的，回调Timer</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__(timer);</div><div class="line">        <span class="comment">/// 9. 如果是被dispatch唤醒的，执行所有调用 dispatch_async 等方法放入main queue 的 block</span></div><div class="line">        __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__(dispatched_block);</div><div class="line">        <span class="comment">/// 9. 如果如果Runloop是被 Source1 (基于port的) 的事件唤醒了，处理这个事件</span></div><div class="line">        __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__(source1);</div><div class="line">    &#125; <span class="keyword">while</span> (...);</div><div class="line">    <span class="comment">/// 10. 通知Observers，即将退出RunLoop</span></div><div class="line">    <span class="comment">/// 此处有Observer释放AutoreleasePool: _objc_autoreleasePoolPop();</span></div><div class="line">    __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Runloop的实际使用"><a href="#Runloop的实际使用" class="headerlink" title="Runloop的实际使用"></a>Runloop的实际使用</h2><blockquote>
+<p>Runloop常用的场景有以下几种：<code>NSTimer</code>，<code>PerformSelector</code>，<code>常驻线程</code>。</p>
+</blockquote>
+<h3 id="常驻线程"><a href="#常驻线程" class="headerlink" title="常驻线程"></a>常驻线程</h3><p>常驻线程的应用场景:经常在后台进行耗时操作,如:监控联网状态，扫描沙盒等 不希望线程处理完事件就销毁，保持常驻状态比如AFNetworking 2.0等。</p>
+<h4 id="Runloop常驻线程等待block回调成功"><a href="#Runloop常驻线程等待block回调成功" class="headerlink" title="Runloop常驻线程等待block回调成功"></a>Runloop常驻线程等待block回调成功</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">NSString</span>* result = <span class="literal">nil</span>;</div><div class="line">__block <span class="built_in">BOOL</span> isExecuted = <span class="literal">NO</span>;</div><div class="line">[(<span class="built_in">WKWebView</span>*)<span class="keyword">self</span>.realWebView evaluateJavaScript:javaScriptString completionHandler:^(<span class="keyword">id</span> obj, <span class="built_in">NSError</span>* error) &#123;</div><div class="line">    result = obj;</div><div class="line">    isExecuted = <span class="literal">YES</span>;</div><div class="line">&#125;];</div><div class="line"><span class="keyword">while</span> (isExecuted == <span class="literal">NO</span>) &#123;</div><div class="line">    [[<span class="built_in">NSRunLoop</span> currentRunLoop] runMode:<span class="built_in">NSDefaultRunLoopMode</span> beforeDate:[<span class="built_in">NSDate</span> distantFuture]];</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> result;</div><div class="line">__block <span class="built_in">NSString</span>* result = <span class="literal">nil</span>;</div><div class="line">[(<span class="built_in">WKWebView</span>*)<span class="keyword">self</span>.realWebView evaluateJavaScript:javaScriptString completionHandler:^(<span class="keyword">id</span> obj, <span class="built_in">NSError</span>* error) &#123;</div><div class="line">    result = obj;</div><div class="line">    <span class="built_in">CFRunLoopStop</span>(<span class="built_in">CFRunLoopGetMain</span>());</div><div class="line">&#125;];</div><div class="line"><span class="built_in">CFRunLoopRun</span>();</div><div class="line"><span class="keyword">return</span> result;</div></pre></td></tr></table></figure>
+<h4 id="保持子线程线程常驻例子"><a href="#保持子线程线程常驻例子" class="headerlink" title="保持子线程线程常驻例子"></a>保持子线程线程常驻例子</h4><p><strong>1.设置成全局的，如果是线程对象是局部的就会死掉</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">strong</span>) <span class="built_in">NSThread</span> *thread;</div></pre></td></tr></table></figure>
+<p><strong>2.初始化线程并启动</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.thread = [[<span class="built_in">NSThread</span> alloc]initWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(run) object:<span class="literal">nil</span>];</div><div class="line">[<span class="keyword">self</span>.thread start];</div></pre></td></tr></table></figure>
+<p><strong>3.启动RunLoop，子线程的RunLoop默认是停止的</strong></p>
+<blockquote>
+<p>在线程的入口处我们需要创建一个Autorelease Pool，当线程退出的时候释放这个Autorelease Pool。这样在线程中创建的autorelease对象就可以在线程结束的时候释放，避免过多的延迟释放造成程序占用过多的内存。如果是一个长寿命的线程的话，应该创建更多的Autorelease Pool来达到这个目的。</p>
+</blockquote>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//只要往RunLoop中添加了  timer、source或者observer就会继续执行，一个Run Loop通常必须包含一个输入源或者定时器来监听事件，如果一个都没有，Run Loop启动后立即退出。</span></div><div class="line">- (<span class="keyword">void</span>)run&#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span> &#123;</div><div class="line">        <span class="comment">//添加一个input source</span></div><div class="line">        [[<span class="built_in">NSRunLoop</span> currentRunLoop] addPort:[<span class="built_in">NSPort</span> port] forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</div><div class="line">        [[<span class="built_in">NSRunLoop</span> currentRunLoop] run];</div><div class="line">        <span class="comment">//或者添加一个定时器</span></div><div class="line">        <span class="comment">//NSTimer *timer = [NSTimer timerWithTimeInterval:2.0 target:self selector:@selector(test) userInfo:nil repeats:YES];</span></div><div class="line">        <span class="comment">//[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];</span></div><div class="line">        <span class="comment">//[[NSRunLoop currentRunLoop] run];</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>4.利用常驻线程处理事情</strong></p>
+<p>这样thread这个线程就会一直存在，当需要使用此线程处理一些事情的时候就这么调用</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(action) onThread:<span class="keyword">self</span>.thread withObject:<span class="literal">nil</span> waitUntilDone:<span class="literal">NO</span> ];</div></pre></td></tr></table></figure>
+<h3 id="NSTimer"><a href="#NSTimer" class="headerlink" title="NSTimer"></a>NSTimer</h3><p>NSTimer也是在面试中提及Runloop的时候会被问到的问题。详情可以看我的另一篇文章：<a href="https://www.zybuluo.com/qidiandasheng/note/492821" target="_blank" rel="external">NSTimer需要注意的地方</a></p>
+<h3 id="PerformSelecter"><a href="#PerformSelecter" class="headerlink" title="PerformSelecter"></a>PerformSelecter</h3><p>当调用 NSObject 的 performSelecter:afterDelay: 后，实际上其内部会创建一个 Timer 并添加到当前线程的 RunLoop 中。所以如果当前线程没有 RunLoop，则这个方法会失效。</p>
+<h3 id="Table-View延迟加载图片"><a href="#Table-View延迟加载图片" class="headerlink" title="Table View延迟加载图片"></a>Table View延迟加载图片</h3><p>这个问题是有的TableView有大量图片（比如头像）加载，在滑动的时候，请求网络，下载完图片之后设置的时候会卡，往常的解决方案一般是添加delegate之类的，检测什么时候滑动结束什么时候去设置图片</p>
+<p>在知道RunLoop之后，可以采用下面的方案，在DefaultMode去做，这样滑动的时候就不会调用设置图片方法.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">UIImage</span> *downLoadImage = ...;  </div><div class="line">[<span class="keyword">self</span>.avatarImageView performSelector:<span class="keyword">@selector</span>(setImage:) </div><div class="line">                        withObject:downloadImage  </div><div class="line">                        afterDelay:<span class="number">0</span>  </div><div class="line">                        inModes:@[<span class="built_in">NSDefaultRunLoopMode</span>]];</div></pre></td></tr></table></figure>
+<h3 id="让Crash的APP回光返照"><a href="#让Crash的APP回光返照" class="headerlink" title="让Crash的APP回光返照"></a>让Crash的APP回光返照</h3><p>我这里有个Demo就是写Signal信号崩溃时，使用手动重启Runloop不使程序崩溃，并弹出Alert。<a href="https://github.com/walkdianzi/DSSignalHandlerDemo" target="_blank" rel="external">DSSignalHandlerDemo</a>。</p>
+<p>主要代码就是以下这段：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">CFRunLoopRef</span> runLoop = <span class="built_in">CFRunLoopGetCurrent</span>();</div><div class="line"><span class="built_in">CFArrayRef</span> allModes = <span class="built_in">CFRunLoopCopyAllModes</span>(runLoop);</div><div class="line"><span class="keyword">while</span> (!dismissed)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="built_in">NSString</span> *mode <span class="keyword">in</span> (__bridge <span class="built_in">NSArray</span> *)allModes)</div><div class="line">    &#123;</div><div class="line">        <span class="comment">//为阻止线程退出，使用 CFRunLoopRunInMode(model, 0.001, false)等待系统消息，false表示RunLoop没有超时时间</span></div><div class="line">        <span class="built_in">CFRunLoopRunInMode</span>((<span class="built_in">CFStringRef</span>)mode, <span class="number">0.001</span>, <span class="literal">false</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">CFRelease</span>(allModes);</div></pre></td></tr></table></figure>
+<h3 id="Async-Test-Case"><a href="#Async-Test-Case" class="headerlink" title="Async Test Case"></a>Async Test Case</h3><p>原来在写Test Case 的时候不支持异步。然后这里有个方法就是使用runloop的CFRunLoopObserver来监听runloop快要sleep的时候，去验证这个异步。</p>
+<img src="/images/2015/06/runloop-simple-4.png">
+<h2 id="如何查看Runloop的调试栈信息"><a href="#如何查看Runloop的调试栈信息" class="headerlink" title="如何查看Runloop的调试栈信息"></a>如何查看Runloop的调试栈信息</h2><p>你直接打开xcode，运行一下程序，然后打个断点暂停一下，我们就能看到从main函数后面马上调起了唤起了Runloop。这个Runloop是跟随着程序一直存在的，是主线程的runloop。我们看一下截图：</p>
+<img src="/images/2015/06/runloop-simple-5.png">
+<img src="/images/2015/06/runloop-simple-6.png">
+<h2 id="Autorelease对象什么时候释放"><a href="#Autorelease对象什么时候释放" class="headerlink" title="Autorelease对象什么时候释放"></a>Autorelease对象什么时候释放</h2><p>Runloop是一个运行循环，但是它不可能一直运行着，所以它会有一个休眠期。Runloop维护着一个<code>AutoreleasePool</code>，当它进入休眠前它会把这个释放池里的对象进行释放。</p>
+<p>UIKit通过<code>RunLoopObserver</code>在RunLoop两次Sleep间对<code>AutoreleasePool</code>进行pop和push,将这次Loop中产生的<code>Autorelease</code>对象释放。</p>
+<p>所以说以下这样的例子会对性能是有影响的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这里大量的循环，Runloop又还没进入休眠状态，所以就会产生大量的Autorelease对象。</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000000</span>; i++)</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSString</span>* string = <span class="string">@"ab c"</span>;</div><div class="line">    <span class="built_in">NSArray</span>* array = [string componentsSeparatedByString:string];</div><div class="line">&#125;</div><div class="line"><span class="comment">//我们可以手动的给它加@autoreleasepool&#123;&#125;，在每次循环后都进行一次释放。</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000000</span>; i++)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">@autoreleasepool</span></div><div class="line">    &#123;</div><div class="line">        <span class="built_in">NSString</span>* string = <span class="string">@"ab c"</span>;</div><div class="line">        <span class="built_in">NSArray</span>* array = [string componentsSeparatedByString:string];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><font color="red"></font><br><strong><font color="red">那一般什么时候Runloop会进入休眠呢?</font></strong></p>
+<p>我们这里看一个简单的例子，就是主线程的<code>Runloop</code>在刚进入一个<code>ViewController</code>的时候什么时期进入休眠。</p>
+<p>先看下面一段代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)viewDidLoad&#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line">    <span class="built_in">NSString</span> *string = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"齐滇大圣"</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>这里[NSString stringWithFormat:@”齐滇大圣”];创建对象时这个对象的引用计数为 1 。当使用局部变量 string 指向这个对象时，这个对象的引用计数 +1 ，变成了 2 。而当 viewDidLoad 方法返回时，局部变量 string 被回收，指向了 nil 。因此，其所指向对象的引用计数 -1 ，变成了 1 。</p>
+<p>然后我们的这个对象是一个<code>autorelease</code>的实例，是被系统自动添加到了当前的 <code>autoreleasepool</code> 中的。所以会当Runloop一次迭代结束即将进入休眠的时候<code>autoreleasepool drain</code>对象引用计数 -1，对象释放。</p>
+</blockquote>
+<p><strong><font color="red">下面我们配合着堆栈信息看一下这个Runloop什么时候结束一次迭代。</font></strong></p>
+<img src="/images/2015/06/runloop-simple-7.png">
+<p>这里我们加入一个<strong>weak的全局变量reference来指向我们的对象。因为</strong>weak引用不持有我们的对象，不会影响所指向对象的生命周期，所以我们用它来输出以判断我们的对象什么时候释放。</p>
+<p>我们能看到reference在viewDidLoad和viewWillAppear的时候有输出，而在viewDidAppear的时候为null，说明被释放了。那我们来猜测一下runloop的迭代周期。</p>
+<p>viewWillAppear很容易理解是即将进入页面嘛，那runloop肯定是还有事要做的嘛，当viewDidAppear的时候表示已经进入页面了。那就表示没事做了，进入睡眠，等待用户动作的时候再次唤醒。你可能会觉得我口说无凭不靠谱，好那我就拿出证据来，我们来看下面两张图。</p>
+<p><strong><font color="red">断点1和断点2：</font></strong></p>
+<img src="/images/2015/06/runloop-simple-8.png">
+<p><strong><font color="red">断点3</font></strong></p>
+<img src="/images/2015/06/runloop-simple-9.png">
+<p>我们能看到断点1和断点2 runloop还是在执行的，断点3表示runloop一个迭代已经结束了，即将进入睡眠。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//触发 Source0 (非基于port的) 回调。</span></div><div class="line">__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(source0);</div><div class="line"><span class="comment">//out_to_block表示从block跳出，block执行完毕，即将进入睡眠。</span></div><div class="line">__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);</div></pre></td></tr></table></figure>
+<p><br><br>转载自：<a href="https://www.zybuluo.com/qidiandasheng/note/346387" target="_blank" rel="external">https://www.zybuluo.com/qidiandasheng/note/346387</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/RunLoop/">RunLoop</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://devma.cn/blog/2015/06/01/runloop-xiang-jie/" data-title="RunLoop实际使用 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2015/06/02/shen-ru-li-jie-runloop/" title="深入理解RunLoop">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--深入理解RunLoop</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2015/05/31/zi-ding-yi-core-data-qian-yi/"  title="自定义 Core Data 迁移">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>自定义 Core Data 迁移-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Web/" title="Web">Web</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IMP/" style="font-size: 10px;">IMP</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/LevelDB/" style="font-size: 10px;">LevelDB</a> <a href="/tags/Mac/" style="font-size: 16.67px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 11.67px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 13.33px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/css/" style="font-size: 11.67px;">css</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/isa/" style="font-size: 10px;">isa</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16.67px;">octopress</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 11.67px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 11.67px;">图片</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 11.67px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18.33px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/算法/" style="font-size: 11.67px;">算法</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+    </div>
+  </div>
+
+
+  <div class="aboutme">
+    <br />
+    <p class="asidetitle">关于我</p>
+    <p style="margin-top: 8px;">iOS开发新人，以前在 <a target="_blank" style="color: #2ca6cb;text-decoration: underline;" href="http://blog.csdn.net/marujunyy">CSDN</a> 写博客.</p>
+    <!--<img src="/images/weixin-qr.jpg" width="220px" />-->
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

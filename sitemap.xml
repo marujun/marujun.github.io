@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://devma.cn/blog/2015/06/01/runloop-xiang-jie/</loc>
+    
+    <lastmod>2017-02-16T07:39:01.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
     
     <lastmod>2017-02-10T06:04:32.000Z</lastmod>
