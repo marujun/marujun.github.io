@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/</loc>
+    
+    <lastmod>2017-02-24T08:25:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2015/06/01/runloop-xiang-jie/</loc>
     
     <lastmod>2017-02-16T07:39:01.000Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
     
     <lastmod>2017-02-10T06:04:32.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/</loc>
-    
-    <lastmod>2017-02-08T08:04:02.000Z</lastmod>
     
   </url>
   
@@ -331,7 +331,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/</loc>
+    <loc>http://devma.cn/blog/2016/03/29/rang-octopressbo-ke-zai-duo-tai-macshang-tong-shi-shi-yong/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -345,14 +352,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/29/rang-octopressbo-ke-zai-duo-tai-macshang-tong-shi-shi-yong/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
+    <loc>http://devma.cn/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
