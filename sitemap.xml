@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://devma.cn/blog/2017/03/03/ios-bian-yi-guo-cheng-de-yuan-li-he-ying-yong/</loc>
+    
+    <lastmod>2017-03-03T07:14:17.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/</loc>
+    
+    <lastmod>2017-03-03T02:17:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/</loc>
     
     <lastmod>2017-02-24T08:25:56.000Z</lastmod>
@@ -54,13 +68,6 @@
     <loc>http://devma.cn/blog/2016/01/14/ios-zhong-imp-zhi-zhen-de-zuo-yong/</loc>
     
     <lastmod>2017-01-14T06:40:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/</loc>
-    
-    <lastmod>2016-12-16T01:56:20.000Z</lastmod>
     
   </url>
   
@@ -331,14 +338,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/29/rang-octopressbo-ke-zai-duo-tai-macshang-tong-shi-shi-yong/</loc>
-    
-    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
+    <loc>http://devma.cn/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     
@@ -352,7 +352,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/28/shadowsocks-zhuan-huan-cheng-httpdai-li/</loc>
+    <loc>http://devma.cn/blog/2016/03/29/rang-octopressbo-ke-zai-duo-tai-macshang-tong-shi-shi-yong/</loc>
+    
+    <lastmod>2016-09-12T01:01:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
     
     <lastmod>2016-09-12T01:01:13.000Z</lastmod>
     

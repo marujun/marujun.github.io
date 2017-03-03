@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-speed.png">
 <meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-fno-objc-arc.png">
 <meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-header-search-paths.png">
-<meta property="og:updated_time" content="2016-12-16T01:56:20.000Z">
+<meta property="og:updated_time" content="2017-03-03T02:17:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS中KV数据库LevelDB的编译和使用">
 <meta name="twitter:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
@@ -156,6 +156,14 @@
 	<!---->
 <!--<nav class="article-nav clearfix">-->
  <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2017/03/03/ios-bian-yi-guo-cheng-de-yuan-li-he-ying-yong/" title="iOS编译过程的原理和应用">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS编译过程的原理和应用</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
 <!---->
 <!--<div class="next">-->
 <!--<a href="/blog/2016/11/10/ios-beng-kui-crash-jie-xi/"  title="iOS 崩溃Crash解析">-->
@@ -221,7 +229,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IMP/" style="font-size: 10px;">IMP</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/LevelDB/" style="font-size: 10px;">LevelDB</a> <a href="/tags/Mac/" style="font-size: 16.67px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 11.67px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 13.33px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/css/" style="font-size: 11.67px;">css</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/isa/" style="font-size: 10px;">isa</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16.67px;">octopress</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 11.67px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 11.67px;">图片</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 11.67px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18.33px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/算法/" style="font-size: 11.67px;">算法</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
+       <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IMP/" style="font-size: 10px;">IMP</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/LevelDB/" style="font-size: 10px;">LevelDB</a> <a href="/tags/Mac/" style="font-size: 16.67px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 11.67px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 13.33px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/css/" style="font-size: 11.67px;">css</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/isa/" style="font-size: 10px;">isa</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 16.67px;">octopress</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 11.67px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 11.67px;">图片</a> <a href="/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 11.67px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18.33px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/算法/" style="font-size: 11.67px;">算法</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/编译/" style="font-size: 10px;">编译</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a>
     </div>
   </div>
 
