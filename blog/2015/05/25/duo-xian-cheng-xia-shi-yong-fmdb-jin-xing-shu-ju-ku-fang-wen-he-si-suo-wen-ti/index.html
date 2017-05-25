@@ -4,27 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>iOS中KV数据库LevelDB的编译和使用 | 极致的技术博客</title>
+    <title>多线程下使用FMDB进行数据库访问和死锁问题 | 极致的技术博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="JiZhi">
     
 
     
-    <meta name="description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
+    <meta name="description" content="多线程访问数据库本身就存在分险，容易形成脏数据。幸好 FMDB 这个第三方库支持了多线程访问，从而解决了脏数据问题。然而也带来了死锁问题……">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS中KV数据库LevelDB的编译和使用">
-<meta property="og:url" content="http://devma.cn/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/index.html">
+<meta property="og:title" content="多线程下使用FMDB进行数据库访问和死锁问题">
+<meta property="og:url" content="http://devma.cn/blog/2015/05/25/duo-xian-cheng-xia-shi-yong-fmdb-jin-xing-shu-ju-ku-fang-wen-he-si-suo-wen-ti/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
-<meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-speed.png">
-<meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-fno-objc-arc.png">
-<meta property="og:image" content="http://devma.cn/images/2016/12/leveldb-header-search-paths.png">
-<meta property="og:updated_time" content="2016-12-20T12:40:28.000Z">
+<meta property="og:description" content="多线程访问数据库本身就存在分险，容易形成脏数据。幸好 FMDB 这个第三方库支持了多线程访问，从而解决了脏数据问题。然而也带来了死锁问题……">
+<meta property="og:updated_time" content="2017-05-25T09:59:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS中KV数据库LevelDB的编译和使用">
-<meta name="twitter:description" content="LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。">
-<meta name="twitter:image" content="http://devma.cn/images/2016/12/leveldb-speed.png">
+<meta name="twitter:title" content="多线程下使用FMDB进行数据库访问和死锁问题">
+<meta name="twitter:description" content="多线程访问数据库本身就存在分险，容易形成脏数据。幸好 FMDB 这个第三方库支持了多线程访问，从而解决了脏数据问题。然而也带来了死锁问题……">
 
     
     
@@ -72,10 +68,10 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/" title="iOS中KV数据库LevelDB的编译和使用" itemprop="url">iOS中KV数据库LevelDB的编译和使用</a>
+      <a href="/blog/2015/05/25/duo-xian-cheng-xia-shi-yong-fmdb-jin-xing-shu-ju-ku-fang-wen-he-si-suo-wen-ti/" title="多线程下使用FMDB进行数据库访问和死锁问题" itemprop="url">多线程下使用FMDB进行数据库访问和死锁问题</a>
   </h1>
   <p class="article-time">
-    <time datetime="2016-12-09T05:54:41.000Z" itemprop="datePublished"> 发表于 2016-12-09</time>
+    <time datetime="2015-05-25T09:35:28.000Z" itemprop="datePublished"> 发表于 2015-05-25</time>
     
   </p>
 </header>
@@ -84,43 +80,42 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#编译iOS静态库"><span class="toc-number">1.</span> <span class="toc-text">编译iOS静态库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在iOS中使用LevelDB"><span class="toc-number">2.</span> <span class="toc-text">在iOS中使用LevelDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤一：导入相关文件"><span class="toc-number">2.1.</span> <span class="toc-text">步骤一：导入相关文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤二：添加-fno-objc-arc-标签"><span class="toc-number">2.2.</span> <span class="toc-text">步骤二：添加 -fno-objc-arc 标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤三：添加-Header-Search-Paths"><span class="toc-number">2.3.</span> <span class="toc-text">步骤三：添加 Header Search Paths</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤四：添加-libc-dylib-Framework"><span class="toc-number">2.4.</span> <span class="toc-text">步骤四：添加 libc++.dylib Framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用Objective-LevelDB"><span class="toc-number">2.5.</span> <span class="toc-text">如何使用Objective-LevelDB</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#想法"><span class="toc-number">1.</span> <span class="toc-text">想法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
 		
 		</div>
 		
-		<!-- { % img /images/2016/09/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
-<p>LevelDB是Google公司重量级工程师Jeff Dean和Sanjay Ghemawat发起的开源项目。LevelDB是一个持久化存储的KV系统，和Redis这种内存型的KV系统不同，LevelDB不会像Redis一样狂吃内存，而是将大部分数据存储到磁盘上。目前能够支持billion级别的数据量，在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。<br><a id="more"></a></p>
-<p>LevelDB开源并托管在GitHub上，项目的地址是：<a href="https://github.com/google/leveldb" target="_blank" rel="external">https://github.com/google/leveldb</a>。</p>
-<p>有个来自LevelDB官方对LevelDB、TreeDB和SQLite3进行性能对比分析的测试，测试结果如下图所示：</p>
-<img src="/images/2016/12/leveldb-speed.png" width="600" height="454">
-<p>结果显示，在顺序读写和随机写上，LevelDB 在性能上都遥遥领先。</p>
-<h2 id="编译iOS静态库"><a href="#编译iOS静态库" class="headerlink" title="编译iOS静态库"></a>编译iOS静态库</h2><p><strong>1.下载代码到本地</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/google/leveldb.git</div></pre></td></tr></table></figure>
-<p><strong>2.编译项目代码</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> leveldb</div><div class="line">CXXFLAGS=-stdlib=libc++ make PLATFORM=IO</div></pre></td></tr></table></figure>
-<p>如果出现如下报错信息：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">c++ -stdlib=libc++ -I. -I./include -std=c++0x  -DOS_MACOSX -DLEVELDB_PLATFORM_POSIX -DLEVELDB_ATOMIC_PRESENT -O2 -DNDEBUG <span class="_">-f</span>PIC -c db/builder.cc -o /db/builder.o</div><div class="line">error: unable to open output file <span class="string">'/db/builder.o'</span>: <span class="string">'Operation not permitted'</span></div><div class="line">1 error generated.</div><div class="line">make: *** [/db/builder.o] Error 1</div></pre></td></tr></table></figure>
-<p>使用 <code>sudo CXXFLAGS=-stdlib=libc++ make PLATFORM=IOS</code> 这行命令即可。</p>
-<p>说明：</p>
-<p>（1）编译完成之后在 <code>out-ios-universal</code> 这个目录下面会自动生成 <code>libleveldb.a</code> 和 <code>libmemenv.a</code> 两个文件。</p>
-<p>（2）可以用 <code>lipo -info libleveldb.a</code> 检测生成的静态库支持的架构情况。默认支持 <code>armv6 armv7 armv7s i386 x86_64 arm64</code> 所有的架构</p>
-<p>（3）头文件在<code>include</code>目录下面，后面会用到</p>
-<h2 id="在iOS中使用LevelDB"><a href="#在iOS中使用LevelDB" class="headerlink" title="在iOS中使用LevelDB"></a>在iOS中使用LevelDB</h2><p>LevelDB提供的是C++的API，可以在 <a href="https://rawgit.com/google/leveldb/master/doc/index.html" target="_blank" rel="external">https://rawgit.com/google/leveldb/master/doc/index.html</a> 这里查到具体的使用说明。</p>
-<p>使用C++确实是不太方便，不过已经有开源库将这些接口使用Objective-C进行了一下包装：<a href="https://github.com/matehat/Objective-LevelDB" target="_blank" rel="external">Objective-LevelDB</a>。</p>
-<p><code>Objective-LevelDB</code> 里面没有提供编译好的 <code>.a</code> 文件，我就拉取最新的代码编译好了.a文件并写了一个 <a href="https://github.com/marujun/USLevelDB.git" target="_blank" rel="external">DEMO</a></p>
-<p>下面记录下如何使用：<br><br></p>
-<h3 id="步骤一：导入相关文件"><a href="#步骤一：导入相关文件" class="headerlink" title="步骤一：导入相关文件"></a>步骤一：导入相关文件</h3><p>把 <a href="https://github.com/marujun/USLevelDB/tree/master/USLevelDB/LevelDB" target="_blank" rel="external">LevelDB</a> 整个文件夹拷贝到需要添加到的项目中<br><br></p>
-<h3 id="步骤二：添加-fno-objc-arc-标签"><a href="#步骤二：添加-fno-objc-arc-标签" class="headerlink" title="步骤二：添加 -fno-objc-arc 标签"></a>步骤二：添加 -fno-objc-arc 标签</h3><p>打开 <code>Target -&gt; Build Phases -&gt; Compile Sources</code> 找到 <code>LevelDB.mm、LDBSnapshot.mm、LDBWriteBatch.mm</code> 这3个文件</p>
-<p>然后加入 <code>-fno-objc-arc</code> 标签。</p>
-<img src="/images/2016/12/leveldb-fno-objc-arc.png">
-<p><br></p>
-<h3 id="步骤三：添加-Header-Search-Paths"><a href="#步骤三：添加-Header-Search-Paths" class="headerlink" title="步骤三：添加 Header Search Paths"></a>步骤三：添加 Header Search Paths</h3><p>打开 <code>Target -&gt; Build Settings -&gt; Header Search Paths</code> 加入 <code>LevelDB</code>文件夹在项目中的路径。</p>
-<p>参考：<code>$(PROJECT_DIR)/USLevelDB/LevelDB</code></p>
-<img src="/images/2016/12/leveldb-header-search-paths.png">
-<p><br></p>
-<h3 id="步骤四：添加-libc-dylib-Framework"><a href="#步骤四：添加-libc-dylib-Framework" class="headerlink" title="步骤四：添加 libc++.dylib Framework"></a>步骤四：添加 libc++.dylib Framework</h3><p>打开 <code>Target -&gt; General -&gt; Linked Frameworks and Libraries</code> </p>
-<p>然后在工程中链接上 <code>libc++.dylib</code><br><br></p>
-<h3 id="如何使用Objective-LevelDB"><a href="#如何使用Objective-LevelDB" class="headerlink" title="如何使用Objective-LevelDB"></a>如何使用Objective-LevelDB</h3><p>开源库的使用文档：<a href="https://github.com/matehat/Objective-LevelDB#how-to-use" target="_blank" rel="external">https://github.com/matehat/Objective-LevelDB#how-to-use</a></p>
+		<!-- { % img /images/2017/03/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>多线程访问数据库本身就存在分险，容易形成脏数据。幸好 <a href="https://github.com/ccgus/fmdb" target="_blank" rel="external">FMDB</a> 这个第三方库支持了多线程访问，从而解决了脏数据问题。然而也带来了死锁问题……<br><a id="more"></a></p>
+<p>先看看FMDB的多线程机制的原理。</p>
+<p>看了它的代码，发现其实很简单的一个思路，但是实现起来还真不容易！！它是生成一个请求队列，将一次事务进行封装放在队列中，只有一个事务完成了，才会进行下一个事务。这就出现了一种现象：如果某一个请求耗时过大，将会导致所有请求堵塞！！同时也要求：同一个线程中，在一个事务完成之前，不能进行下一个事务。</p>
+<p>举个例子：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.dbQueue inTransaction:^(FMDatabase *db, <span class="built_in">BOOL</span> *rollback) &#123;</div><div class="line">    <span class="keyword">if</span> ([db executeUpdate:sql]) &#123;</div><div class="line">        [<span class="keyword">self</span> increaseCounter];</div><div class="line">    &#125;</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p>这个方法在执行sql成功后，将会调用increaseCounter方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)increaseCounter &#123;</div><div class="line">    [<span class="keyword">self</span>.dbQueue inTransaction:^(FMDatabase *db, <span class="built_in">BOOL</span> *rollback) &#123;</div><div class="line">        [db executeQuery:<span class="string">@"insert ..."</span>];</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>而increaseCounter方法中又增加一个事务，去执行另外一个sql语句。</p>
+<p>结果出现了这种现象：</p>
+<p>第一个事务没结束，第二个事务等待第一个事务结束，而第一个事务等待第二个事务返回状态，出现死锁！！</p>
+<p>正确的写法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">__block <span class="built_in">BOOL</span> status = <span class="literal">NO</span>;</div><div class="line">[<span class="keyword">self</span>.dbQueue inTransaction:^(FMDatabase *db, <span class="built_in">BOOL</span> *rollback) &#123;</div><div class="line">    status = [db executeUpdate:sql];</div><div class="line">&#125;];</div><div class="line"><span class="keyword">if</span> (status) &#123;</div><div class="line">    [<span class="keyword">self</span> increaseCounter];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也就是将两个事务拆开。</p>
+<h2 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h2><p>在App中保持一个FMDatabaseQueue的实例，并在所有的线程中都只使用这一个实例。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[FMDatabaseQueue databaseQueueWithPath:path];</div></pre></td></tr></table></figure>
+<p><code>FMDatabaseQueue</code> 虽然看似一个队列，实际上它本身并不是，它通过内部创建一个Serial的<code>dispatch_queue_t</code> 来处理通过 <code>inDatabase</code>和 <code>inTransaction</code> 传入的Blocks，所以当我们在主线程（或者后台）调用 inDatabase 或者 inTransaction 时，代码实际上是同步的。<code>FMDatabaseQueue</code> 这么设计的目的是让我们避免发生并发访问数据库的问题，因为对数据库的访问可能是随机的（在任何时候）、不同线程间（不同的网络回调等）的请求。内置一个Serial队列后，FMDatabaseQueue 就变成线程安全了，所有的数据库访问都是同步执行，而且这比使用<code>@synchronized</code> 或 <code>NSLock</code> 要高效得多。</p>
+<p>但是这么一来就有了一个问题：如果后台在执行大量的更新，而主线程也需要访问数据库，虽然要访问的数据量很少，但是在后台执行完之前，还是会阻塞主线程。 </p>
+<p>对此，<a href="https://github.com/robertmryan?tab=repositories" target="_blank" rel="external">robertmryan</a> 给出了一些想法：</p>
+<ol>
+<li>如果你是在后台使用的 <code>inDatabase</code> 来执行更新，可以考虑换成 <code>inTransaction</code>，后者比前者更新起来快很多，特别是在更新量比较大的时候（比如更新1000条或10000条）。</li>
+<li>拆解你的更新数据量，如果有300条，可以分10次、每次更新30条。当然有时不能这么做，因为你可能通过网络请求回来的数据，你希望一次性、完整地写入到数据库中，虽然有局限性，不过这确实能很好地减少每个Block占用数据库的时间。</li>
+<li>上面两点可以改善问题，但是问题依然是存在的，在大多数时候，你应该把从主线程调用<code>inDatabase</code> 和 <code>inTransaction</code> 放在异步里：</li>
+</ol>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line">    [<span class="keyword">self</span>.databaseQueue inDatabase:^(FMDatabase *db) &#123;</div><div class="line">        <span class="comment">//do something...</span></div><div class="line">    &#125;];</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>这种方式能解决不依赖于数据库返回的结果的情况，如果对返回结果有依赖，就需要考虑UI上的体验了，如加一个 <code>UIActivityIndicatorView</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>多线程编程应该尽量采用事务队列</li>
+<li>事务队列与Mysql等的锁数据库效果相似，即事务完成前，其他线程以及本线程不能访问数据库（<strong>注意不是锁表，是锁库</strong>）</li>
+<li>一个事务内应该只包含数据库请求语句，不应当包含其他逻辑</li>
+<li>一个请求不应耗时过长，否则出现线程等待</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -134,7 +129,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/LevelDB/">LevelDB</a>
+  <span></span> <a href="/tags/多线程/">多线程</a>
   </div>
 
 </div>
@@ -143,7 +138,7 @@
 
 	<!--<div class="article-share" id="share">-->
 	<!---->
-	  <!--<div data-url="http://devma.cn/blog/2016/12/09/ios-zhong-kv-shu-ju-ku-leveldb-de-bian-yi-he-shi-yong/" data-title="iOS中KV数据库LevelDB的编译和使用 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--<div data-url="http://devma.cn/blog/2015/05/25/duo-xian-cheng-xia-shi-yong-fmdb-jin-xing-shu-ju-ku-fang-wen-he-si-suo-wen-ti/" data-title="多线程下使用FMDB进行数据库访问和死锁问题 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
 	  <!--</div>-->
 	<!---->
 	<!--</div>-->
@@ -157,18 +152,18 @@
 <!--<nav class="article-nav clearfix">-->
  <!---->
  <!--<div class="prev" >-->
- <!--<a href="/blog/2017/03/03/ios-bian-yi-guo-cheng-de-yuan-li-he-ying-yong/" title="iOS编译过程的原理和应用">-->
+ <!--<a href="/blog/2015/05/31/zi-ding-yi-core-data-qian-yi/" title="自定义 Core Data 迁移">-->
   <!--<strong>上一篇：</strong><br/>-->
   <!--<span>-->
-  <!--iOS编译过程的原理和应用</span>-->
+  <!--自定义 Core Data 迁移</span>-->
 <!--</a>-->
 <!--</div>-->
 <!---->
 <!---->
 <!--<div class="next">-->
-<!--<a href="/blog/2016/11/10/ios-beng-kui-crash-jie-xi/"  title="iOS 崩溃Crash解析">-->
+<!--<a href="/blog/2015/02/08/ios-mian-shi-ti-zhi-chang-jian-suan-fa-2/"  title="iOS 面试题之常见算法(2)">-->
  <!--<strong>下一篇：</strong><br/> -->
- <!--<span>iOS 崩溃Crash解析-->
+ <!--<span>iOS 面试题之常见算法(2)-->
 <!--</span>-->
 <!--</a>-->
 <!--</div>-->

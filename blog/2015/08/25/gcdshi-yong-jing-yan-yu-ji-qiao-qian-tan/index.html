@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://devma.cn/blog/2015/08/25/gcdshi-yong-jing-yan-yu-ji-qiao-qian-tan/index.html">
 <meta property="og:site_name" content="极致的技术博客">
 <meta property="og:description" content="dispatch_once_t必须是全局或static变量这一条算是”老生常谈”了，但我认为还是有必要强调一次，毕竟非全局或非static的dispatch_once_t变量在使用时会导致非常不好排查的bug，正确的如下：12345//静态变量，保证只有一份实例，才能确保只执行一次static dispatch_once_t onceToken;dispatch_once(&amp;amp;onceTo">
-<meta property="og:updated_time" content="2016-11-11T02:19:22.000Z">
+<meta property="og:updated_time" content="2016-11-19T04:26:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD使用经验与技巧浅谈">
 <meta name="twitter:description" content="dispatch_once_t必须是全局或static变量这一条算是”老生常谈”了，但我认为还是有必要强调一次，毕竟非全局或非static的dispatch_once_t变量在使用时会导致非常不好排查的bug，正确的如下：12345//静态变量，保证只有一份实例，才能确保只执行一次static dispatch_once_t onceToken;dispatch_once(&amp;amp;onceTo">
@@ -177,7 +177,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/多线程/">多线程</a>
+  <span></span> <a href="/tags/多线程/">多线程</a><a href="/tags/iOS/">iOS</a>
   </div>
 
 </div>
