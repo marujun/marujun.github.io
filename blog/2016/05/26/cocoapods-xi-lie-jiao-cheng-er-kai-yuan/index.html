@@ -1,0 +1,476 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>CocoaPods系列教程(二) —— 开源 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="说到“开源”代码很多人脑袋里面第一个想到的就是完全开源给全世界的人。但是这篇文章需要产生另一个分解，针对开源的对象进行分解。对于公开给所有的人的开源我们称之为公有库。而除了我们平常所说的开源外，还有一种形式是公司内部的开源，即对部分开源，通常情况下我们针对这个库有称之为私有库。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CocoaPods系列教程(二) —— 开源">
+<meta property="og:url" content="http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-er-kai-yuan/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="说到“开源”代码很多人脑袋里面第一个想到的就是完全开源给全世界的人。但是这篇文章需要产生另一个分解，针对开源的对象进行分解。对于公开给所有的人的开源我们称之为公有库。而除了我们平常所说的开源外，还有一种形式是公司内部的开源，即对部分开源，通常情况下我们针对这个库有称之为私有库。">
+<meta property="og:updated_time" content="2017-05-26T10:45:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CocoaPods系列教程(二) —— 开源">
+<meta name="twitter:description" content="说到“开源”代码很多人脑袋里面第一个想到的就是完全开源给全世界的人。但是这篇文章需要产生另一个分解，针对开源的对象进行分解。对于公开给所有的人的开源我们称之为公有库。而除了我们平常所说的开源外，还有一种形式是公司内部的开源，即对部分开源，通常情况下我们针对这个库有称之为私有库。">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-er-kai-yuan/" title="CocoaPods系列教程(二) —— 开源" itemprop="url">CocoaPods系列教程(二) —— 开源</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-05-26T09:43:59.000Z" itemprop="datePublished"> 发表于 2016-05-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Podsepc文件"><span class="toc-number">1.</span> <span class="toc-text">Podsepc文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Podspec文件进阶"><span class="toc-number">2.</span> <span class="toc-text">Podspec文件进阶</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#作者"><span class="toc-number">3.</span> <span class="toc-text">作者</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发布"><span class="toc-number">4.</span> <span class="toc-text">发布</span></a></li></ol>
+		
+		</div>
+		
+		<!-- { % img /images/2017/03/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>说到“开源”代码很多人脑袋里面第一个想到的就是完全开源给全世界的人。但是这篇文章需要产生另一个分解，针对开源的对象进行分解。对于公开给所有的人的开源我们称之为公有库。而除了我们平常所说的开源外，还有一种形式是公司内部的开源，即对部分开源，通常情况下我们针对这个库有称之为私有库。<br><a id="more"></a></p>
+<p>而本章中就针对这两部分人群进行讲解，分别公有库和私有库在CocoaPods上的使用进行讲解一下。 当然，对于这两种情况下的库来说还是有一些共同的部分，所以我们先对CocoaPods中的一些使用和配置进行讲解，在讲解之后我们再针对不同的场景进行讲解不同的一些命令和流程。</p>
+<h2 id="Podsepc文件"><a href="#Podsepc文件" class="headerlink" title="Podsepc文件"></a>Podsepc文件</h2><p>在所有支持CocoaPods导入的库的开源目录(如Github)下，我们都能看到一个 <code>*.podspec</code> 文件。当然我们不管是做 <code>公有库</code> 或者是 <code>私有库</code> 都是必须配置这个文件的。</p>
+<p>这个文件是告诉CocoaPods你这个库的一些基本信息，包括你的版本号、获取的地址、那些文件是希望被包含进来的等一些信息。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Pod::Spec.new do |s|</div><div class="line">  s.name         = <span class="string">"USImagePickerController"</span></div><div class="line">  s.version      = <span class="string">"0.1"</span></div><div class="line">  s.summary      = <span class="string">"A photo picker for iOS 7+."</span></div><div class="line">  s.homepage     = <span class="string">"https://github.com/marujun/USImagePickerController"</span></div><div class="line">  s.license      = &#123; :type =&gt; <span class="string">"MIT"</span>, :file =&gt; <span class="string">"LICENSE"</span> &#125;</div><div class="line">  s.author       = &#123; <span class="string">"demo"</span> =&gt; <span class="string">"demo@qq.com"</span> &#125;</div><div class="line">  s.source       = &#123; :git =&gt; <span class="string">"https://github.com/marujun/USImagePickerController.git"</span>, :tag =&gt; s.version.to_s &#125;</div><div class="line">  s.platform     = :ios, <span class="string">"7.0"</span></div><div class="line">  </div><div class="line">  s.source_files  = <span class="string">"USImagePickerController/**/*.&#123;h,m&#125;"</span>, <span class="string">"ImagePickerSheetController/**/*.&#123;h,m&#125;"</span></div><div class="line">  s.exclude_files = <span class="string">"USImagePickerController/RSKImageCropper/*"</span></div><div class="line">  s.public_header_files  = <span class="string">"USImagePickerController/**/*.&#123;h&#125;"</span>, <span class="string">"ImagePickerSheetController/**/*.&#123;h&#125;"</span></div><div class="line">  s.resources = <span class="string">"USImagePickerController/Resource/*"</span>, <span class="string">"ImagePickerSheetController/Resource/*"</span></div><div class="line">  </div><div class="line">  s.frameworks = <span class="string">'UIKit'</span>, <span class="string">'AssetsLibrary'</span></div><div class="line">  s.weak_frameworks = <span class="string">'Photos'</span></div><div class="line">  s.requires_arc = true</div><div class="line">  s.dependency <span class="string">"RSKImageCropper"</span>, <span class="string">"~&gt; 1.6.0"</span></div><div class="line">end</div></pre></td></tr></table></figure>
+<p>对于一个普通的Podspec文件来说一般都是有这些内容就可以了。而这个文件是在你新建或者需要新提交一个版本的时候回进行改动的文件。</p>
+<p>里面很简单的内容就不说了，就是你要提交到CocoaPods上的名字、版本号，简介、主页、License、作者信息、最低平台信息、从哪个Git上下载、需要引入的framework、那些文件需要被引入，那些文件是资源文件以及是否需要ARC的模式。</p>
+<p>大体就是包含这些信息。不过针对其中<code>source_file</code>、<code>resource</code>以及<code>license</code>稍微说两句。对于<code>source_file</code>主要是指你那些目录是可以被包含进来的，而<code>resource</code>是指哪些文件是作为资源文件进行引入的。而对于这些文件的描述都是可以用一些匹配公式的。可匹配的符号有<code>*</code>, <code>**</code>, <code>?</code>, <code>[set]</code>, <code>{p,q}</code>, <code>\</code>.常用匹配符的人应该能看得懂这些匹配符的意思。</p>
+<p>而针对license来说的话，一定要填写正确的，要不然在之后的验证过程中(validate)，会一直出现warming的信息，让人看着很不舒服。</p>
+<p>在<code>Podspec</code>文件中，很经常看到 <code>do |名字|</code> 的形式，这个有点类似于在对应end之前声明了一个local的参数一样。除了上问所示的 <code>Pod::Spec.new do |s|</code> 的情况外，还有可能会出现在 <code>s.subspec &#39;SubModule&#39; do |sm|</code> 的形式，同样sm也是可以自己修改成自己想要的名字。</p>
+<h2 id="Podspec文件进阶"><a href="#Podspec文件进阶" class="headerlink" title="Podspec文件进阶"></a>Podspec文件进阶</h2><p>进阶其实也是非常简单的内容，主要是针对如果处理一个<code>公有库</code>或者<code>私有库</code>要进行模块的话，也就是针对上文出现的 <code>Subspec</code> 说一些注意点。 照惯例，还是先上Demo：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">s.subspec <span class="string">'Security'</span> do |ss|  </div><div class="line">  ss.source_files = <span class="string">'AFNetworking/AFSecurityPolicy.&#123;h,m&#125;'</span></div><div class="line">  ss.public_header_files = <span class="string">'AFNetworking/AFSecurityPolicy.h'</span></div><div class="line">  ss.frameworks = <span class="string">'Security'</span></div><div class="line">end</div></pre></td></tr></table></figure>
+<p>可以看出，需要声明一个子模块的话只需通过 <code>父节点名.subspec &#39;子模块名&#39; do |子节点名|</code> 来进行声明一个子模块，而子模块里面一般都只需要配置一些文件匹配的信息、资源文件的信息以及一些依赖的信息即可。当然需要声明的都只是跟这个子模块有关的。大体的配置项跟上一小节中的配置项差不多，只是这部分的配置项的作用效果只是针对这个子模块而已。</p>
+<p>除了上述所说的常用的配置项之外，还有其他的配置项大家可以通过 <a href="https://guides.cocoapods.org/syntax/podspec.html" target="_blank" rel="external">CocoaPods的Podspec语法</a> 进行查询。这里就不对每个参数进行讲解了。其实对于一个<code>公有库</code>或者<code>私有库</code>来说，<code>Podspec</code>文件是非常重要的，因为这里面定义了</p>
+<h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p>上面简单的讲述了<code>Podspec</code>文件，下面开始我们的开源之旅吧。 在开始提交项目到<code>CocoaPods</code>之前，小伙伴们有没有想过在提交源代码前怎么标示你的源代码是属于你的，我们总要一个类似账号的东东吧。当然需要，那么我们先来搞一个账号吧:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk register abc@163.com &apos;Pluto Y&apos; --description=&apos;My own computer&apos;</div></pre></td></tr></table></figure>
+<p>只要运行上面命令则会像<code>CocoaPods</code>方面注册一个账号。不过他的账号没有类似登陆的机制，所以在你切换设备后，需要再次使用这个命令进行“登陆”操作。其语法为<code>pod trunk register 邮箱 &#39;昵称&#39; --description=&#39;设备信息&#39;</code>，其中的昵称和<code>--description</code>是可有可无的。</p>
+<p>对于昵称来说，第一次”注册”时最好填写一下。第二次”登陆”时，则可不比填写，而对于–description来说的话，其实就是为了让你区分不同设备”登陆”，因为CocoaPods是以<code>Session</code>的形式将用户信息缓存在机子中，而可能出现多台设备”登陆”的情况，所以在<code>register</code>的时候带上–description方面之后查看哪些设备“登陆”过. 只要只要通过 <code>pod trunk me</code> 来查看是否”注册”成功。 如果成功的话,并且多台设备登陆的情况，具体如下图: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">- Name:     demo</div><div class="line">- Email:    demo@qq.com</div><div class="line">- Since:    February 22nd, 01:38</div><div class="line">- Pods:</div><div class="line">  - USImagePickerController</div><div class="line">- Sessions:</div><div class="line">  - February 22nd, 01:38 -   June 30th, 04:44. IP: 114.255.24.2 </div><div class="line">  - May 26th, 01:56      - October 1st, 01:58. IP: 210.12.149.34 Description: MacBook Pro</div></pre></td></tr></table></figure>
+<p>好了，有了账号之后，当然是着手开始做了。在写好代码后，在你项目的根目录下运行:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod spec create <span class="string">'SlideMenuControllerOC'</span></div></pre></td></tr></table></figure>
+<p>当然 <code>USImagePickerController</code> 就是你开源出去让别人搜到的项目名啦，你直接替换成你的项目名即可。运行完这个目录后，CocoaPods会自动帮你产生一个包含一部分基础内容的Podspec文件，通过对里面进行一些必要的修改即可。当然对于开源项目一般都不需要对于子模块的定义。然后根据上述的内容以及CocoaPods官网文档描述进行定义那个文件即可。</p>
+<p>当然这个是针对于那些已经创建好项目的小伙伴么，对于那些连项目都没有创建的小伙伴们，CocoaPods还提供了另一个命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod lib create <span class="string">'FirstCocoaPodsProject'</span></div></pre></td></tr></table></figure>
+<p>通过这条命令会创建好一个项目,在执行这个项目的过程中，根据命令行的引导，你会创建好一个CocoaPods定义好的一个项目模板。</p>
+<h2 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h2><p>首先需要验证你的代码是否有错以及<code>Podspec</code>文件，那么这个时候下面这条命令就起到非常大的作用了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod lib lint Name.podspec</div></pre></td></tr></table></figure>
+<p>这条命令是用来验证你的Podspec文件是否有问题，并且代码里面是否有问题的命令。当然我还是建议这条命令后面跟着<code>--verbose</code>的参数，除此之外，这条命令还有其他参数是可以跟着的，这里稍微讲讲其中的一部分，毕竟参数也是比较少嘛： </p>
+<ul>
+<li><code>--allow-warnings</code> 是否允许警告，在用到第三方框架的时候，有的时候是自带会有warmings的代码，用这参数可以屏蔽警告 </li>
+<li><code>--fail-fast</code> 原本这条命令是在所有代码校验完成后，才会输出所有信息，可是可以通过这个参数在出现第一个错误的时候就停止 </li>
+<li><code>--use-libraries</code> 如果用到的第三方中需要使用库文件的话，则会用到这个参数。（如在项目中依赖了ShareSDK的情况） </li>
+<li><code>--sources</code> 如果一个库的podspec包含了除了CocoaPods仓库以外的其他库的引用，则需要该参数指明，用逗号分隔，这个参数对于私有库是非常有用的 </li>
+<li><code>--verbose</code> 这条参数可以输出所有的消息信息，在验证过程中，博主还是建议大家都用这个参数 </li>
+<li><code>--subspec=NAME</code> 这个参数是用来指检验某一个子模块的情况 </li>
+</ul>
+<p>当然，这里只是对参数进行大概的描述，上述参数中，–allow-warnings和–verbose是博主强烈希望大家加上的。</p>
+<p>好了，在验证通过你的项目之后，你就可以通过git上的进行打tag了。也有小伙伴将打tag和验证的顺序调换了，不过小伙伴们听哥一句劝啊，千万先验证完后在打tag啊，要不然你打完tag后发现验证不通过之前的tag就没有太大的作用了。</p>
+<p>最后，终于到达上传的时间了，运行命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod trunk push 项目名.podspec</div></pre></td></tr></table></figure>
+<p>只要通过上述命令即可上传项目到CocoaPods官方的仓库里去，当然如果你有新的tag版本的话也是通过该命令进行上传新的版本到CocoaPods的。而我们可以通过 <code>pod search</code> 名字来查询是否上传成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">-&gt; USImagePickerController (0.1)</div><div class="line">   A photo picker <span class="keyword">for</span> iOS 7+.</div><div class="line">   pod <span class="string">'USImagePickerController'</span>, <span class="string">'~&gt; 0.1'</span></div><div class="line">   - Homepage: https://github.com/marujun/USImagePickerController</div><div class="line">   - Source:   https://github.com/marujun/USImagePickerController.git</div><div class="line">   - Versions: 0.1, 0.0.1 [master repo]</div></pre></td></tr></table></figure>
+<p>成功的话就会出现上述信息，里面包含了对于项目的描述。 至此，对于提交开源的项目到CocoaPods就结束了。</p>
+<p>最后在附带一条命令吧，如果你是多人开发的情况，或者是希望加入一个小伙伴到你的项目中的话，可以通过: <code>pod trunk add-owner &#39;项目名&#39; &#39;邮箱&#39;</code>的方式，将别人加入到你的项目中去。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mac/">Mac</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/CocoaPods/">CocoaPods</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-er-kai-yuan/" data-title="CocoaPods系列教程(二) —— 开源 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-san-si-you-ku-guan-li-he-mo-kuai-hua-guan-li/" title="CocoaPods系列教程(三) —— 私有库管理和模块化管理">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--CocoaPods系列教程(三) —— 私有库管理和模块化管理</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/"  title="iOS - 多线程之NSOperation">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>iOS - 多线程之NSOperation-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Web/" title="Web">Web</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/CocoaPods/" style="font-size: 14.29px;">CocoaPods</a> <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IMP/" style="font-size: 10px;">IMP</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/LevelDB/" style="font-size: 10px;">LevelDB</a> <a href="/tags/Mac/" style="font-size: 15.71px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 11.43px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12.86px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/css/" style="font-size: 11.43px;">css</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/isa/" style="font-size: 10px;">isa</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 17.14px;">octopress</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 11.43px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 11.43px;">图片</a> <a href="/tags/多线程/" style="font-size: 15.71px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 11.43px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18.57px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/算法/" style="font-size: 11.43px;">算法</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/编译/" style="font-size: 10px;">编译</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a>
+    </div>
+  </div>
+
+
+  <div class="aboutme">
+    <br />
+    <p class="asidetitle">关于我</p>
+    <p style="margin-top: 8px;">iOS开发新人，以前在 <a target="_blank" style="color: #2ca6cb;text-decoration: underline;" href="http://blog.csdn.net/marujunyy">CSDN</a> 写博客.</p>
+    <!--<img src="/images/weixin-qr.jpg" width="220px" />-->
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

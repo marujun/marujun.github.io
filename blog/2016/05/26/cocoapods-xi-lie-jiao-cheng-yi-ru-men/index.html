@@ -1,0 +1,469 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>CocoaPods系列教程(一) —— 入门 | 极致的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="JiZhi">
+    
+
+    
+    <meta name="description" content="初次使用关于使用我这里主要分为两个部分，一个部分是关于命令的层次来说的，一部分是关于Podfile的层次来说的。当然对于简单的使用用起来也非常简单。不过刚开始就来一个简单的吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CocoaPods系列教程(一) —— 入门">
+<meta property="og:url" content="http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-yi-ru-men/index.html">
+<meta property="og:site_name" content="极致的技术博客">
+<meta property="og:description" content="初次使用关于使用我这里主要分为两个部分，一个部分是关于命令的层次来说的，一部分是关于Podfile的层次来说的。当然对于简单的使用用起来也非常简单。不过刚开始就来一个简单的吧。">
+<meta property="og:updated_time" content="2017-05-26T10:19:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CocoaPods系列教程(一) —— 入门">
+<meta name="twitter:description" content="初次使用关于使用我这里主要分为两个部分，一个部分是关于命令的层次来说的，一部分是关于Podfile的层次来说的。当然对于简单的使用用起来也非常简单。不过刚开始就来一个简单的吧。">
+
+    
+    
+    <link rel="icon" href="/img/favicon.png">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="极致的技术博客">极致的技术博客</a></h1>
+				<h2 class="blog-motto">这是我用来记录平日学习笔记的地方，欢迎您的访问.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-yi-ru-men/" title="CocoaPods系列教程(一) —— 入门" itemprop="url">CocoaPods系列教程(一) —— 入门</a>
+  </h1>
+  <p class="article-time">
+    <time datetime="2016-05-26T08:20:53.000Z" itemprop="datePublished"> 发表于 2016-05-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#初次使用"><span class="toc-number">1.</span> <span class="toc-text">初次使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入至Podfile"><span class="toc-number">2.</span> <span class="toc-text">深入至Podfile</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#platform"><span class="toc-number">2.1.</span> <span class="toc-text">platform</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xcodeproj"><span class="toc-number">2.2.</span> <span class="toc-text">xcodeproj</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pod"><span class="toc-number">2.3.</span> <span class="toc-text">pod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#target"><span class="toc-number">2.4.</span> <span class="toc-text">target</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#inhibit-all-warnings"><span class="toc-number">2.5.</span> <span class="toc-text">inhibit_all_warnings!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#use-frameworks"><span class="toc-number">2.6.</span> <span class="toc-text">use_frameworks!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#source"><span class="toc-number">2.7.</span> <span class="toc-text">source</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#plugin"><span class="toc-number">2.8.</span> <span class="toc-text">plugin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pre-install"><span class="toc-number">2.9.</span> <span class="toc-text">pre_install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#post-install"><span class="toc-number">2.10.</span> <span class="toc-text">post_install</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<!-- { % img /images/2017/03/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<h2 id="初次使用"><a href="#初次使用" class="headerlink" title="初次使用"></a>初次使用</h2><p>关于使用我这里主要分为两个部分，一个部分是关于命令的层次来说的，一部分是关于Podfile的层次来说的。当然对于简单的使用用起来也非常简单。不过刚开始就来一个简单的吧。<br><a id="more"></a></p>
+<p>就比如我们最常用的<code>AFNetworking</code>、<code>SDwebImage</code>来说的话，只需在项目名.xcodeproj的目录下创建一个<code>Podfile</code>的文件，然后打开文件，填入一下内容：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">platform:ios,<span class="string">'7.1'</span>  </div><div class="line">pod <span class="string">'SDWebImage'</span>, <span class="string">'~&gt;3.7'</span>  </div><div class="line">pod <span class="string">'AFNetworking'</span>  </div><div class="line">pod <span class="string">'iOS-Echarts'</span></div></pre></td></tr></table></figure>
+<p>然后保存，并且打开一个命令行，跳转到<code>Podfile</code>的目录直接运行<code>pod install</code>即可。 </p>
+<p>当然，你会看到你的目录下会多了目录Pods, 文件Podfile.lock以及文件项目名.xcworkspace。以后你打开项目就再也不是xcodeproj的文件了，而是wxcworkspcace的文件。</p>
+<h2 id="深入至Podfile"><a href="#深入至Podfile" class="headerlink" title="深入至Podfile"></a>深入至Podfile</h2><p>由于有<code>Podfile.lock</code>文件的保护下，在没有执行<code>pod update</code>命令的情况下，是不会将已有的第三方依赖库进行升级的。</p>
+<h3 id="platform"><a href="#platform" class="headerlink" title="platform"></a>platform</h3><p>这个参数是只依赖的库希望在哪个平台被编译。 一句话带过吧，直接使用<code>platform:ios, &#39;7.0&#39;</code>，说希望采用iOS7.0的进行编译。</p>
+<h3 id="xcodeproj"><a href="#xcodeproj" class="headerlink" title="xcodeproj"></a>xcodeproj</h3><p>指定包含引用pod库的target的Xcode工程会被链接到</p>
+<p>如果没有显示的project被指定，那么会默认使用target的父target指定的project作为目标。如果如果没有任何一个target指定目标，那么就会使用和Podefile在同一目录下的project。</p>
+<p>同样也能够指定是否这些设置在release或者debug模式下生效。为了做到这一点，你必须指定一个名字和:release/:debuge关联起来</p>
+<p>例子: 指定用户工程</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Look for target to link with in an Xcode project called</span></div><div class="line"><span class="comment"># `MyProject.xcodeproj`.</span></div><div class="line">xcodeproj <span class="string">'MyProject'</span></div><div class="line"></div><div class="line">target :test do</div><div class="line">  <span class="comment"># This Pods library links with a target in another project.</span></div><div class="line">  xcodeproj <span class="string">'TestProject'</span></div><div class="line">end</div></pre></td></tr></table></figure>
+<p>用自定义的编译配置</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xcodeproj <span class="string">'TestProject'</span>, <span class="string">'Mac App Store'</span> =&gt; :release, <span class="string">'Test'</span> =&gt; :debug</div></pre></td></tr></table></figure>
+<h3 id="pod"><a href="#pod" class="headerlink" title="pod"></a>pod</h3><p>首先先来讲讲最核心的pod关键字吧。关于pod的使用在上面可以看得出来是pod ‘框架名’ 参数。 当然对于前面两个pod ‘框架名’是固定的，没上面好说，参数的话，这里主要讲参数。 </p>
+<p>参数一： <code>版本号</code> 从上面可以看得出SDWebImage就接了版本号。不过版本号可以是大于、小于、等于等。当然具体的可以是’&gt; 3.7’, ‘&gt;= 3.7’, ‘&lt; 3.7’, ‘3.7’以及’~&gt; 3.7’。关于普通的就没什么好说了，最后一个~&gt;指的是正对最后一位来说。如使用’~&gt; 3.7.4’,意味着’&gt;= 3.7.4’并且’&lt; 3.8.0’的意思。 </p>
+<p>参数二：<code>地址</code> CocoaPods可以指定某一个git的目录或者是本地的目录。有的时候我们希望一直用某一个版本最新的版本，即使没有打版本的话，我们可以直接后面接上<code>:git =&gt; &#39;https://github.com/gowalla/AFNetworking.git&#39;</code>。 当然除了这种情况外，还有可能是如果是我们自己开发的私有库，并且在开发阶段的情况下，可能就希望开发模式进行引用，则可以使用path参数：<code>:path =&gt; &#39;~/Documents/AFNetworking&#39;</code> </p>
+<p>参数三：<code>tag、branch、commit</code> 有的时候我们希望引用有一个tag，branch或者是comit的内容的话可以使用这个参数，分别用:branch =&gt; ‘branch名’、:tag =&gt; ‘tag名’、:commit =&gt; ‘提交号’。 </p>
+<p>参数四：<code>inhibit_warnings</code> 用来避免那些第三方框架中带来的警告: <code>:inhibit_warnings =&gt; true</code>。</p>
+<h3 id="target"><a href="#target" class="headerlink" title="target"></a>target</h3><p>这个是指定具体的配置是适配在哪个<code>target</code>，这里的target值得就是Xcode中的target。如果对于一些项目中你的不同target引用的框架不同的话，可以采用这个进行区分。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">target <span class="string">"ShowsApp"</span> do  </div><div class="line">  pod <span class="string">'ShowsKit'</span></div><div class="line">  target <span class="string">"ShowsTV"</span> do</div><div class="line">    pod <span class="string">"ShowTVAuth"</span></div><div class="line">  end</div><div class="line">end</div></pre></td></tr></table></figure>
+<h3 id="inhibit-all-warnings"><a href="#inhibit-all-warnings" class="headerlink" title="inhibit_all_warnings!"></a>inhibit_all_warnings!</h3><p>屏蔽CocoaPods库里面的所有警告。</p>
+<h3 id="use-frameworks"><a href="#use-frameworks" class="headerlink" title="use_frameworks!"></a>use_frameworks!</h3><p>这个指明编译成动态库，而不是静态库，特别是在使用Swift库的过程中，特别需要使用这句。不过他会把所有项目的编译动态库，这一点有点不好。不过在使用Swift库的过程中就没办法了。</p>
+<h3 id="source"><a href="#source" class="headerlink" title="source"></a>source</h3><p>这个参数是指<code>CocoaPods</code>从哪些仓库(<code>Spec</code>)中获得框架的源代码，如果在结合使用开源库以及自己私有库的情况下，这个参数还是非常有意义的。只需要在<code>Podfile</code>文件开头列出你需要引用库的所有仓库地址即可。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">source <span class="string">'https://github.com/artsy/Specs.git'</span>  </div><div class="line">source <span class="string">'https://192.168.0.90:8888/MySepcs/Specs.git'</span></div></pre></td></tr></table></figure>
+<h3 id="plugin"><a href="#plugin" class="headerlink" title="plugin"></a>plugin</h3><p>Podfile提供了钩子用来在安装时被调用，钩子是全局的，不存储在每个target定义里面。</p>
+<p>指定的插件应该使用在安装过程中使用此方法来指定一个插件，应该在安装过程中使用，同时，应传递给插件调用时的选项</p>
+<p>例子: 指定用slather 和 CocoaPods-keys插件</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">plugin <span class="string">'CocoaPods-keys'</span>, :keyring =&gt; <span class="string">'Eidolon'</span></div><div class="line">plugin <span class="string">'slather'</span></div></pre></td></tr></table></figure>
+<h3 id="pre-install"><a href="#pre-install" class="headerlink" title="pre_install"></a>pre_install</h3><p>这个钩子允许你在Pods被下载后但是还未安装前对Pods做一些改变；它接受 <a href="http://www.rubydoc.info/gems/cocoapods/Pod/Installer/" target="_blank" rel="external">Pod::Installer</a> 作为唯一参数</p>
+<p>例子: 定义pre_install钩子</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">pre_install do |installer|</div><div class="line">  <span class="comment"># Do something fancy!</span></div><div class="line">end</div></pre></td></tr></table></figure>
+<h3 id="post-install"><a href="#post-install" class="headerlink" title="post_install"></a>post_install</h3><p>这个钩子允许你在生成的Xcode project写入硬盘或者其他你想执行的操作前做最后的改动；它接受 <a href="http://www.rubydoc.info/gems/cocoapods/Pod/Installer/" target="_blank" rel="external">Pod::Installer</a> 作为唯一参数</p>
+<p>例子: 给所有target自定义编译配置</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">post_install do |installer|</div><div class="line">  installer.pods_project.targets.each do |target|</div><div class="line">    target.build_configurations.each do |config|</div><div class="line">      config.build_settings[<span class="string">'GCC_ENABLE_OBJC_GC'</span>] = <span class="string">'supported'</span></div><div class="line">    end</div><div class="line">  end</div><div class="line">end</div></pre></td></tr></table></figure>
+<p>好了对于Podfile常用几个稍微拿出来说了一下，如果还有更深入不懂的情况下，可以查看 <a href="https://guides.cocoapods.org/syntax/podfile.html#podfile" target="_blank" rel="external">CocoaPods Guide</a> 。 最后给一个官方的Demo吧.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">platform :ios, <span class="string">'9.0'</span></div><div class="line">inhibit_all_warnings!</div><div class="line"></div><div class="line">target <span class="string">'MyApp'</span> do</div><div class="line">  pod <span class="string">'ObjectiveSugar'</span>, <span class="string">'~&gt; 0.5'</span></div><div class="line"></div><div class="line">  target <span class="string">"MyAppTests"</span> do</div><div class="line">    inherit! :search_paths</div><div class="line">    pod <span class="string">'OCMock'</span>, <span class="string">'~&gt; 2.0.1'</span></div><div class="line">  end</div><div class="line">end</div><div class="line"></div><div class="line">post_install do |installer|</div><div class="line">  installer.pods_project.targets.each do |target|</div><div class="line">    puts <span class="string">"#&#123;target.name&#125;"</span></div><div class="line">  end</div><div class="line">end</div></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Mac/">Mac</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/CocoaPods/">CocoaPods</a>
+  </div>
+
+</div>
+
+
+
+	<!--<div class="article-share" id="share">-->
+	<!---->
+	  <!--<div data-url="http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-yi-ru-men/" data-title="CocoaPods系列教程(一) —— 入门 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--</div>-->
+	<!---->
+	<!--</div>-->
+
+
+</footer>
+
+   	       
+	</article>
+	<!---->
+<!--<nav class="article-nav clearfix">-->
+ <!---->
+ <!--<div class="prev" >-->
+ <!--<a href="/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/" title="iOS - 多线程之NSOperation">-->
+  <!--<strong>上一篇：</strong><br/>-->
+  <!--<span>-->
+  <!--iOS - 多线程之NSOperation</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!---->
+<!--<div class="next">-->
+<!--<a href="/blog/2016/05/06/charles-cong-ru-men-dao-jing-tong/"  title="Charles 从入门到精通">-->
+ <!--<strong>下一篇：</strong><br/> -->
+ <!--<span>Charles 从入门到精通-->
+<!--</span>-->
+<!--</a>-->
+<!--</div>-->
+<!---->
+<!--</nav>-->
+<!---->
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Hexo/" title="Hexo">Hexo</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Mac/" title="Mac">Mac</a></li>
+		  
+		
+		  
+			<li><a href="/categories/Web/" title="Web">Web</a></li>
+		  
+		
+		  
+			<li><a href="/categories/iOS/" title="iOS">iOS</a></li>
+		  
+		
+		  
+			<li><a href="/categories/lantern/" title="lantern">lantern</a></li>
+		  
+		
+		  
+			<li><a href="/categories/octopress/" title="octopress">octopress</a></li>
+		  
+		
+		  
+			<li><a href="/categories/server/" title="server">server</a></li>
+		  
+		
+		  
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks</a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/CocoaPods/" style="font-size: 14.29px;">CocoaPods</a> <a href="/tags/Core-Data/" style="font-size: 10px;">Core Data</a> <a href="/tags/Crash/" style="font-size: 10px;">Crash</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IMP/" style="font-size: 10px;">IMP</a> <a href="/tags/LLDB/" style="font-size: 10px;">LLDB</a> <a href="/tags/LevelDB/" style="font-size: 10px;">LevelDB</a> <a href="/tags/Mac/" style="font-size: 15.71px;">Mac</a> <a href="/tags/RunLoop/" style="font-size: 11.43px;">RunLoop</a> <a href="/tags/Xcode/" style="font-size: 12.86px;">Xcode</a> <a href="/tags/aria2/" style="font-size: 10px;">aria2</a> <a href="/tags/css/" style="font-size: 11.43px;">css</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/isa/" style="font-size: 10px;">isa</a> <a href="/tags/lantern/" style="font-size: 10px;">lantern</a> <a href="/tags/octopress/" style="font-size: 17.14px;">octopress</a> <a href="/tags/runtime/" style="font-size: 10px;">runtime</a> <a href="/tags/server/" style="font-size: 10px;">server</a> <a href="/tags/shadowsocks/" style="font-size: 11.43px;">shadowsocks</a> <a href="/tags/冲突/" style="font-size: 10px;">冲突</a> <a href="/tags/动画/" style="font-size: 10px;">动画</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/命令行/" style="font-size: 10px;">命令行</a> <a href="/tags/图片/" style="font-size: 11.43px;">图片</a> <a href="/tags/多线程/" style="font-size: 15.71px;">多线程</a> <a href="/tags/多语言/" style="font-size: 10px;">多语言</a> <a href="/tags/字体/" style="font-size: 11.43px;">字体</a> <a href="/tags/字符串/" style="font-size: 10px;">字符串</a> <a href="/tags/局域网/" style="font-size: 10px;">局域网</a> <a href="/tags/工具/" style="font-size: 18.57px;">工具</a> <a href="/tags/抓包/" style="font-size: 10px;">抓包</a> <a href="/tags/算法/" style="font-size: 11.43px;">算法</a> <a href="/tags/绘图/" style="font-size: 10px;">绘图</a> <a href="/tags/编译/" style="font-size: 10px;">编译</a> <a href="/tags/翻页/" style="font-size: 10px;">翻页</a> <a href="/tags/视频/" style="font-size: 10px;">视频</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a>
+    </div>
+  </div>
+
+
+  <div class="aboutme">
+    <br />
+    <p class="asidetitle">关于我</p>
+    <p style="margin-top: 8px;">iOS开发新人，以前在 <a target="_blank" style="color: #2ca6cb;text-decoration: underline;" href="http://blog.csdn.net/marujunyy">CSDN</a> 写博客.</p>
+    <!--<img src="/images/weixin-qr.jpg" width="220px" />-->
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+	<p class="copyright" style="margin-top: 10px;">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017
+		
+		<a href="/about" target="_blank" title="JiZhi">JiZhi</a>
+		
+	</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0b3d22344546c87f9aa90672323bef30";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

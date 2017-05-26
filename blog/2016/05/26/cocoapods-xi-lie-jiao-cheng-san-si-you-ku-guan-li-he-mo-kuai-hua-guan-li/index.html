@@ -4,32 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>CGImageSource读取图像数据 | 极致的技术博客</title>
+    <title>CocoaPods系列教程(三) —— 私有库管理和模块化管理 | 极致的技术博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="JiZhi">
     
 
     
-    <meta name="description" content="CGImageSource是对图像数据读取任务的抽象，通过它可以获得图像对象、缩略图、图像的属性(包括Exif信息)。">
+    <meta name="description" content="对项目进行模块化管理，保证各个模块之前可以重用和替换，并且之后根据客户需求只加载用户需求的模块可以采用CocoaPods对各个模块进行管理，采用公有库和私有库共存的状态。然后在添加配置文件以及一些 Runtime的机制 进行管理。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CGImageSource读取图像数据">
-<meta property="og:url" content="http://devma.cn/blog/2016/08/01/cgimagesource-du-qu-tu-xiang-shu-ju/index.html">
+<meta property="og:title" content="CocoaPods系列教程(三) —— 私有库管理和模块化管理">
+<meta property="og:url" content="http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-san-si-you-ku-guan-li-he-mo-kuai-hua-guan-li/index.html">
 <meta property="og:site_name" content="极致的技术博客">
-<meta property="og:description" content="CGImageSource是对图像数据读取任务的抽象，通过它可以获得图像对象、缩略图、图像的属性(包括Exif信息)。">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationUp.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationDown.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationLeft.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationRight.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationUpMirrored.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationDownMirrored.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationLeftMirrored.jpg">
-<meta property="og:image" content="http://devma.cn/images/2016/08/UIImageOrientationRightMirrored.jpg">
-<meta property="og:updated_time" content="2016-11-19T04:26:51.000Z">
+<meta property="og:description" content="对项目进行模块化管理，保证各个模块之前可以重用和替换，并且之后根据客户需求只加载用户需求的模块可以采用CocoaPods对各个模块进行管理，采用公有库和私有库共存的状态。然后在添加配置文件以及一些 Runtime的机制 进行管理。">
+<meta property="og:updated_time" content="2017-05-26T10:45:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CGImageSource读取图像数据">
-<meta name="twitter:description" content="CGImageSource是对图像数据读取任务的抽象，通过它可以获得图像对象、缩略图、图像的属性(包括Exif信息)。">
-<meta name="twitter:image" content="http://devma.cn/images/2016/08/UIImageOrientationUp.jpg">
+<meta name="twitter:title" content="CocoaPods系列教程(三) —— 私有库管理和模块化管理">
+<meta name="twitter:description" content="对项目进行模块化管理，保证各个模块之前可以重用和替换，并且之后根据客户需求只加载用户需求的模块可以采用CocoaPods对各个模块进行管理，采用公有库和私有库共存的状态。然后在添加配置文件以及一些 Runtime的机制 进行管理。">
 
     
     
@@ -77,10 +68,10 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/blog/2016/08/01/cgimagesource-du-qu-tu-xiang-shu-ju/" title="CGImageSource读取图像数据" itemprop="url">CGImageSource读取图像数据</a>
+      <a href="/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-san-si-you-ku-guan-li-he-mo-kuai-hua-guan-li/" title="CocoaPods系列教程(三) —— 私有库管理和模块化管理" itemprop="url">CocoaPods系列教程(三) —— 私有库管理和模块化管理</a>
   </h1>
   <p class="article-time">
-    <time datetime="2016-08-01T01:58:11.000Z" itemprop="datePublished"> 发表于 2016-08-01</time>
+    <time datetime="2016-05-26T10:20:01.000Z" itemprop="datePublished"> 发表于 2016-05-26</time>
     
   </p>
 </header>
@@ -89,31 +80,45 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建CGImageSourceRef"><span class="toc-number">1.</span> <span class="toc-text">创建CGImageSourceRef</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取图像"><span class="toc-number">2.</span> <span class="toc-text">获取图像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建图像的缩略图"><span class="toc-number">3.</span> <span class="toc-text">创建图像的缩略图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取图像的属性信息"><span class="toc-number">4.</span> <span class="toc-text">获取图像的属性信息</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#私有库"><span class="toc-number">1.</span> <span class="toc-text">私有库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发模式"><span class="toc-number">2.</span> <span class="toc-text">开发模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用私有库"><span class="toc-number">3.</span> <span class="toc-text">使用私有库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模块化管理"><span class="toc-number">4.</span> <span class="toc-text">模块化管理</span></a></li></ol>
 		
 		</div>
 		
-		<!-- { % img /images/2016/08/demo.png %} -->
-<p>CGImageSource是对图像数据读取任务的抽象，通过它可以获得图像对象、缩略图、图像的属性(包括Exif信息)。</p>
-<a id="more"></a>
-<p><br></p>
-<h2 id="创建CGImageSourceRef"><a href="#创建CGImageSourceRef" class="headerlink" title="创建CGImageSourceRef"></a>创建CGImageSourceRef</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSString</span> *imagePath = [[<span class="built_in">NSBundle</span> bundleForClass:<span class="keyword">self</span>.class] pathForImageResource:<span class="string">@"test.png"</span>];</div><div class="line"><span class="built_in">CGImageSourceRef</span> imageSource = <span class="built_in">CGImageSourceCreateWithURL</span>((__bridge <span class="built_in">CFURLRef</span>)[<span class="built_in">NSURL</span> fileURLWithPath:imagePath],<span class="literal">NULL</span>);</div></pre></td></tr></table></figure>
-<h2 id="获取图像"><a href="#获取图像" class="headerlink" title="获取图像"></a>获取图像</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">CGImageRef</span> imageRef = <span class="built_in">CGImageSourceCreateImageAtIndex</span>(imageSource, <span class="number">0</span>, <span class="literal">NULL</span>);</div></pre></td></tr></table></figure>
-<h2 id="创建图像的缩略图"><a href="#创建图像的缩略图" class="headerlink" title="创建图像的缩略图"></a>创建图像的缩略图</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//缩略图的宽和高</span></div><div class="line"><span class="keyword">double</span> thumbnailWidth=xxx,thumbnailHeight=xxx;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (imageSource != <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="comment">//缩略图的信息的字典</span></div><div class="line">    <span class="built_in">NSDictionary</span> *options = @&#123;</div><div class="line">                           (<span class="keyword">id</span>) kCGImageSourceCreateThumbnailWithTransform : @YES,</div><div class="line">                           (<span class="keyword">id</span>) kCGImageSourceCreateThumbnailFromImageAlways : @YES,</div><div class="line">                           (<span class="keyword">id</span>) kCGImageSourceThumbnailMaxPixelSize : [<span class="built_in">NSNumber</span> numberWithInt:MAX(thumbnailWidth,thumbnailHeight)]</div><div class="line">                           &#125;;</div><div class="line">    <span class="comment">//得到缩略图</span></div><div class="line">    <span class="built_in">CGImageRef</span> thumbnailRef = <span class="built_in">CGImageSourceCreateThumbnailAtIndex</span>(imageSource, <span class="number">0</span>, (__bridge <span class="built_in">CFDictionaryRef</span>)options);</div><div class="line">    <span class="built_in">CFRelease</span>(imageSource);</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (thumbnailRef) &#123;</div><div class="line">        lastImage = [<span class="built_in">UIImage</span> imageWithCGImage:thumbnailRef];</div><div class="line">        <span class="built_in">CGImageRelease</span>(thumbnailRef);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><code>CFDictionaryRef</code> 字典规范的操作标识：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">kCGImageSourceCreateThumbnailFromImageIfAbsent （如果有缩略图则使用，无则使用原图产生缩略图）默认值是kCFBooleanFalse</div><div class="line"></div><div class="line">kCGImageSourceCreateThumbnailFromImageAlways （用原图产生缩略图）默认值是kCFBooleanFalse</div><div class="line"></div><div class="line">kCGImageSourceThumbnailMaxPixelSize （缩略图长或宽最大尺寸）value为CFNumber类型</div><div class="line"></div><div class="line">kCGImageSourceCreateThumbnailWithTransform （根据exif标记 自动旋转）默认值是kCFBooleanFalse</div></pre></td></tr></table></figure>
-<h2 id="获取图像的属性信息"><a href="#获取图像的属性信息" class="headerlink" title="获取图像的属性信息"></a>获取图像的属性信息</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">CFDictionaryRef</span> imageInfo = <span class="built_in">CGImageSourceCopyPropertiesAtIndex</span>(imageSource, <span class="number">0</span>,<span class="literal">NULL</span>);</div><div class="line"></div><div class="line"><span class="comment">//像素的宽</span></div><div class="line"><span class="built_in">NSNumber</span> *pixelWidthObj = (__bridge <span class="built_in">NSNumber</span> *)<span class="built_in">CFDictionaryGetValue</span>(imageInfo, kCGImagePropertyPixelWidth);</div><div class="line"></div><div class="line"><span class="comment">//像素的高</span></div><div class="line"><span class="built_in">NSNumber</span> *pixelHeightObj = (__bridge <span class="built_in">NSNumber</span> *)<span class="built_in">CFDictionaryGetValue</span>(imageInfo, kCGImagePropertyPixelHeight);</div><div class="line"></div><div class="line"><span class="comment">//图像的旋转方向</span></div><div class="line"><span class="built_in">NSInteger</span> orientation = [(__bridge <span class="built_in">NSNumber</span> *)<span class="built_in">CFDictionaryGetValue</span>(imageInfo, kCGImagePropertyOrientation) integerValue];</div><div class="line"></div><div class="line"><span class="comment">//Exif信息</span></div><div class="line"><span class="built_in">NSDictionary</span> *exifInfo = (__bridge <span class="built_in">NSDictionary</span> *)<span class="built_in">CFDictionaryGetValue</span>(imageInfo, kCGImagePropertyExifAuxDictionary);</div></pre></td></tr></table></figure>
-<p>其中获取到的 <code>kCGImagePropertyPixelHeight</code> 和 <code>kCGImagePropertyPixelHeight</code> 的数值是原始的值，也就是旋转之前的数值;</p>
-<p>所以要获取到显示图像的宽和高，需要对应 <code>kCGImagePropertyOrientation</code> 的值，值分别从1-8，与UIImageOrientation有以下的映射关系：</p>
+		<!-- { % img /images/2017/03/demo.png %}   注意：复制后去除 "{ %" 之间的空格 -->
+<p>对项目进行模块化管理，保证各个模块之前可以重用和替换，并且之后根据客户需求只加载用户需求的模块可以采用CocoaPods对各个模块进行管理，采用<code>公有库</code>和<code>私有库</code>共存的状态。然后在添加配置文件以及一些 <a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html" target="_blank" rel="external">Runtime的机制</a> 进行管理。<br><a id="more"></a></p>
+<p>而对于一个公司的核心代码来说，当然不可能采用公开的形似来进行管理对已的框架。所以在CocoaPods中，还有另一种方式提供给公司内部管理进行管理代码，那就是私有库(Private Pods)。</p>
+<h2 id="私有库"><a href="#私有库" class="headerlink" title="私有库"></a>私有库</h2><p>我们先开始说说如何创建私有库吧。其实创建私有库的核心过程还是跟公有库是差不多的。不管是私有库还是公有库，关注点都在于Podspec文件的书写。但是在上篇文章中讲过了大体Podspec文件以及创建公有库的流程了，这里我就对那些部分不进行详细讲解了。这里针对一些不同的地方以及需要注意的地方进行讲解一下。</p>
+<p>首先在创建私有库之前，我们是不是该先创建一个私有库该往哪个仓库提交的仓库(Spec)。 所以当然当务之急是先创建一个私有仓库啦。而这个仓库对于公司来说的话，最好是搭建在内网里面，用Gitlab之类的git仓库管理工具即可。</p>
+<p>先建仓库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod repo add <span class="string">'仓库名'</span> <span class="string">'仓库地址'</span></div></pre></td></tr></table></figure>
+<p>这里的仓库地址最好是私有地址，让所有可以使用这个仓库的成员都可以访问的地址。当然通过上面这句话，就能非常简单的创建好私有库的地址了。当然，小伙伴们可以通过<code>cd ~/.cocoapods/repos</code>这个目录里面检查是否创建好具体的私有库。</p>
+<p>当然之后就是 <code>写代码-&gt;写Podspec文件-&gt;检查项目和Podspec文件-&gt;打tag</code>，这里就不进行累述了。到了下一步按照原定计划来说的话，应该是要提交项目到CocoaPods上对了吧，可是我们这里讲的是私有库，当然不可能提交到CocoaPods上，而应该提交到自己的仓库里面。</p>
+<p>将之前的<code>pod trunk push 项目名.podspec</code>修改为<code>pod repo push &#39;私有仓库名&#39; 项目名.podspec</code>即可。之后大家就可以前往之前创建的私有库的地址上查看是否上传版本成功。</p>
+<p>好了，到此为止简单的创建私有库的流程就说完了。 不过还有一些小的方面跟大家顺带说一下，</p>
 <ul>
-<li><img src="/images/2016/08/UIImageOrientationUp.jpg">  UIImageOrientationUp: 1 正常方向(默认值)</li>
-<li><img src="/images/2016/08/UIImageOrientationDown.jpg">  UIImageOrientationDown: 3 旋转180度(朝左朝右当然是一样的)</li>
-<li><img src="/images/2016/08/UIImageOrientationLeft.jpg">  UIImageOrientationLeft: 8 向左逆时针旋转90度</li>
-<li><img src="/images/2016/08/UIImageOrientationRight.jpg">  UIImageOrientationRight: 6 向右顺时针旋转90度</li>
-<li><img src="/images/2016/08/UIImageOrientationUpMirrored.jpg">  UIImageOrientationUpMirrored: 2 将原图水平的翻转到背面</li>
-<li><img src="/images/2016/08/UIImageOrientationDownMirrored.jpg">  UIImageOrientationDownMirrored: 4 在水平翻转之后再旋转180度</li>
-<li><img src="/images/2016/08/UIImageOrientationLeftMirrored.jpg">  UIImageOrientationLeftMirrored: 5 在水平翻转之后向左逆时针旋转90度</li>
-<li><img src="/images/2016/08/UIImageOrientationRightMirrored.jpg">  UIImageOrientationRightMirrored: 7 在水平翻转之后向右顺时针旋转90度</li>
+<li>比如如何删除私有仓库: <code>pod repo remove [name]</code>。</li>
+<li>在普通项目中如何使用私有仓库，可以在Podfile里面的开头声明所有包含的仓库名,即利用<a href="/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-yi-ru-men/">第一章-入门</a>说到的<code>source</code>参数</li>
+</ul>
+<h2 id="开发模式"><a href="#开发模式" class="headerlink" title="开发模式"></a>开发模式</h2><p>当然，在使用私有库的过程中，很大一部分时间私有库都是处于开发阶段，而我们总不能一直提交tag的方式进行<code>pod update</code>更新吧。</p>
+<p>因此CocoaPods就提供了一个开发模式,其实操作起来也是非常简单的事情，就是将所谓的引用路径修改成本地路径即可。就是讲Podfile中的<code>pod &#39;库名&#39;, :path =&gt; &#39;本地路径&#39;</code>即可。</p>
+<p>这样在通常的修改代码中是不需要执行<code>pod update</code>的，但是对于如果修改了目录结构（添加、删除或者移动文件文件）或者是修改了<code>Podspec</code>文件的配置的话，最好是运行一下<code>pod update</code>的命令。普通修改代码的情况下就不需要运行pod update命令和打tag了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pod <span class="string">'USImagePickerController'</span>, :path =&gt; <span class="string">'../USImagePickerController'</span></div></pre></td></tr></table></figure>
+<h2 id="使用私有库"><a href="#使用私有库" class="headerlink" title="使用私有库"></a>使用私有库</h2><p>使用私有库的方式我在这里主要列举了两种情况，下面针对这两中情况的具体注意项我这里稍微说明一下。 </p>
+<p>第一种：正常使用私有库的情况，即在<code>Podfile</code>中引用私有库；这种方式最简单，就是通过在Podfile开头列举说所有私有库的位置以及CocoaPods位置即可。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Podfile文件</span></div><div class="line"><span class="comment"># 公有仓库</span></div><div class="line">source <span class="string">'https://github.com/CocoaPods/Specs.git'</span>  </div><div class="line"><span class="comment"># 私有仓库</span></div><div class="line">source <span class="string">'https://192.168.0.100/TestPrivate/Specs.git'</span></div></pre></td></tr></table></figure>
+<p>第二种：在私有库中引用私有库，即在<code>Podspec</code>文件中依赖(dependency)私有库；这种情况就比较麻烦一点，因为毕竟Podspec文件中并没有指明私有仓库地址的地方。</p>
+<p>那么肯定就不在Podspec文件里面指明私有仓库的地方。而是在验证和上传私有库的时候进行指明。即在下面这两条命令中进行指明：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">pod lib lint 项目名.podspec --sources=https://github.com/CocoaPods/Specs.git,192.168.0.100:Plutoy/Specs.git</div><div class="line"></div><div class="line">pod repo push --source=https://github.com/CocoaPods/Specs.git,192.168.0.100:marujun/Specs.git</div></pre></td></tr></table></figure>
+<p>要不然你在检验项目以及提交项目过程中就会出现Error的情况。</p>
+<p>但是这两种情况还是有点不同的，第一种情况是可以采用开发者模式，而第二种情况不能采用开发者模式，只能通过打tag之后才能进行使用，所以在使用第二种情况下最好是测试好之后打完tag再进行引用。</p>
+<h2 id="模块化管理"><a href="#模块化管理" class="headerlink" title="模块化管理"></a>模块化管理</h2><p>关于模块化管理，其实对于一个人力资源特别紧缺的公司来说还是挺有必要的。其实也有小伙伴跟我提过说用framework或者.a等框架形式不就好了么？可是对于framework要进行版本管理以及多地方引用的管理情况下，很多情况下都会忘记了当前大的包对应的是仓库管理里面的哪个版本</p>
+<p>因为有可能我们经常打tag的时候，小修改还是会用同一个版本号，所以会出现很多误差性的情况。而通过CocoaPods进行管理的话，就可以追踪到仓库管理里面的具体提交号、版本号、branches等情况。</p>
+<p>不过在进行模块化管理的过程中需要注意一些点：</p>
+<ul>
+<li>模块中不能出现循环依赖，即A依赖B，B依赖C，C依赖A的情况</li>
+<li>如果一个子模块引用，需要填写完整的模块名，如在Core模块下面有Controller模块下面有个Setting模块，并且整个库的名字为TestProj的话,则依赖的名称需要这样写<code>s.dependency &#39;TestProj/Core/Controller/Setting&#39;</code>的形式</li>
+<li>如果出现模块特别多的情况下，在验证过程中，竟然采用<code>--subspec=子模块名</code>来进行一个模块一个模块验证，特别是对于如果只改动了一个模块的情况下，这里所说的字模块名也和上面一点异样，要填写完整的模块名</li>
+<li>在写私有库的过程中，竟然不用prefix header的形式，因为在分子模块的过程中很容易出现忘记引用header而出现的Error</li>
 </ul>
   
 	</div>
@@ -122,13 +127,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/iOS/">iOS</a>
+  <a class="article-category-link" href="/categories/Mac/">Mac</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/图片/">图片</a>
+  <span></span> <a href="/tags/CocoaPods/">CocoaPods</a>
   </div>
 
 </div>
@@ -137,7 +142,7 @@
 
 	<!--<div class="article-share" id="share">-->
 	<!---->
-	  <!--<div data-url="http://devma.cn/blog/2016/08/01/cgimagesource-du-qu-tu-xiang-shu-ju/" data-title="CGImageSource读取图像数据 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
+	  <!--<div data-url="http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-san-si-you-ku-guan-li-he-mo-kuai-hua-guan-li/" data-title="CocoaPods系列教程(三) —— 私有库管理和模块化管理 | 极致的技术博客" data-tsina="undefined" class="share clearfix">-->
 	  <!--</div>-->
 	<!---->
 	<!--</div>-->
@@ -151,18 +156,18 @@
 <!--<nav class="article-nav clearfix">-->
  <!---->
  <!--<div class="prev" >-->
- <!--<a href="/blog/2016/08/05/chisel-lldb-ming-ling-cha-jian-rang-diao-shi-geng-easy/" title="Chisel-LLDB命令插件，让调试更Easy">-->
+ <!--<a href="/blog/2016/05/27/ios-duo-yu-yan-ben-di-hua/" title="iOS - 多语言本地化">-->
   <!--<strong>上一篇：</strong><br/>-->
   <!--<span>-->
-  <!--Chisel-LLDB命令插件，让调试更Easy</span>-->
+  <!--iOS - 多语言本地化</span>-->
 <!--</a>-->
 <!--</div>-->
 <!---->
 <!---->
 <!--<div class="next">-->
-<!--<a href="/blog/2016/07/31/aria2-an-zhuang-he-shi-yong/"  title="Aria2 安装和使用">-->
+<!--<a href="/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-er-kai-yuan/"  title="CocoaPods系列教程(二) —— 开源">-->
  <!--<strong>下一篇：</strong><br/> -->
- <!--<span>Aria2 安装和使用-->
+ <!--<span>CocoaPods系列教程(二) —— 开源-->
 <!--</span>-->
 <!--</a>-->
 <!--</div>-->
