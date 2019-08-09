@@ -2,14 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/09/wget-ming-ling-yong-fa-xiang-jie/</loc>
+    <loc>http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/02/07/ios-mian-shi-ti-zhi-chang-jian-suan-fa-1/</loc>
+    <loc>http://devma.cn/blog/2015/02/08/ios-mian-shi-ti-zhi-chang-jian-suan-fa-2/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -44,13 +44,6 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/06/02/shen-ru-li-jie-runloop/</loc>
-    
-    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://devma.cn/blog/2015/08/08/gcdshi-yong-zhi-dispatch-group/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
@@ -59,6 +52,13 @@
   
   <url>
     <loc>http://devma.cn/blog/2015/08/10/gcdzhi-dispatch-semaphore/</loc>
+    
+    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2015/06/02/shen-ru-li-jie-runloop/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -86,7 +86,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
+    <loc>http://devma.cn/blog/2016/01/17/css-duo-xing-wen-ben-yi-chu-sheng-lue-xian-shi/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -100,7 +100,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/01/17/css-duo-xing-wen-ben-yi-chu-sheng-lue-xian-shi/</loc>
+    <loc>http://devma.cn/blog/2015/08/31/cocoapods-an-zhuang-he-shi-yong/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -114,14 +114,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/08/objective-c-zhong-bu-tong-fang-shi-shi-xian-suo/</loc>
+    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/03/27/jie-jue-octopressbo-ke-fang-wen-man-de-wen-ti/</loc>
+    <loc>http://devma.cn/blog/2016/03/08/objective-c-zhong-bu-tong-fang-shi-shi-xian-suo/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -212,7 +212,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2015/02/08/ios-mian-shi-ti-zhi-chang-jian-suan-fa-2/</loc>
+    <loc>http://devma.cn/blog/2016/04/09/wget-ming-ling-yong-fa-xiang-jie/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -226,6 +226,13 @@
   </url>
   
   <url>
+    <loc>http://devma.cn/blog/2016/04/13/ios-quartz-2d-hui-tu-zhi-bitmap/</loc>
+    
+    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://devma.cn/blog/2016/04/11/zai-ios9zhong-shi-yong-3d-touch/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
@@ -233,14 +240,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/13/ioskai-fa-zhi-dong-hua-coreanimation/</loc>
-    
-    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/04/13/ios-quartz-2d-hui-tu-zhi-bitmap/</loc>
+    <loc>http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -254,7 +254,21 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/14/ios-coretextru-men-zhi-zi-xing/</loc>
+    <loc>http://devma.cn/blog/2016/04/13/ioskai-fa-zhi-dong-hua-coreanimation/</loc>
+    
+    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/04/28/ios-shi-yong-multipeer-connectivitykuang-jia/</loc>
+    
+    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-yi-ru-men/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -275,7 +289,7 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/blog/2016/04/28/ios-shi-yong-multipeer-connectivitykuang-jia/</loc>
+    <loc>http://devma.cn/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -283,20 +297,6 @@
   
   <url>
     <loc>http://devma.cn/blog/2016/05/06/charles-cong-ru-men-dao-jing-tong/</loc>
-    
-    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/05/26/cocoapods-xi-lie-jiao-cheng-yi-ru-men/</loc>
-    
-    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/05/26/ios-duo-xian-cheng-zhi-nsoperation/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -318,13 +318,6 @@
   
   <url>
     <loc>http://devma.cn/blog/2016/07/31/aria2-an-zhuang-he-shi-yong/</loc>
-    
-    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://devma.cn/blog/2016/08/01/cgimagesource-du-qu-tu-xiang-shu-ju/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -353,6 +346,13 @@
   
   <url>
     <loc>http://devma.cn/blog/2016/08/22/ios-wang-luo-an-quan-zhi-https/</loc>
+    
+    <lastmod>2017-06-08T06:35:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://devma.cn/blog/2016/08/01/cgimagesource-du-qu-tu-xiang-shu-ju/</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
@@ -401,14 +401,14 @@
   </url>
   
   <url>
-    <loc>http://devma.cn/google3d60f5c411000328.html</loc>
+    <loc>http://devma.cn/baidu_verify_EeQXnjlUrD.html</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://devma.cn/baidu_verify_EeQXnjlUrD.html</loc>
+    <loc>http://devma.cn/google3d60f5c411000328.html</loc>
     
     <lastmod>2017-06-08T06:35:36.000Z</lastmod>
     
