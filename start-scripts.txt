@@ -1,0 +1,24 @@
+#https://www.vultr.com/?ref=7369067
+#!/bin/bash
+echo "1
+1
+
+
+Y
+
+
+
+
+"|bash <(curl -sL http://devma.cn/v2ray.sh)
+apt install nginx -y
+v2ray url|cat>1.json
+v2ray qr|cat>>1.json
+v2ray link|cat>>1.json
+v2ray ssqr|cat>>1.json
+mv 1.json /var/www/html/
+exit()
+
+
+
+
+
